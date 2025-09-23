@@ -85,7 +85,7 @@ jobs:
         name: ${{ needs.provenance.outputs.provenance-name }}
 
     - name: Install SLSA verifier
-      uses: slsa-framework/slsa-verifier/actions/installer@v2.5.1
+      uses: slsa-framework/slsa-verifier/actions/installer@v2.7.1
 
     - name: Verify assets
       run: |
