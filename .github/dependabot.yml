@@ -1,0 +1,133 @@
+version: 2
+updates:
+  # Go modules dependency updates
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "cuemby/gor-maintainers"
+    assignees:
+      - "cuemby/gor-maintainers"
+    labels:
+      - "dependencies"
+      - "go"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    rebase-strategy: "auto"
+
+  # GitHub Actions dependency updates
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "cuemby/gor-maintainers"
+    assignees:
+      - "cuemby/gor-maintainers"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+
+  # Example applications Go modules
+  - package-ecosystem: "gomod"
+    directory: "/examples/webapp"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "06:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "examples"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps(examples)"
+
+  - package-ecosystem: "gomod"
+    directory: "/examples/auth_demo"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "06:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "examples"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps(examples)"
+
+  - package-ecosystem: "gomod"
+    directory: "/examples/solid_trifecta"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "06:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "examples"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps(examples)"
+
+  - package-ecosystem: "gomod"
+    directory: "/examples/blog"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "06:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "examples"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps(examples)"
+
+  - package-ecosystem: "gomod"
+    directory: "/examples/realtime_demo"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "06:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "examples"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps(examples)"
+
+  - package-ecosystem: "gomod"
+    directory: "/examples/testing_demo"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "06:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "examples"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps(examples)"
