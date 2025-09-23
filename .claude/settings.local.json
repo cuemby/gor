@@ -31,7 +31,10 @@
       "Bash(go tool cover:*)",
       "Bash(grep:*)",
       "Bash(awk:*)",
-      "Bash(sort:*)"
+      "Bash(sort:*)",
+      "Bash(xargs dirname:*)",
+      "Bash(for dir in internal/cli internal/orm internal/dev internal/assets internal/websocket internal/config pkg/gor internal/sse)",
+      "Bash(for:*)"
     ],
     "deny": [],
     "ask": []
