@@ -198,19 +198,8 @@ func (w *Watcher) rebuild() error {
 
 // shouldExclude checks if a path should be excluded
 func (w *Watcher) shouldExclude(path string) bool {
-	// Make path relative to root for consistent checking
-	relPath, err := filepath.Rel(w.root, path)
-	if err != nil {
-		// If we can't get relative path, fall back to absolute path checking
-		relPath = path
-	}
-
 	for _, exclude := range w.excludePaths {
-		// Check if the exclude pattern appears as a directory component in the relative path
-		if strings.HasPrefix(relPath, exclude+string(filepath.Separator)) ||
-			relPath == exclude ||
-			strings.Contains(relPath, string(filepath.Separator)+exclude+string(filepath.Separator)) ||
-			strings.Contains(relPath, string(filepath.Separator)+exclude) && strings.HasSuffix(relPath, exclude) {
+		if strings.Contains(path, exclude) {
 			return true
 		}
 	}
