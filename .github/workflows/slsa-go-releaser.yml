@@ -1,0 +1,48 @@
+name: SLSA Go Releaser
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  # Generate SLSA provenance using the slsa-framework/slsa-github-generator.
+  # The provenance file can be verified using https://github.com/slsa-framework/slsa-verifier.
+  # For more information about SLSA and how it improves the software supply chain, visit slsa.dev.
+  provenance:
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_go_slsa3.yml@v2.0.0
+    with:
+      go-version-file: "go.mod"
+      # Optional: only needed if using ldflags.
+      evaluated-envs: "COMMIT:${{github.sha}}, BRANCH:${{github.ref_name}}, VERSION:${{github.ref_name}}"
+
+  upload-assets:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    needs: [provenance]
+    steps:
+      - name: Download assets
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.provenance.outputs.go-binary-name }}
+
+      - name: Download provenance
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.provenance.outputs.go-provenance-name }}
+
+      - name: Upload assets to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ needs.provenance.outputs.go-binary-name }}
+            ${{ needs.provenance.outputs.go-provenance-name }}

@@ -37,7 +37,11 @@
       "Bash(for:*)",
       "Read(///**)",
       "Bash(git ls-tree:*)",
-      "Read(//Users/ar4mirez/.claude/**)"
+      "Read(//Users/ar4mirez/.claude/**)",
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(git fetch:*)",
+      "Bash(git merge:*)"
     ],
     "deny": [],
     "ask": []

@@ -4,7 +4,7 @@ This guide will walk you through creating your first Gor application.
 
 ## Prerequisites
 
-- Go 1.21 or later
+- Go 1.25 or later
 - SQLite, PostgreSQL, or MySQL (optional)
 
 ## Installation
@@ -12,7 +12,7 @@ This guide will walk you through creating your first Gor application.
 ### Install the Gor CLI
 
 ```bash
-go install github.com/ar4mirez/gor/cmd/gor@latest
+go install github.com/cuemby/gor/cmd/gor@latest
 ```
 
 ### Verify Installation
@@ -133,7 +133,7 @@ func ConfigureRoutes(app *gor.Application) {
 package controllers
 
 import (
-    "github.com/ar4mirez/gor/pkg/gor"
+    "github.com/cuemby/gor/pkg/gor"
     "blog/app/models"
 )
 

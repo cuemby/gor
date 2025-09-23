@@ -231,7 +231,7 @@ Current test coverage by package:
 ### Best Practices
 
 - [Project Structure](./docs/best-practices.md) - Organizing code
-- [Performance Tips](https://github.com/ar4mirez/gor#performance) - Optimization
+- [Performance Tips](https://github.com/cuemby/gor#performance) - Optimization
 - [Security Guidelines](./docs/security.md) - Secure coding
 - [Testing Strategy](./docs/testing-strategy.md) - Test coverage
 - [Deployment Strategy](./docs/deployment-strategy.md) - Production tips
@@ -239,7 +239,7 @@ Current test coverage by package:
 
 ### Community & Support
 
-- [GitHub Repository](https://github.com/ar4mirez/gor) - Source code
+- [GitHub Repository](https://github.com/cuemby/gor) - Source code
 - [Issue Tracker](./issues) - Bug reports
 - [Discussions](./discussions) - Community forum
 - [Contributing](./CONTRIBUTING.md) - Contribution guide
@@ -333,4 +333,4 @@ ctx.Cable().HandleWebSocket(func(conn *WebSocketConnection) {
 
 ---
 
-This documentation is optimized for Large Language Models (LLMs) to provide comprehensive context about the Gor framework. For the latest updates, visit the [GitHub repository](https://github.com/ar4mirez/gor).
+This documentation is optimized for Large Language Models (LLMs) to provide comprehensive context about the Gor framework. For the latest updates, visit the [GitHub repository](https://github.com/cuemby/gor).

@@ -22,7 +22,7 @@ Complete API documentation for the Gor web framework.
 ### Creating an Application
 
 ```go
-import "github.com/ar4mirez/gor/pkg/gor"
+import "github.com/cuemby/gor/pkg/gor"
 
 app := gor.NewApplication(&gor.Config{
     Port:        3000,
@@ -812,7 +812,7 @@ router.Use(middleware.RateLimit(10).Only("/api/*"))
 ### Test Helpers
 
 ```go
-import "github.com/ar4mirez/gor/pkg/testing"
+import "github.com/cuemby/gor/pkg/testing"
 
 func TestPostsController_Index(t *testing.T) {
     app := testing.NewTestApp(t)

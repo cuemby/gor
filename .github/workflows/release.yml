@@ -1,0 +1,188 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    outputs:
+      changelog: ${{ steps.changelog.outputs.changelog }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Generate changelog
+      id: changelog
+      run: |
+        # Get the latest two tags
+        CURRENT_TAG=${GITHUB_REF#refs/tags/}
+        PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "")
+
+        echo "Current tag: $CURRENT_TAG"
+        echo "Previous tag: $PREVIOUS_TAG"
+
+        # Generate changelog
+        if [ -n "$PREVIOUS_TAG" ]; then
+          CHANGELOG=$(git log --pretty=format:"- %s (%h)" $PREVIOUS_TAG..$CURRENT_TAG)
+        else
+          CHANGELOG=$(git log --pretty=format:"- %s (%h)")
+        fi
+
+        # Create changelog content
+        cat << EOF > changelog.md
+        ## What's Changed
+
+        $CHANGELOG
+
+        **Full Changelog**: https://github.com/cuemby/gor/compare/$PREVIOUS_TAG...$CURRENT_TAG
+        EOF
+
+        # Output for use in release
+        echo "changelog<<EOF" >> $GITHUB_OUTPUT
+        cat changelog.md >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+          - goos: linux
+            goarch: arm64
+          - goos: darwin
+            goarch: amd64
+          - goos: darwin
+            goarch: arm64
+          - goos: windows
+            goarch: amd64
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: 'go.mod'
+
+    - name: Get version
+      id: version
+      run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+    - name: Build binary
+      env:
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.goarch }}
+        CGO_ENABLED: 0
+      run: |
+        # Set binary name
+        BINARY_NAME="gor-${{ matrix.goos }}-${{ matrix.goarch }}"
+        if [ "${{ matrix.goos }}" = "windows" ]; then
+          BINARY_NAME="${BINARY_NAME}.exe"
+        fi
+
+        # Build with version info
+        go build \
+          -ldflags="-s -w -X main.Version=${{ steps.version.outputs.version }} -X main.BuildTime=$(date -u '+%Y-%m-%d_%H:%M:%S') -X main.GitCommit=$(git rev-parse --short HEAD)" \
+          -o $BINARY_NAME \
+          ./cmd/gor
+
+    - name: Create package
+      run: |
+        # Set binary and package names
+        BINARY_NAME="gor-${{ matrix.goos }}-${{ matrix.goarch }}"
+        if [ "${{ matrix.goos }}" = "windows" ]; then
+          BINARY_NAME="${BINARY_NAME}.exe"
+        fi
+
+        # Create package
+        if [ "${{ matrix.goos }}" = "windows" ]; then
+          zip "${BINARY_NAME}.zip" $BINARY_NAME README.md LICENSE CHANGELOG.md
+        else
+          tar -czf "${BINARY_NAME}.tar.gz" $BINARY_NAME README.md LICENSE CHANGELOG.md
+        fi
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: gor-${{ matrix.goos }}-${{ matrix.goarch }}
+        path: |
+          gor-${{ matrix.goos }}-${{ matrix.goarch }}*
+        retention-days: 1
+
+  release:
+    needs: [changelog, build]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+
+    - name: Prepare release assets
+      run: |
+        mkdir release-assets
+        find . -name "gor-*" -type f | grep -E '\.(tar\.gz|zip|exe)$|gor-.*-.*$' | xargs -I {} cp {} release-assets/
+        ls -la release-assets/
+
+    - name: Create release
+      uses: softprops/action-gh-release@v2
+      with:
+        name: Release ${{ github.ref_name }}
+        body: ${{ needs.changelog.outputs.changelog }}
+        files: release-assets/*
+        draft: false
+        prerelease: ${{ contains(github.ref_name, '-') }}
+        generate_release_notes: true
+        append_body: true
+
+  docker:
+    needs: [build]
+    runs-on: ubuntu-latest
+    if: "!contains(github.ref_name, '-')" # Only for stable releases
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/cuemby/gor
+        tags: |
+          type=ref,event=tag
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max

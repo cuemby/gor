@@ -325,7 +325,7 @@ make release
 ## Dependencies
 
 ### Runtime Dependencies
-- **Go 1.21+** (minimum version for Go features used)
+- **Go 1.25+** (minimum version for Go features used)
 - **SQLite3**: github.com/mattn/go-sqlite3 (primary database)
 - **WebSocket**: github.com/gorilla/websocket (real-time features)
 - **Crypto**: golang.org/x/crypto (password hashing, security)
