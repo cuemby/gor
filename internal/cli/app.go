@@ -92,7 +92,7 @@ func (a *App) Run(args []string) error {
 
 // printHelp prints the general help message
 func (a *App) printHelp() {
-	fmt.Println(`
+	fmt.Print(`
 🚀 Gor - The Rails-Inspired Go Web Framework
 
 USAGE:
