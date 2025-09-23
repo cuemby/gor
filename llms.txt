@@ -1,0 +1,301 @@
+# Gor - Rails for Go
+
+> Batteries-included web framework bringing Rails productivity to Go
+
+A Rails-inspired web framework for Go that provides the rapid development experience of Ruby on Rails with Go's superior performance, type safety, and single-binary deployment. Features the "Solid Trifecta" (Queue, Cache, Cable) without requiring Redis, making it perfect for solo developers and small teams.
+
+## Key Features
+
+- **Convention Over Configuration** - Rails-like conventions with sensible defaults
+- **No Redis Required** - Database-backed queue, cache, and real-time features
+- **Type Safety** - Compile-time checking with Go's type system
+- **Single Binary** - Deploy one file with embedded assets
+- **10x Performance** - Faster than Rails while maintaining productivity
+- **Batteries Included** - Everything you need out of the box
+
+## Documentation
+
+### Getting Started
+
+- [Quick Start Guide](https://github.com/ar4mirez/gor/docs/getting-started.md) - Get up and running in 5 minutes
+- [Installation](https://github.com/ar4mirez/gor/docs/getting-started.md#installation) - Install Gor CLI and dependencies
+- [Creating Your First App](https://github.com/ar4mirez/gor/docs/getting-started.md#creating-your-first-application) - Step-by-step tutorial
+- [Project Structure](https://github.com/ar4mirez/gor/docs/getting-started.md#project-structure) - Understanding Gor applications
+- [Key Concepts](https://github.com/ar4mirez/gor#core-philosophy) - MVC, conventions, and principles
+- [Development Workflow](https://github.com/ar4mirez/gor/docs/getting-started.md#development-workflow) - Hot reload and productivity
+
+### Core Framework
+
+- [Application](https://github.com/ar4mirez/gor/docs/api.md#application) - Central application instance
+- [Configuration](https://github.com/ar4mirez/gor/docs/api.md#configuration) - Environment-based config management
+- [Request Lifecycle](https://github.com/ar4mirez/gor/pkg/gor/framework.go) - How requests are processed
+- [Context](https://github.com/ar4mirez/gor/docs/api.md#context) - Request/response context
+- [Middleware](https://github.com/ar4mirez/gor/docs/api.md#middleware) - Request processing pipeline
+
+### Routing & Controllers
+
+- [RESTful Routing](https://github.com/ar4mirez/gor/docs/api.md#router) - Rails-style resource routing
+- [Route Definitions](https://github.com/ar4mirez/gor/docs/api.md#basic-routing) - HTTP verbs and patterns
+- [Named Routes](https://github.com/ar4mirez/gor/docs/api.md#named-routes) - URL generation helpers
+- [Route Constraints](https://github.com/ar4mirez/gor/docs/api.md#route-constraints) - Parameter validation
+- [Route Groups](https://github.com/ar4mirez/gor/docs/api.md#route-groups) - Organized routing
+- [Controllers](https://github.com/ar4mirez/gor/docs/api.md#controllers) - Request handlers
+- [Controller Actions](https://github.com/ar4mirez/gor/docs/api.md#basic-controller) - CRUD operations
+- [Controller Callbacks](https://github.com/ar4mirez/gor/docs/api.md#controller-callbacks) - Before/after filters
+
+### Models & ORM
+
+- [Model Definition](https://github.com/ar4mirez/gor/docs/api.md#model-definition) - Defining data models
+- [ORM Queries](https://github.com/ar4mirez/gor/docs/api.md#querying) - Database operations
+- [Query Builder](https://github.com/ar4mirez/gor/docs/api.md#querying) - Fluent query interface
+- [Associations](https://github.com/ar4mirez/gor/docs/api.md#associations) - Relationships between models
+- [Validations](https://github.com/ar4mirez/gor/docs/api.md#model-definition) - Data validation rules
+- [Callbacks](https://github.com/ar4mirez/gor/docs/api.md#model-definition) - Lifecycle hooks
+- [Scopes](https://github.com/ar4mirez/gor/docs/api.md#model-definition) - Reusable queries
+- [Transactions](https://github.com/ar4mirez/gor/docs/api.md#transactions) - Database transactions
+- [Raw SQL](https://github.com/ar4mirez/gor/docs/api.md#raw-sql) - Custom SQL queries
+- [Migrations](https://github.com/ar4mirez/gor/internal/orm/migration.go) - Schema management
+- [Database Adapters](https://github.com/ar4mirez/gor/internal/orm) - SQLite, PostgreSQL, MySQL
+
+### Views & Templates
+
+- [Template Engine](https://github.com/ar4mirez/gor/internal/views) - HTML templating
+- [Layouts](https://github.com/ar4mirez/gor/docs/getting-started.md#create-views) - Master templates
+- [Partials](https://github.com/ar4mirez/gor/internal/views/template.go) - Reusable components
+- [Template Helpers](https://github.com/ar4mirez/gor/internal/views/helpers.go) - View utilities
+- [Asset Pipeline](https://github.com/ar4mirez/gor/internal/assets) - CSS/JS processing
+
+### The Solid Trifecta
+
+#### Queue System
+- [Queue Overview](https://github.com/ar4mirez/gor/docs/api.md#queue) - Background job processing
+- [Job Definition](https://github.com/ar4mirez/gor/docs/api.md#job-definition) - Creating jobs
+- [Enqueueing Jobs](https://github.com/ar4mirez/gor/docs/api.md#enqueueing-jobs) - Job scheduling
+- [Recurring Jobs](https://github.com/ar4mirez/gor/docs/api.md#recurring-jobs) - Cron-like scheduling
+- [Worker Management](https://github.com/ar4mirez/gor/internal/queue/worker.go) - Job workers
+- [Queue Monitoring](https://github.com/ar4mirez/gor/docs/api.md#queue-management) - Stats and management
+- [Database Backend](https://github.com/ar4mirez/gor/internal/queue) - No Redis required
+
+#### Cache System
+- [Cache Overview](https://github.com/ar4mirez/gor/docs/api.md#cache) - Multi-tier caching
+- [Basic Operations](https://github.com/ar4mirez/gor/docs/api.md#basic-operations) - Get/Set/Delete
+- [Advanced Caching](https://github.com/ar4mirez/gor/docs/api.md#advanced-caching) - Fetch, increment, tags
+- [Cache Stores](https://github.com/ar4mirez/gor/docs/api.md#cache-stores) - Memory, disk, database
+- [Tagged Caching](https://github.com/ar4mirez/gor/internal/cache) - Group invalidation
+- [Fragment Caching](https://github.com/ar4mirez/gor/internal/cache) - Partial caching
+
+#### Cable System
+- [Cable Overview](https://github.com/ar4mirez/gor/docs/api.md#cable) - Real-time features
+- [WebSockets](https://github.com/ar4mirez/gor/docs/api.md#websocket-server) - Bidirectional communication
+- [Server-Sent Events](https://github.com/ar4mirez/gor/docs/api.md#server-sent-events) - Server push
+- [Broadcasting](https://github.com/ar4mirez/gor/docs/api.md#broadcasting) - Message distribution
+- [Channels](https://github.com/ar4mirez/gor/internal/cable) - Organized messaging
+- [Presence](https://github.com/ar4mirez/gor/internal/cable) - User tracking
+
+### Authentication & Security
+
+- [Authentication System](https://github.com/ar4mirez/gor/docs/api.md#authentication) - Built-in auth
+- [User Model](https://github.com/ar4mirez/gor/docs/api.md#user-model) - Authentication model
+- [Sessions](https://github.com/ar4mirez/gor/docs/api.md#authentication-methods) - Session management
+- [JWT](https://github.com/ar4mirez/gor/internal/auth) - Token authentication
+- [Authorization](https://github.com/ar4mirez/gor/docs/api.md#authorization) - RBAC and abilities
+- [Password Management](https://github.com/ar4mirez/gor/internal/auth) - Hashing and reset
+- [CSRF Protection](https://github.com/ar4mirez/gor/pkg/middleware) - Security middleware
+- [CORS](https://github.com/ar4mirez/gor/pkg/middleware) - Cross-origin requests
+- [Rate Limiting](https://github.com/ar4mirez/gor/pkg/middleware) - Request throttling
+
+### Testing
+
+- [Testing Framework](https://github.com/ar4mirez/gor/docs/api.md#testing) - Built-in testing
+- [Test Helpers](https://github.com/ar4mirez/gor/docs/api.md#test-helpers) - Testing utilities
+- [Controller Tests](https://github.com/ar4mirez/gor/docs/api.md#controller-tests) - HTTP testing
+- [Model Tests](https://github.com/ar4mirez/gor/docs/api.md#model-tests) - Data layer testing
+- [Job Tests](https://github.com/ar4mirez/gor/docs/api.md#job-tests) - Background job testing
+- [Test Factories](https://github.com/ar4mirez/gor/internal/testing) - Test data generation
+- [Fixtures](https://github.com/ar4mirez/gor/internal/testing) - Sample data
+
+### CLI & Generators
+
+- [CLI Overview](https://github.com/ar4mirez/gor/cmd/gor) - Command-line interface
+- [New Application](https://github.com/ar4mirez/gor/docs/getting-started.md#generate-a-new-application) - Create new projects
+- [Model Generator](https://github.com/ar4mirez/gor/docs/getting-started.md#generate-a-model) - Generate models
+- [Controller Generator](https://github.com/ar4mirez/gor/docs/getting-started.md#generate-a-controller) - Generate controllers
+- [Scaffold Generator](https://github.com/ar4mirez/gor/internal/cli/generators) - Full CRUD scaffolding
+- [Migration Generator](https://github.com/ar4mirez/gor/docs/getting-started.md#generate-migration) - Database migrations
+- [Database Commands](https://github.com/ar4mirez/gor/docs/getting-started.md#run-migrations) - Migration management
+- [Server Commands](https://github.com/ar4mirez/gor/docs/getting-started.md#start-the-server) - Development server
+
+### Deployment
+
+- [Production Build](https://github.com/ar4mirez/gor/docs/getting-started.md#building-for-production) - Optimized builds
+- [Docker Deployment](https://github.com/ar4mirez/gor/docs/getting-started.md#docker-deployment) - Container deployment
+- [Environment Variables](https://github.com/ar4mirez/gor/docs/getting-started.md#environment-variables) - Configuration
+- [Health Checks](https://github.com/ar4mirez/gor/internal/deployment) - Monitoring endpoints
+- [Zero-downtime Deploy](https://github.com/ar4mirez/gor/internal/deploy) - Graceful updates
+- [Asset Compilation](https://github.com/ar4mirez/gor/internal/assets) - Production assets
+- [Database Setup](https://github.com/ar4mirez/gor/internal/deployment) - Production database
+
+### Developer Experience
+
+- [Hot Reload](https://github.com/ar4mirez/gor/internal/dev) - Auto-reloading
+- [Debugging](https://github.com/ar4mirez/gor/internal/dev) - Debug tools
+- [Error Pages](https://github.com/ar4mirez/gor/internal/dev) - Development errors
+- [Console](https://github.com/ar4mirez/gor/internal/dev) - Interactive console
+- [Logging](https://github.com/ar4mirez/gor/pkg/gor) - Structured logging
+
+### Plugin System
+
+- [Plugin Overview](https://github.com/ar4mirez/gor/docs/api.md#plugins) - Extensibility
+- [Creating Plugins](https://github.com/ar4mirez/gor/docs/api.md#creating-a-plugin) - Plugin development
+- [Plugin Hooks](https://github.com/ar4mirez/gor/internal/plugin) - Extension points
+- [Plugin Registry](https://github.com/ar4mirez/gor/internal/plugin/registry.go) - Plugin management
+- [Installing Plugins](https://github.com/ar4mirez/gor/docs/api.md#using-plugins) - Plugin installation
+
+### Examples
+
+- [Blog Application](https://github.com/ar4mirez/gor/examples/blog) - Full-featured blog with auth
+- [WebApp Example](https://github.com/ar4mirez/gor/examples/webapp) - Basic web application
+- [Authentication Demo](https://github.com/ar4mirez/gor/examples/auth_demo) - Auth implementation
+- [Real-time Chat](https://github.com/ar4mirez/gor/examples/realtime_demo) - WebSocket example
+- [Solid Trifecta Demo](https://github.com/ar4mirez/gor/examples/solid_trifecta) - Queue, cache, cable
+- [Template App](https://github.com/ar4mirez/gor/examples/template_app) - Template engine usage
+- [Testing Demo](https://github.com/ar4mirez/gor/examples/testing_demo) - Testing patterns
+- [ORM Example](https://github.com/ar4mirez/gor/examples/orm_example.go) - Database operations
+
+### Comparison & Migration
+
+- [vs Ruby on Rails](https://github.com/ar4mirez/gor#comparison-with-rails) - Rails comparison
+- [vs Express.js](https://github.com/ar4mirez/gor#comparison-with-rails) - Node.js comparison
+- [vs Django](https://github.com/ar4mirez/gor#comparison-with-rails) - Python comparison
+- [Performance Benchmarks](https://github.com/ar4mirez/gor#performance) - Speed comparisons
+- [Migration Guide](https://github.com/ar4mirez/gor/docs/migration.md) - Porting applications
+
+### API Reference
+
+- [Complete API](https://github.com/ar4mirez/gor/docs/api.md) - Full API documentation
+- [Application API](https://github.com/ar4mirez/gor/docs/api.md#application) - App methods
+- [Router API](https://github.com/ar4mirez/gor/docs/api.md#router) - Routing methods
+- [Context API](https://github.com/ar4mirez/gor/docs/api.md#context) - Request/response
+- [ORM API](https://github.com/ar4mirez/gor/docs/api.md#orm) - Database methods
+- [Queue API](https://github.com/ar4mirez/gor/docs/api.md#queue) - Job methods
+- [Cache API](https://github.com/ar4mirez/gor/docs/api.md#cache) - Caching methods
+- [Cable API](https://github.com/ar4mirez/gor/docs/api.md#cable) - Real-time methods
+- [Auth API](https://github.com/ar4mirez/gor/docs/api.md#authentication) - Auth methods
+
+### Integrations
+
+- [PostgreSQL](https://github.com/ar4mirez/gor/internal/orm) - PostgreSQL adapter
+- [MySQL](https://github.com/ar4mirez/gor/internal/orm) - MySQL adapter
+- [SQLite](https://github.com/ar4mirez/gor/internal/orm) - SQLite adapter
+- [Redis Cache](https://github.com/ar4mirez/gor/internal/cache) - Redis cache store
+- [S3 Storage](https://github.com/ar4mirez/gor/internal/storage) - File uploads
+- [Email Services](https://github.com/ar4mirez/gor/internal/mailer) - Email integration
+- [OAuth Providers](https://github.com/ar4mirez/gor/internal/auth) - Social login
+- [Monitoring Tools](https://github.com/ar4mirez/gor/internal/monitoring) - APM integration
+
+### Best Practices
+
+- [Project Structure](https://github.com/ar4mirez/gor/docs/best-practices.md) - Organizing code
+- [Performance Tips](https://github.com/ar4mirez/gor#performance) - Optimization
+- [Security Guidelines](https://github.com/ar4mirez/gor/docs/security.md) - Secure coding
+- [Testing Strategy](https://github.com/ar4mirez/gor/docs/testing-strategy.md) - Test coverage
+- [Deployment Strategy](https://github.com/ar4mirez/gor/docs/deployment-strategy.md) - Production tips
+- [Database Design](https://github.com/ar4mirez/gor/docs/database-design.md) - Schema best practices
+
+### Community & Support
+
+- [GitHub Repository](https://github.com/ar4mirez/gor) - Source code
+- [Issue Tracker](https://github.com/ar4mirez/gor/issues) - Bug reports
+- [Discussions](https://github.com/ar4mirez/gor/discussions) - Community forum
+- [Contributing](https://github.com/ar4mirez/gor/CONTRIBUTING.md) - Contribution guide
+- [Code of Conduct](https://github.com/ar4mirez/gor/CODE_OF_CONDUCT.md) - Community guidelines
+- [License](https://github.com/ar4mirez/gor/LICENSE) - MIT License
+
+## Framework Components
+
+### Core Packages
+- `pkg/gor` - Framework interfaces and core types
+- `internal/orm` - Object-relational mapping
+- `internal/router` - HTTP routing
+- `internal/views` - Template engine
+- `internal/queue` - Background jobs
+- `internal/cache` - Caching system
+- `internal/cable` - Real-time features
+- `internal/auth` - Authentication
+- `internal/assets` - Asset pipeline
+- `internal/testing` - Test framework
+- `internal/cli` - CLI tools
+- `internal/config` - Configuration
+- `internal/plugin` - Plugin system
+
+### Key Features
+- **Type-safe ORM** with compile-time checking
+- **RESTful routing** with nested resources
+- **Background jobs** without Redis
+- **Multi-tier caching** with tagging
+- **WebSockets & SSE** for real-time
+- **Built-in auth** with sessions and JWT
+- **Asset pipeline** with fingerprinting
+- **Hot reload** in development
+- **Single binary** deployment
+- **Docker ready** with health checks
+
+## Quick Examples
+
+### Create a Model
+```go
+type Post struct {
+    gor.Model
+    Title     string `db:"title" validate:"required"`
+    Body      string `db:"body"`
+    Published bool   `db:"published"`
+}
+```
+
+### Define Routes
+```go
+router.Resource("posts", &PostsController{})
+// Creates all RESTful routes automatically
+```
+
+### Background Job
+```go
+type EmailJob struct {
+    gor.Job
+    To string
+}
+
+func (j *EmailJob) Perform(ctx context.Context) error {
+    return sendEmail(j.To)
+}
+
+queue.Enqueue(&EmailJob{To: "user@example.com"})
+```
+
+### WebSocket
+```go
+ctx.Cable().HandleWebSocket(func(conn *WebSocketConnection) {
+    conn.Subscribe("chat")
+    for msg := range conn.Messages() {
+        ctx.Cable().Broadcast("chat", msg)
+    }
+})
+```
+
+## Version Information
+
+- **Current Version**: 1.0.0
+- **Go Version**: 1.21+
+- **Database Support**: SQLite 3.35+, PostgreSQL 12+, MySQL 8+
+- **License**: MIT
+
+## Related Projects
+
+- [Ruby on Rails](https://rubyonrails.org) - Original inspiration
+- [Phoenix Framework](https://phoenixframework.org) - Elixir web framework
+- [Django](https://djangoproject.com) - Python web framework
+- [Laravel](https://laravel.com) - PHP web framework
+
+---
+
+This documentation is optimized for Large Language Models (LLMs) to provide comprehensive context about the Gor framework. For the latest updates, visit the [GitHub repository](https://github.com/ar4mirez/gor).
