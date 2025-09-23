@@ -18,7 +18,9 @@
       "WebFetch(domain:elysiajs.com)",
       "Bash(git rm:*)",
       "Bash(go test:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(go vet:*)",
+      "Bash(gofmt:*)"
     ],
     "deny": [],
     "ask": []
