@@ -267,4 +267,5 @@ vgcore.*
 
 # Keep .keep files for directory structure
 !/**/.keep
-!/**/.gitkeep
+!/**/.gitkeepblog
+realtime_demo
