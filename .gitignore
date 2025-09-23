@@ -1,0 +1,270 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below if you use dep)
+# vendor/
+
+# Go workspace file
+go.work
+go.work.sum
+
+# Go build cache
+/dist/
+/build/
+/bin/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+*.env
+
+# IDE and Editor directories
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.iml
+*.ipr
+*.iws
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+Session.vim
+.netrwhist
+tags
+
+# Emacs
+*~
+\#*\#
+.\#*
+.projectile
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Gor Framework specific
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+development.db
+test.db
+production.db
+/db/*.sqlite3
+/db/*.sqlite3-journal
+/db/*.db
+
+# Log files
+/log/*
+/logs/*
+*.log
+!/log/.keep
+!/logs/.keep
+
+# Temporary files
+/tmp/*
+!/tmp/.keep
+/temp/*
+*.tmp
+*.bak
+*.backup
+
+# Uploaded files
+/public/uploads/*
+!/public/uploads/.keep
+/storage/*
+!/storage/.keep
+
+# Compiled assets
+/public/assets/*
+!/public/assets/.keep
+/public/packs/*
+!/public/packs/.keep
+/node_modules/
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
+
+# Cache directories
+/cache/*
+!/cache/.keep
+.cache/
+*.cache
+
+# Session files
+/sessions/*
+!/sessions/.keep
+
+# Config overrides (keep example files)
+/config/config.local.yml
+/config/config.local.yaml
+/config/config.local.json
+/config/database.local.yml
+/config/secrets.yml
+/config/secrets.yaml
+/config/secrets.json
+
+# Generated files
+/generated/*
+!/generated/.keep
+
+# Build artifacts
+/gor
+/gor-*
+/cmd/gor/gor
+*.a
+*.o
+
+# Test coverage
+coverage.txt
+coverage.html
+coverage.out
+*.coverprofile
+/coverage/*
+
+# Benchmarks
+*.bench
+bench.txt
+
+# Profiling
+*.prof
+*.pprof
+cpu.prof
+mem.prof
+
+# Documentation build
+/docs/_build/
+/docs/_site/
+/site/
+
+# Package files
+*.tar.gz
+*.zip
+*.deb
+*.rpm
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Kubernetes
+*.kubeconfig
+/k8s/secrets/
+
+# Terraform
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# Background process PIDs
+*.pid
+
+# Plugin compiled files
+/plugins/*.so
+/plugins/*.dll
+/plugins/*.dylib
+
+# Example application databases
+/examples/*/*.db
+/examples/*/*.sqlite
+/examples/*/*.sqlite3
+/examples/*/test.db
+/examples/*/development.db
+/examples/*/production.db
+
+# Example application logs
+/examples/*/logs/
+/examples/*/log/
+/examples/*/*.log
+
+# Example application temp files
+/examples/*/tmp/
+/examples/*/temp/
+
+# Example application uploads
+/examples/*/public/uploads/
+/examples/*/storage/
+
+# Example application node modules
+/examples/*/node_modules/
+
+# Hot reload temporary files
+.air.toml
+/tmp/
+*.tmp
+
+# SSL certificates (keep examples)
+*.pem
+*.key
+*.crt
+*.csr
+!examples/certs/*.example
+
+# Backup files
+*.backup
+*.old
+*.orig
+
+# Core dumps
+core
+vgcore.*
+
+# debugger
+.dlv
+
+# Go modules download cache
+/go.sum.backup
+
+# Local development overrides
+/docker-compose.local.yml
+/Makefile.local
+
+# Ignore everything in data directory except .keep files
+/data/*
+!/data/.keep
+
+# Ignore CLI build outputs
+/cmd/gor/gor
+/cmd/gor/dist/
+
+# Ignore generated migration files during development
+/db/migrations/*_temp.go
+
+# Keep .keep files for directory structure
+!/**/.keep
+!/**/.gitkeep
