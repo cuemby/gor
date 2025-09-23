@@ -1018,3 +1018,611 @@ app.Plugins().Load("path/to/plugin.so")
 // Install from registry
 app.Plugins().Install("github.com/user/gor-metrics")
 ```
+## Server-Sent Events (SSE)
+
+### SSE Server
+
+```go
+// Create SSE server
+sseServer := sse.NewServer()
+go sseServer.Run()
+
+// Handle SSE connections
+router.GET("/events", sseServer.ServeHTTP, "events")
+```
+
+### SSE Events
+
+```go
+// Send event to all clients
+sseServer.BroadcastToAll(&sse.Event{
+    Type: "message",
+    Data: map[string]interface{}{
+        "text": "Hello everyone",
+        "time": time.Now(),
+    },
+})
+
+// Send to specific channel
+sseServer.BroadcastToChannel("notifications", &sse.Event{
+    Type: "notification",
+    Data: "New notification",
+})
+
+// Send to specific client
+sseServer.SendToClient(clientID, &sse.Event{
+    Type: "private",
+    Data: "Private message",
+})
+```
+
+### SSE Client Subscription
+
+```go
+// Client subscribes to channels via query params
+// GET /events?channels=notifications,updates
+
+// In handler
+func SSEHandler(ctx *gor.Context) error {
+    channels := ctx.Query("channels")
+    // Server handles subscription automatically
+    return nil
+}
+```
+
+### SSE Specialized Events
+
+```go
+// Data update event
+sseServer.SendDataUpdate("products", "product", "created", product)
+
+// Progress event
+sseServer.SendProgress("import", taskID, 75, "Processing...")
+```
+
+## WebSocket API
+
+### WebSocket Server
+
+```go
+// Create WebSocket hub
+hub := websocket.NewHub()
+go hub.Run()
+
+// WebSocket handler
+func WebSocketHandler(ctx *gor.Context) error {
+    conn, err := websocket.Upgrade(ctx.Response, ctx.Request)
+    if err != nil {
+        return err
+    }
+
+    client := &websocket.Client{
+        Hub:  hub,
+        Conn: conn,
+        Send: make(chan []byte, 256),
+    }
+
+    hub.Register <- client
+
+    go client.WritePump()
+    go client.ReadPump()
+
+    return nil
+}
+```
+
+### WebSocket Messages
+
+```go
+// Message structure
+type Message struct {
+    Type    string      `json:"type"`
+    Channel string      `json:"channel"`
+    Data    interface{} `json:"data"`
+}
+
+// Broadcast to all
+hub.Broadcast <- []byte(`{"type":"chat","data":"Hello"}`)
+
+// Send to specific client
+client.Send <- []byte(`{"type":"private","data":"Hi"}`)
+```
+
+### WebSocket Channels
+
+```go
+// Subscribe to channel
+hub.Subscribe(client, "room:123")
+
+// Unsubscribe from channel
+hub.Unsubscribe(client, "room:123")
+
+// Broadcast to channel
+hub.BroadcastToChannel("room:123", message)
+```
+
+### WebSocket Connection Handling
+
+```go
+// Client connection lifecycle
+type Client struct {
+    ID   string
+    Hub  *Hub
+    Conn *websocket.Conn
+    Send chan []byte
+}
+
+func (c *Client) ReadPump() {
+    defer func() {
+        c.Hub.Unregister <- c
+        c.Conn.Close()
+    }()
+
+    for {
+        _, message, err := c.Conn.ReadMessage()
+        if err != nil {
+            break
+        }
+
+        // Process message
+        c.Hub.HandleMessage(c, message)
+    }
+}
+
+func (c *Client) WritePump() {
+    ticker := time.NewTicker(54 * time.Second)
+    defer func() {
+        ticker.Stop()
+        c.Conn.Close()
+    }()
+
+    for {
+        select {
+        case message := <-c.Send:
+            c.Conn.WriteMessage(websocket.TextMessage, message)
+
+        case <-ticker.C:
+            c.Conn.WriteMessage(websocket.PingMessage, nil)
+        }
+    }
+}
+```
+
+## Asset Pipeline
+
+### Asset Configuration
+
+```go
+// Configure asset pipeline
+assets := assets.NewPipeline(&assets.Config{
+    SourceDir:    "app/assets",
+    PublicDir:    "public",
+    Fingerprint:  true,
+    Compress:     true,
+    SourceMaps:   false,
+})
+
+app.Use(assets.Middleware())
+```
+
+### Asset Compilation
+
+```go
+// Compile assets
+assets.Compile()
+
+// Watch for changes (development)
+assets.Watch()
+```
+
+### Asset Helpers
+
+```go
+// In templates
+{{ asset_path "application.css" }}
+// Output: /assets/application-abc123.css
+
+{{ javascript_include_tag "application" }}
+// Output: <script src="/assets/application-xyz789.js"></script>
+
+{{ stylesheet_link_tag "application" }}
+// Output: <link href="/assets/application-abc123.css" rel="stylesheet">
+```
+
+### Asset Manifest
+
+```json
+// public/assets/manifest.json
+{
+  "application.js": "application-abc123.js",
+  "application.css": "application-xyz456.css",
+  "logo.png": "logo-def789.png"
+}
+```
+
+## Development Tools
+
+### Hot Reload
+
+```go
+// Enable hot reload in development
+if app.Environment() == "development" {
+    dev := dev.NewWatcher(&dev.Config{
+        Paths: []string{
+            "app/",
+            "config/",
+            "lib/",
+        },
+        Extensions: []string{".go", ".html", ".css", ".js"},
+        Command:    "go run main.go",
+    })
+    
+    go dev.Start()
+}
+```
+
+### Debug Mode
+
+```go
+// Enable debug mode
+app.Config.Debug = true
+
+// Debug logging
+app.Logger().Debug("Debug message", gor.Fields{
+    "user_id": 123,
+    "action":  "login",
+})
+
+// Debug middleware
+app.Use(middleware.Debug())
+```
+
+### Development Console
+
+```go
+// Interactive console
+console := dev.NewConsole(app)
+console.Start()
+
+// Available in console:
+// > app
+// > db
+// > User.All()
+// > cache.Get("key")
+```
+
+### Error Pages
+
+```go
+// Development error handler
+if app.Environment() == "development" {
+    app.Use(dev.ErrorHandler())
+}
+
+// Custom error pages
+app.ErrorHandler = func(ctx *gor.Context, err error) {
+    if app.Environment() == "development" {
+        // Show detailed error with stack trace
+        dev.RenderError(ctx, err)
+    } else {
+        // Show user-friendly error
+        ctx.Render(500, "errors/500")
+    }
+}
+```
+
+## Plugin System Details
+
+### Plugin Interface
+
+```go
+type Plugin interface {
+    Name() string
+    Version() string
+    Init(app *Application) error
+    Start() error
+    Stop() error
+    Routes() []Route
+    Middleware() []Middleware
+    Commands() []Command
+}
+```
+
+### Plugin Registry
+
+```go
+// Global registry
+registry := plugin.NewRegistry()
+
+// Register plugin
+registry.Register("metrics", NewMetricsPlugin())
+
+// Get plugin
+p := registry.Get("metrics")
+
+// List plugins
+plugins := registry.List()
+```
+
+### Plugin Hooks
+
+```go
+type Hooks interface {
+    BeforeRequest(*Context) error
+    AfterRequest(*Context) error
+    BeforeAction(controller, action string) error
+    AfterAction(controller, action string) error
+    OnError(error) error
+}
+
+// Implement hooks
+func (p *MyPlugin) BeforeRequest(ctx *Context) error {
+    // Called before every request
+    return nil
+}
+```
+
+### Plugin Configuration
+
+```yaml
+# config/plugins.yml
+plugins:
+  metrics:
+    enabled: true
+    config:
+      port: 9090
+      path: /metrics
+
+  auth:
+    enabled: true
+    config:
+      providers:
+        - google
+        - github
+```
+
+### Dynamic Plugin Loading
+
+```go
+// Load plugin at runtime
+plugin, err := plugin.Open("path/to/plugin.so")
+if err != nil {
+    return err
+}
+
+// Get exported symbol
+symPlugin, err := plugin.Lookup("Plugin")
+if err != nil {
+    return err
+}
+
+// Cast to plugin interface
+var p Plugin
+p, ok := symPlugin.(Plugin)
+if !ok {
+    return errors.New("invalid plugin")
+}
+
+// Register plugin
+app.Plugins().Register(p)
+```
+
+## Performance Monitoring
+
+### Metrics Collection
+
+```go
+// Built-in metrics
+metrics := app.Metrics()
+
+// Request metrics
+metrics.RecordRequest(path, method, status, duration)
+
+// Custom metrics
+metrics.Counter("user.signup").Inc()
+metrics.Gauge("active.users").Set(123)
+metrics.Histogram("request.size").Observe(1024)
+```
+
+### Performance Profiling
+
+```go
+// Enable profiling
+import _ "net/http/pprof"
+
+// Profiling endpoints
+router.GET("/debug/pprof/", pprof.Index, "profile")
+router.GET("/debug/pprof/heap", pprof.Heap, "heap")
+router.GET("/debug/pprof/goroutine", pprof.Goroutine, "goroutine")
+```
+
+### Benchmarking
+
+```go
+// Benchmark endpoint
+func BenchmarkEndpoint(b *testing.B) {
+    app := NewTestApp()
+    
+    b.ResetTimer()
+    for i := 0; i < b.N; i++ {
+        req := httptest.NewRequest("GET", "/users", nil)
+        w := httptest.NewRecorder()
+        app.ServeHTTP(w, req)
+    }
+}
+```
+
+## Advanced Features
+
+### Request ID Tracking
+
+```go
+// Middleware to add request ID
+func RequestID(next HandlerFunc) HandlerFunc {
+    return func(ctx *Context) error {
+        requestID := uuid.New().String()
+        ctx.Set("request_id", requestID)
+        ctx.SetHeader("X-Request-ID", requestID)
+        return next(ctx)
+    }
+}
+```
+
+### Content Negotiation
+
+```go
+func UserHandler(ctx *Context) error {
+    user := getUser(ctx.Param("id"))
+
+    // Content negotiation
+    switch ctx.Request.Header.Get("Accept") {
+    case "application/json":
+        return ctx.JSON(200, user)
+    case "application/xml":
+        return ctx.XML(200, user)
+    default:
+        return ctx.Render(200, "users/show", user)
+    }
+}
+```
+
+### Streaming Responses
+
+```go
+func StreamHandler(ctx *Context) error {
+    ctx.Response.Header().Set("Content-Type", "text/event-stream")
+    ctx.Response.Header().Set("Cache-Control", "no-cache")
+
+    flusher, ok := ctx.Response.(http.Flusher)
+    if !ok {
+        return errors.New("streaming not supported")
+    }
+
+    for i := 0; i < 10; i++ {
+        fmt.Fprintf(ctx.Response, "data: Event %d\n\n", i)
+        flusher.Flush()
+        time.Sleep(1 * time.Second)
+    }
+
+    return nil
+}
+```
+
+### File Uploads
+
+```go
+func UploadHandler(ctx *Context) error {
+    // Parse multipart form
+    err := ctx.Request.ParseMultipartForm(32 << 20) // 32MB
+    if err != nil {
+        return err
+    }
+
+    // Get file
+    file, header, err := ctx.Request.FormFile("file")
+    if err != nil {
+        return err
+    }
+    defer file.Close()
+
+    // Save file
+    dst, err := os.Create(filepath.Join("uploads", header.Filename))
+    if err != nil {
+        return err
+    }
+    defer dst.Close()
+
+    _, err = io.Copy(dst, file)
+    return err
+}
+```
+
+### Background Processing
+
+```go
+// Async handler
+func AsyncHandler(ctx *Context) error {
+    // Queue job for background processing
+    job := &ProcessJob{
+        UserID: ctx.Get("user_id").(int),
+        Data:   ctx.Request.Body,
+    }
+
+    ctx.Queue().Enqueue(job)
+
+    return ctx.JSON(202, map[string]string{
+        "status": "processing",
+        "job_id": job.ID,
+    })
+}
+```
+
+## API Versioning
+
+```go
+// Version via URL path
+v1 := router.Group("/api/v1")
+v1.GET("/users", UsersV1Handler, "users_v1")
+
+v2 := router.Group("/api/v2")
+v2.GET("/users", UsersV2Handler, "users_v2")
+
+// Version via header
+func VersionedHandler(ctx *Context) error {
+    version := ctx.Request.Header.Get("API-Version")
+    
+    switch version {
+    case "2.0":
+        return UsersV2Handler(ctx)
+    default:
+        return UsersV1Handler(ctx)
+    }
+}
+```
+
+## Error Handling
+
+### Custom Error Types
+
+```go
+type AppError struct {
+    Code    int    `json:"code"`
+    Message string `json:"message"`
+    Details string `json:"details,omitempty"`
+}
+
+func (e AppError) Error() string {
+    return e.Message
+}
+
+// Use in handler
+func Handler(ctx *Context) error {
+    return AppError{
+        Code:    404,
+        Message: "User not found",
+        Details: "No user with ID: " + ctx.Param("id"),
+    }
+}
+```
+
+### Global Error Handler
+
+```go
+app.ErrorHandler = func(ctx *Context, err error) {
+    switch e := err.(type) {
+    case AppError:
+        ctx.JSON(e.Code, e)
+    case *ValidationError:
+        ctx.JSON(400, map[string]interface{}{
+            "error": "Validation failed",
+            "fields": e.Fields,
+        })
+    default:
+        ctx.JSON(500, map[string]string{
+            "error": "Internal server error",
+        })
+    }
+}
+```
+
+This completes the Gor API Reference with comprehensive coverage of all framework features.
