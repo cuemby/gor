@@ -511,3 +511,137 @@ func BenchmarkServer_Subscribe(b *testing.B) {
 // Benchmark removed - Event.String() method doesn't exist in implementation
 
 // Test removed - concurrent test was causing timeout issues
+func TestSendDataUpdate(t *testing.T) {
+	server := NewServer()
+	go server.Run()
+
+	// Create a test client
+	client := &Client{
+		ID:            "test-client",
+		EventChannel:  make(chan *Event, 10),
+		CloseChannel:  make(chan bool),
+		Subscriptions: make(map[string]bool),
+	}
+
+	// Register and subscribe client to test channel
+	server.clients[client.ID] = client
+	server.Subscribe(client, "test-channel")
+
+	// Clear subscription event
+	time.Sleep(10 * time.Millisecond)
+	select {
+	case <-client.EventChannel:
+		// Drain subscription event
+	default:
+	}
+
+	// Test with channel
+	server.SendDataUpdate("test-channel", "user", "created", map[string]string{"name": "John"})
+
+	// Give time for async processing
+	time.Sleep(10 * time.Millisecond)
+
+	// Check if event was broadcast
+	select {
+	case event := <-client.EventChannel:
+		if event.Type != "data_update" {
+			t.Errorf("Expected event type 'data_update', got %s", event.Type)
+		}
+		if dataMap, ok := event.Data.(map[string]interface{}); ok {
+			if dataMap["entity"] != "user" {
+				t.Errorf("Expected entity 'user', got %v", dataMap["entity"])
+			}
+			if dataMap["action"] != "created" {
+				t.Errorf("Expected action 'created', got %v", dataMap["action"])
+			}
+		}
+	case <-time.After(100 * time.Millisecond):
+		t.Error("No event received")
+	}
+
+	// Test without channel (broadcast to all)
+	server.SendDataUpdate("", "post", "updated", map[string]string{"title": "Test"})
+	
+	time.Sleep(10 * time.Millisecond)
+	
+	select {
+	case event := <-client.EventChannel:
+		if event.Type != "data_update" {
+			t.Errorf("Expected event type 'data_update', got %s", event.Type)
+		}
+	case <-time.After(100 * time.Millisecond):
+		t.Error("No broadcast event received")
+	}
+}
+
+func TestSendProgress(t *testing.T) {
+	server := NewServer()
+	go server.Run()
+
+	// Create a test client
+	client := &Client{
+		ID:            "progress-client",
+		EventChannel:  make(chan *Event, 10),
+		CloseChannel:  make(chan bool),
+		Subscriptions: make(map[string]bool),
+	}
+
+	// Register and subscribe client to test channel
+	server.clients[client.ID] = client
+	server.Subscribe(client, "progress-channel")
+
+	// Clear subscription event
+	time.Sleep(10 * time.Millisecond)
+	select {
+	case <-client.EventChannel:
+		// Drain subscription event
+	default:
+	}
+
+	// Test with channel
+	server.SendProgress("progress-channel", "task-123", 50, "Processing...")
+
+	// Give time for async processing
+	time.Sleep(10 * time.Millisecond)
+
+	// Check if event was broadcast
+	select {
+	case event := <-client.EventChannel:
+		if event.Type != "progress" {
+			t.Errorf("Expected event type 'progress', got %s", event.Type)
+		}
+		data := event.Data.(map[string]interface{})
+		if data["taskID"] != "task-123" {
+			t.Errorf("Expected taskID 'task-123', got %v", data["taskID"])
+		}
+		if data["progress"] != 50 {
+			t.Errorf("Expected progress 50, got %v", data["progress"])
+		}
+		if data["message"] != "Processing..." {
+			t.Errorf("Expected message 'Processing...', got %v", data["message"])
+		}
+	case <-time.After(100 * time.Millisecond):
+		t.Error("No event received")
+	}
+
+	// Test without channel (broadcast to all)
+	server.SendProgress("", "task-456", 100, "Complete")
+	
+	time.Sleep(10 * time.Millisecond)
+	
+	select {
+	case event := <-client.EventChannel:
+		if event.Type != "progress" {
+			t.Errorf("Expected event type 'progress', got %s", event.Type)
+		}
+		data := event.Data.(map[string]interface{})
+		if data["taskID"] != "task-456" {
+			t.Errorf("Expected taskID 'task-456', got %v", data["taskID"])
+		}
+		if data["progress"] != 100 {
+			t.Errorf("Expected progress 100, got %v", data["progress"])
+		}
+	case <-time.After(100 * time.Millisecond):
+		t.Error("No broadcast event received")
+	}
+}
