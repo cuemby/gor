@@ -69,8 +69,9 @@ jobs:
     - name: Run golangci-lint
       uses: golangci/golangci-lint-action@v6
       with:
-        version: latest
+        version: v1.64.8
         args: --timeout=5m
+        skip-cache: true
 
     - name: Run code quality checks
       run: |
@@ -108,14 +109,14 @@ jobs:
 
     - name: Install security tools
       run: |
-        go install github.com/securecodewarrior/gosec/v2/cmd/gosec@latest &
+        go install github.com/securego/gosec/v2/cmd/gosec@latest &
         go install golang.org/x/vuln/cmd/govulncheck@latest &
         wait
 
     - name: Run security scans
       run: |
         echo "Running Gosec..."
-        gosec -fmt sarif -out gosec.sarif ./... &
+        $(go env GOPATH)/bin/gosec -fmt sarif -out gosec.sarif ./... &
         GOSEC_PID=$!
 
         echo "Running govulncheck..."
