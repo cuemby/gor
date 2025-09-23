@@ -9,7 +9,6 @@ import (
 	"time"
 
 	gortest "github.com/cuemby/gor/internal/testing"
-	"github.com/cuemby/gor/pkg/gor"
 )
 
 // Example model for testing
@@ -104,8 +103,10 @@ func TestArticleFactories(t *testing.T) {
 
 	// Define article factory
 	factory.Define("article", Article{}, map[string]gortest.AttributeFunc{
-		"ID":    gortest.SequentialID("article"),
-		"Title": gortest.SequentialEmail("Article"),
+		"ID": gortest.FixedValue(1),
+		"Title": func(f *gortest.Factory) interface{} {
+			return fmt.Sprintf("Article %d", time.Now().UnixNano())
+		},
 		"Content": func(f *gortest.Factory) interface{} {
 			return "This is article content"
 		},
