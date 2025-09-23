@@ -66,12 +66,10 @@ jobs:
       with:
         go-version-file: 'go.mod'
 
-    - name: Run golangci-lint
-      uses: golangci/golangci-lint-action@v6
-      with:
-        version: v1.64.8
-        args: --timeout=5m
-        skip-cache: true
+    - name: Install and run golangci-lint
+      run: |
+        go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.62.2
+        $(go env GOPATH)/bin/golangci-lint run --timeout=5m
 
     - name: Run code quality checks
       run: |
