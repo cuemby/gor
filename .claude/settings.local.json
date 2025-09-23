@@ -44,7 +44,9 @@
       "Bash(git merge:*)",
       "Bash(./bin/gor:*)",
       "Bash(git restore:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(gh pr create:*)",
+      "Bash(gh pr view:*)"
     ],
     "deny": [],
     "ask": []
