@@ -92,9 +92,9 @@ func (c *CLI) Setup() error {
 			},
 		},
 		EnvVars: map[string]string{
-			"GOR_ENV":    "production",
-			"LOG_LEVEL":  "info",
-			"PORT":       "3000",
+			"GOR_ENV":   "production",
+			"LOG_LEVEL": "info",
+			"PORT":      "3000",
 		},
 		Secrets: map[string]string{
 			"SECRET_KEY_BASE": "${SECRET_KEY_BASE}",

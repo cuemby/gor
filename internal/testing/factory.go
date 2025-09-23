@@ -14,9 +14,9 @@ type Factory struct {
 
 // FactoryDefinition defines how to create a model
 type FactoryDefinition struct {
-	Model      interface{}
-	Attributes map[string]AttributeFunc
-	AfterBuild []func(interface{})
+	Model       interface{}
+	Attributes  map[string]AttributeFunc
+	AfterBuild  []func(interface{})
 	AfterCreate []func(interface{})
 }
 
@@ -259,8 +259,8 @@ func DefaultFactories() *Factory {
 		CreatedAt time.Time
 		UpdatedAt time.Time
 	}{}, map[string]AttributeFunc{
-		"ID":      SequentialID("comment"),
-		"PostID":  FixedValue(1),
+		"ID":       SequentialID("comment"),
+		"PostID":   FixedValue(1),
 		"AuthorID": FixedValue(1),
 		"Content": func(f *Factory) interface{} {
 			return fmt.Sprintf("Comment %d", f.Sequence("comment_content"))

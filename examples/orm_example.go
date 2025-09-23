@@ -13,11 +13,11 @@ import (
 // Example models
 type User struct {
 	gor.BaseModel
-	Email     string    `gor:"unique;not_null" json:"email"`
-	Username  string    `gor:"unique;not_null" json:"username"`
-	FirstName string    `json:"first_name"`
-	LastName  string    `json:"last_name"`
-	Active    bool      `gor:"not_null" json:"active"`
+	Email     string `gor:"unique;not_null" json:"email"`
+	Username  string `gor:"unique;not_null" json:"username"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Active    bool   `gor:"not_null" json:"active"`
 }
 
 func (u User) TableName() string {
@@ -26,10 +26,10 @@ func (u User) TableName() string {
 
 type Post struct {
 	gor.BaseModel
-	Title   string `gor:"not_null" json:"title"`
-	Content string `json:"content"`
-	UserID  uint   `gor:"not_null;index" json:"user_id"`
-	Published bool `gor:"not_null" json:"published"`
+	Title     string `gor:"not_null" json:"title"`
+	Content   string `json:"content"`
+	UserID    uint   `gor:"not_null;index" json:"user_id"`
+	Published bool   `gor:"not_null" json:"published"`
 }
 
 func (p Post) TableName() string {

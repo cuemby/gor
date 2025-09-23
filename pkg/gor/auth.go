@@ -215,22 +215,22 @@ type UserRegistration struct {
 
 // UserUpdate data for updating user information.
 type UserUpdate struct {
-	Email     *string `json:"email,omitempty" validate:"omitempty,email"`
-	Username  *string `json:"username,omitempty" validate:"omitempty,alphanum,min=3,max=50"`
-	FirstName *string `json:"first_name,omitempty" validate:"omitempty,max=100"`
-	LastName  *string `json:"last_name,omitempty" validate:"omitempty,max=100"`
-	Avatar    *string `json:"avatar,omitempty"`
+	Email     *string     `json:"email,omitempty" validate:"omitempty,email"`
+	Username  *string     `json:"username,omitempty" validate:"omitempty,alphanum,min=3,max=50"`
+	FirstName *string     `json:"first_name,omitempty" validate:"omitempty,max=100"`
+	LastName  *string     `json:"last_name,omitempty" validate:"omitempty,max=100"`
+	Avatar    *string     `json:"avatar,omitempty"`
 	Status    *UserStatus `json:"status,omitempty"`
 }
 
 // PasswordReset represents a password reset request.
 type PasswordReset struct {
-	ID        string    `json:"id" gor:"primary_key"`
-	UserID    string    `json:"user_id" gor:"not_null;index"`
-	Token     string    `json:"-" gor:"unique;not_null"`
-	ExpiresAt time.Time `json:"expires_at"`
+	ID        string     `json:"id" gor:"primary_key"`
+	UserID    string     `json:"user_id" gor:"not_null;index"`
+	Token     string     `json:"-" gor:"unique;not_null"`
+	ExpiresAt time.Time  `json:"expires_at"`
 	UsedAt    *time.Time `json:"used_at"`
-	CreatedAt time.Time `json:"created_at"`
+	CreatedAt time.Time  `json:"created_at"`
 }
 
 func (pr *PasswordReset) TableName() string { return "password_resets" }
@@ -243,14 +243,14 @@ func (pr *PasswordReset) IsValid() bool {
 type MFAMethod string
 
 const (
-	MFAMethodTOTP MFAMethod = "totp" // Time-based One-Time Password
-	MFAMethodSMS  MFAMethod = "sms"  // SMS verification
+	MFAMethodTOTP  MFAMethod = "totp"  // Time-based One-Time Password
+	MFAMethodSMS   MFAMethod = "sms"   // SMS verification
 	MFAMethodEmail MFAMethod = "email" // Email verification
 )
 
 type MFASetup struct {
-	Secret    string   `json:"secret"`
-	QRCode    string   `json:"qr_code"`
+	Secret      string   `json:"secret"`
+	QRCode      string   `json:"qr_code"`
 	BackupCodes []string `json:"backup_codes"`
 }
 
@@ -343,9 +343,9 @@ func (p DefaultPasswordPolicy) Validate(password string) []string {
 	return errors
 }
 
-func (p DefaultPasswordPolicy) RequiredLength() int { return 8 }
-func (p DefaultPasswordPolicy) RequiresNumbers() bool { return true }
-func (p DefaultPasswordPolicy) RequiresSpecialChars() bool { return true }
-func (p DefaultPasswordPolicy) RequiresUppercase() bool { return true }
-func (p DefaultPasswordPolicy) RequiresLowercase() bool { return true }
+func (p DefaultPasswordPolicy) RequiredLength() int          { return 8 }
+func (p DefaultPasswordPolicy) RequiresNumbers() bool        { return true }
+func (p DefaultPasswordPolicy) RequiresSpecialChars() bool   { return true }
+func (p DefaultPasswordPolicy) RequiresUppercase() bool      { return true }
+func (p DefaultPasswordPolicy) RequiresLowercase() bool      { return true }
 func (p DefaultPasswordPolicy) ForbidsCommonPasswords() bool { return true }

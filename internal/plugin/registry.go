@@ -29,17 +29,17 @@ type Repository struct {
 
 // PluginInfo contains information about a plugin
 type PluginInfo struct {
-	Name        string            `json:"name"`
-	Version     string            `json:"version"`
-	Description string            `json:"description"`
-	Author      string            `json:"author"`
-	License     string            `json:"license"`
-	Homepage    string            `json:"homepage"`
-	Repository  string            `json:"repository"`
-	Tags        []string          `json:"tags"`
-	Compatibility Compatibility   `json:"compatibility"`
-	Dependencies []Dependency     `json:"dependencies"`
-	Assets      map[string]string `json:"assets"`
+	Name          string            `json:"name"`
+	Version       string            `json:"version"`
+	Description   string            `json:"description"`
+	Author        string            `json:"author"`
+	License       string            `json:"license"`
+	Homepage      string            `json:"homepage"`
+	Repository    string            `json:"repository"`
+	Tags          []string          `json:"tags"`
+	Compatibility Compatibility     `json:"compatibility"`
+	Dependencies  []Dependency      `json:"dependencies"`
+	Assets        map[string]string `json:"assets"`
 }
 
 // Compatibility defines version compatibility
@@ -56,11 +56,11 @@ type Dependency struct {
 
 // InstalledPlugin represents an installed plugin
 type InstalledPlugin struct {
-	Info         PluginInfo `json:"info"`
-	Path         string     `json:"path"`
-	InstalledAt  time.Time  `json:"installed_at"`
-	UpdatedAt    time.Time  `json:"updated_at"`
-	Enabled      bool       `json:"enabled"`
+	Info        PluginInfo `json:"info"`
+	Path        string     `json:"path"`
+	InstalledAt time.Time  `json:"installed_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+	Enabled     bool       `json:"enabled"`
 }
 
 // NewRegistry creates a new plugin registry

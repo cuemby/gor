@@ -106,10 +106,10 @@ func (h *Hub) ServeWS(w http.ResponseWriter, r *http.Request) {
 	}
 
 	client := &Client{
-		hub:  h,
-		conn: conn,
-		send: make(chan []byte, 256),
-		id:   generateClientID(),
+		hub:           h,
+		conn:          conn,
+		send:          make(chan []byte, 256),
+		id:            generateClientID(),
 		subscriptions: make(map[string]bool),
 	}
 

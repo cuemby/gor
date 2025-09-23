@@ -304,22 +304,22 @@ func shouldCompress(ext string) bool {
 
 func getContentType(ext string) string {
 	types := map[string]string{
-		".css":  "text/css",
-		".js":   "application/javascript",
-		".json": "application/json",
-		".html": "text/html",
-		".xml":  "application/xml",
-		".svg":  "image/svg+xml",
-		".png":  "image/png",
-		".jpg":  "image/jpeg",
-		".jpeg": "image/jpeg",
-		".gif":  "image/gif",
-		".webp": "image/webp",
-		".ico":  "image/x-icon",
-		".woff": "font/woff",
+		".css":   "text/css",
+		".js":    "application/javascript",
+		".json":  "application/json",
+		".html":  "text/html",
+		".xml":   "application/xml",
+		".svg":   "image/svg+xml",
+		".png":   "image/png",
+		".jpg":   "image/jpeg",
+		".jpeg":  "image/jpeg",
+		".gif":   "image/gif",
+		".webp":  "image/webp",
+		".ico":   "image/x-icon",
+		".woff":  "font/woff",
 		".woff2": "font/woff2",
-		".ttf":  "font/ttf",
-		".eot":  "application/vnd.ms-fontobject",
+		".ttf":   "font/ttf",
+		".eot":   "application/vnd.ms-fontobject",
 	}
 
 	if ct, ok := types[ext]; ok {

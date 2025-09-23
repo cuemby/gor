@@ -24,23 +24,23 @@ type cacheEntry struct {
 
 // SolidCache implements a database-backed cache similar to Rails' Solid Cache
 type SolidCache struct {
-	db            *sql.DB
-	mu            sync.RWMutex
-	memCache      map[string]*memoryCacheEntry // L1 cache in memory
-	memCacheMu    sync.RWMutex
-	maxMemorySize int64
-	currentSize   int64
-	ctx           context.Context
-	cancel        context.CancelFunc
-	wg            sync.WaitGroup
+	db              *sql.DB
+	mu              sync.RWMutex
+	memCache        map[string]*memoryCacheEntry // L1 cache in memory
+	memCacheMu      sync.RWMutex
+	maxMemorySize   int64
+	currentSize     int64
+	ctx             context.Context
+	cancel          context.CancelFunc
+	wg              sync.WaitGroup
 	cleanupInterval time.Duration
 }
 
 // memoryCacheEntry is an in-memory cache entry
 type memoryCacheEntry struct {
-	value     []byte
-	expiresAt time.Time
-	size      int64
+	value      []byte
+	expiresAt  time.Time
+	size       int64
 	lastAccess time.Time
 }
 

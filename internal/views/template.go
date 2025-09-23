@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"html/template"
 	"io"
-	"os"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -16,14 +16,14 @@ import (
 
 // TemplateEngine provides Rails-style templating with layouts and partials
 type TemplateEngine struct {
-	viewsPath   string
-	layoutsPath string
+	viewsPath    string
+	layoutsPath  string
 	partialsPath string
-	extension   string
-	cache       map[string]*template.Template
-	mu          sync.RWMutex
-	funcs       template.FuncMap
-	debug       bool
+	extension    string
+	cache        map[string]*template.Template
+	mu           sync.RWMutex
+	funcs        template.FuncMap
+	debug        bool
 }
 
 // NewTemplateEngine creates a new template engine
@@ -247,37 +247,36 @@ func (te *TemplateEngine) preloadTemplates() {
 	// Implementation depends on specific needs
 }
 
-
 // defaultHelpers returns default template helper functions
 func defaultHelpers() template.FuncMap {
 	return template.FuncMap{
 		// String helpers
-		"upper":      strings.ToUpper,
-		"lower":      strings.ToLower,
-		"title":      strings.Title,
-		"trim":       strings.TrimSpace,
-		"capitalize": capitalize,
-		"pluralize":  pluralize,
+		"upper":       strings.ToUpper,
+		"lower":       strings.ToLower,
+		"title":       strings.Title,
+		"trim":        strings.TrimSpace,
+		"capitalize":  capitalize,
+		"pluralize":   pluralize,
 		"singularize": singularize,
-		"truncate":   truncate,
+		"truncate":    truncate,
 
 		// URL helpers
-		"url_for":     urlFor,
-		"link_to":     linkTo,
-		"asset_path":  assetPath,
-		"image_tag":   imageTag,
-		"script_tag":  scriptTag,
-		"style_tag":   styleTag,
+		"url_for":    urlFor,
+		"link_to":    linkTo,
+		"asset_path": assetPath,
+		"image_tag":  imageTag,
+		"script_tag": scriptTag,
+		"style_tag":  styleTag,
 
 		// Form helpers
-		"form_for":    formFor,
-		"form_tag":    formTag,
-		"text_field":  textField,
-		"text_area":   textArea,
-		"select_tag":  selectTag,
-		"submit_tag":  submitTag,
+		"form_for":     formFor,
+		"form_tag":     formTag,
+		"text_field":   textField,
+		"text_area":    textArea,
+		"select_tag":   selectTag,
+		"submit_tag":   submitTag,
 		"hidden_field": hiddenField,
-		"csrf_tag":    csrfTag,
+		"csrf_tag":     csrfTag,
 
 		// Date/Time helpers
 		"time_ago":    timeAgo,
@@ -285,11 +284,11 @@ func defaultHelpers() template.FuncMap {
 		"time_format": timeFormat,
 
 		// Utility helpers
-		"json":        jsonEncode,
-		"safe":        safeHTML,
-		"raw":         rawHTML,
-		"partial":     partial,
-		"yield":       templateYield,
+		"json":    jsonEncode,
+		"safe":    safeHTML,
+		"raw":     rawHTML,
+		"partial": partial,
+		"yield":   templateYield,
 	}
 }
 
@@ -316,7 +315,7 @@ func pluralize(word string, count ...int) string {
 		return word[:len(word)-1] + "ies"
 	}
 	if strings.HasSuffix(word, "s") || strings.HasSuffix(word, "x") ||
-	   strings.HasSuffix(word, "ch") || strings.HasSuffix(word, "sh") {
+		strings.HasSuffix(word, "ch") || strings.HasSuffix(word, "sh") {
 		return word + "es"
 	}
 	return word + "s"

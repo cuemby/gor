@@ -453,7 +453,7 @@ func parseStructTag(tag string, column *gor.Column) {
 func contains(s, substr string) bool {
 	return len(s) >= len(substr) && (s == substr ||
 		(len(s) > len(substr) && (s[:len(substr)+1] == substr+";" ||
-		s[len(s)-len(substr)-1:] == ";"+substr)))
+			s[len(s)-len(substr)-1:] == ";"+substr)))
 }
 
 func toSnakeCase(s string) string {

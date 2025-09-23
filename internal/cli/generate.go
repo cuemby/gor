@@ -244,16 +244,16 @@ func (c *GenerateCommand) generateChannel(name string) error {
 func (c *GenerateCommand) addResourceRoute(name string) error {
 	// This would update the routes file
 	fmt.Printf("  ℹ️ Add this to config/routes.go:\n")
-	fmt.Printf("     r.Resources(\"%ss\", &controllers.%sController{})\n", 
+	fmt.Printf("     r.Resources(\"%ss\", &controllers.%sController{})\n",
 		strings.ToLower(name), strings.Title(name))
 	return nil
 }
 
 // Field parsing
 type Field struct {
-	Name     string
-	Type     string
-	GoType   string
+	Name      string
+	Type      string
+	GoType    string
 	Modifiers []string
 }
 
@@ -550,13 +550,13 @@ import (
 
 // Up migrates the database forward
 func Up_%s(db *sql.DB) error {
-	query := ` + "`" + `
+	query := `+"`"+`
 	CREATE TABLE IF NOT EXISTS %s (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 %s		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 		updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 	)
-	` + "`" + `
+	`+"`"+`
 	_, err := db.Exec(query)
 	return err
 }

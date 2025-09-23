@@ -129,42 +129,42 @@ func (c *BaseChannel) AfterBroadcast(ctx context.Context, message interface{}, c
 // Message represents a real-time message.
 type Message struct {
 	ID        string                 `json:"id"`
-	Type      MessageType           `json:"type"`
-	Channel   string                `json:"channel"`
+	Type      MessageType            `json:"type"`
+	Channel   string                 `json:"channel"`
 	Data      map[string]interface{} `json:"data"`
-	UserID    string                `json:"user_id,omitempty"`
-	Timestamp time.Time             `json:"timestamp"`
-	TTL       time.Duration         `json:"ttl,omitempty"`
+	UserID    string                 `json:"user_id,omitempty"`
+	Timestamp time.Time              `json:"timestamp"`
+	TTL       time.Duration          `json:"ttl,omitempty"`
 }
 
 type MessageType string
 
 const (
-	MessageBroadcast    MessageType = "broadcast"
-	MessageSubscribe    MessageType = "subscribe"
-	MessageUnsubscribe  MessageType = "unsubscribe"
-	MessagePing         MessageType = "ping"
-	MessagePong         MessageType = "pong"
-	MessageError        MessageType = "error"
-	MessageConfirm      MessageType = "confirm"
-	MessageReject       MessageType = "reject"
+	MessageBroadcast   MessageType = "broadcast"
+	MessageSubscribe   MessageType = "subscribe"
+	MessageUnsubscribe MessageType = "unsubscribe"
+	MessagePing        MessageType = "ping"
+	MessagePong        MessageType = "pong"
+	MessageError       MessageType = "error"
+	MessageConfirm     MessageType = "confirm"
+	MessageReject      MessageType = "reject"
 )
 
 // CableStats provides statistics about cable performance.
 type CableStats struct {
-	Connections    CableConnectionStats `json:"connections"`
-	Channels       CableChannelStats    `json:"channels"`
-	Messages       CableMessageStats    `json:"messages"`
-	Performance    CablePerformanceStats `json:"performance"`
-	Memory         CableMemoryStats     `json:"memory"`
+	Connections CableConnectionStats  `json:"connections"`
+	Channels    CableChannelStats     `json:"channels"`
+	Messages    CableMessageStats     `json:"messages"`
+	Performance CablePerformanceStats `json:"performance"`
+	Memory      CableMemoryStats      `json:"memory"`
 }
 
 type CableConnectionStats struct {
-	Total       int `json:"total"`
-	WebSocket   int `json:"websocket"`
-	SSE         int `json:"sse"`
+	Total         int `json:"total"`
+	WebSocket     int `json:"websocket"`
+	SSE           int `json:"sse"`
 	Authenticated int `json:"authenticated"`
-	Anonymous   int `json:"anonymous"`
+	Anonymous     int `json:"anonymous"`
 }
 
 type CableChannelStats struct {
@@ -184,10 +184,10 @@ type CableMessageStats struct {
 }
 
 type CablePerformanceStats struct {
-	AverageLatency   time.Duration `json:"average_latency"`
-	MessageThroughput float64      `json:"message_throughput"`
-	ConnectionTime   time.Duration `json:"connection_time"`
-	BroadcastTime    time.Duration `json:"broadcast_time"`
+	AverageLatency    time.Duration `json:"average_latency"`
+	MessageThroughput float64       `json:"message_throughput"`
+	ConnectionTime    time.Duration `json:"connection_time"`
+	BroadcastTime     time.Duration `json:"broadcast_time"`
 }
 
 type CableMemoryStats struct {
@@ -270,14 +270,14 @@ type CableEvent struct {
 type CableEventType string
 
 const (
-	CableConnected     CableEventType = "connected"
-	CableDisconnected  CableEventType = "disconnected"
-	CableSubscribed    CableEventType = "subscribed"
-	CableUnsubscribed  CableEventType = "unsubscribed"
-	CableMessageSent   CableEventType = "message_sent"
+	CableConnected       CableEventType = "connected"
+	CableDisconnected    CableEventType = "disconnected"
+	CableSubscribed      CableEventType = "subscribed"
+	CableUnsubscribed    CableEventType = "unsubscribed"
+	CableMessageSent     CableEventType = "message_sent"
 	CableMessageReceived CableEventType = "message_received"
-	CableBroadcast     CableEventType = "broadcast"
-	CableError         CableEventType = "error"
+	CableBroadcast       CableEventType = "broadcast"
+	CableError           CableEventType = "error"
 )
 
 // Authentication and authorization

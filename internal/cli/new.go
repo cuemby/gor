@@ -115,14 +115,14 @@ func (c *NewCommand) createDirectoryStructure(appPath string) error {
 
 func (c *NewCommand) generateFiles(appPath, appName string) error {
 	files := map[string]string{
-		"go.mod":                       c.goModContent(appName),
-		"main.go":                      c.mainGoContent(),
-		"config/application.go":        c.applicationContent(),
-		"config/database.yml":          c.databaseYmlContent(),
-		"config/routes.go":             c.routesContent(),
-		"config/environments/development.go": c.developmentEnvContent(),
-		"config/environments/production.go":  c.productionEnvContent(),
-		"config/environments/test.go":        c.testEnvContent(),
+		"go.mod":                                    c.goModContent(appName),
+		"main.go":                                   c.mainGoContent(),
+		"config/application.go":                     c.applicationContent(),
+		"config/database.yml":                       c.databaseYmlContent(),
+		"config/routes.go":                          c.routesContent(),
+		"config/environments/development.go":        c.developmentEnvContent(),
+		"config/environments/production.go":         c.productionEnvContent(),
+		"config/environments/test.go":               c.testEnvContent(),
 		"app/controllers/application_controller.go": c.applicationControllerContent(),
 		"app/controllers/home_controller.go":        c.homeControllerContent(),
 		"app/models/application_record.go":          c.applicationRecordContent(),
@@ -655,13 +655,13 @@ A Gor Framework application.
 ### Installation
 
 1. Install dependencies:
-   `  + "```bash\n   go mod tidy\n   ```" + `
+   `+"```bash\n   go mod tidy\n   ```"+`
 
 2. Create and migrate the database:
-   `  + "```bash\n   gor db create\n   gor db migrate\n   ```" + `
+   `+"```bash\n   gor db create\n   gor db migrate\n   ```"+`
 
 3. Start the development server:
-   `  + "```bash\n   gor server\n   ```" + `
+   `+"```bash\n   gor server\n   ```"+`
 
 4. Visit http://localhost:3000
 
@@ -669,19 +669,19 @@ A Gor Framework application.
 
 ### Generate a new scaffold
 
-`  + "```bash\ngor generate scaffold Post title:string body:text published:boolean\n```" + `
+`+"```bash\ngor generate scaffold Post title:string body:text published:boolean\n```"+`
 
 ### Run tests
 
-`  + "```bash\ngor test\n```" + `
+`+"```bash\ngor test\n```"+`
 
 ### Console
 
-`  + "```bash\ngor console\n```" + `
+`+"```bash\ngor console\n```"+`
 
 ## Deployment
 
-`  + "```bash\ngor build\ngor deploy production\n```" + `
+`+"```bash\ngor build\ngor deploy production\n```"+`
 
 ## License
 

@@ -19,37 +19,37 @@ type Deployer struct {
 
 // Config holds deployment configuration
 type Config struct {
-	AppName      string                 `json:"app_name"`
-	Environment  string                 `json:"environment"`
-	Version      string                 `json:"version"`
-	Registry     string                 `json:"registry"`
-	Servers      []Server               `json:"servers"`
-	EnvVars      map[string]string      `json:"env_vars"`
-	Secrets      map[string]string      `json:"secrets"`
-	HealthCheck  HealthCheckConfig      `json:"health_check"`
-	Rollback     RollbackConfig         `json:"rollback"`
-	Deployment   DeploymentStrategy     `json:"deployment"`
-	Database     DatabaseConfig         `json:"database"`
-	SSL          SSLConfig              `json:"ssl"`
-	Accessories  []AccessoryConfig      `json:"accessories"`
+	AppName     string             `json:"app_name"`
+	Environment string             `json:"environment"`
+	Version     string             `json:"version"`
+	Registry    string             `json:"registry"`
+	Servers     []Server           `json:"servers"`
+	EnvVars     map[string]string  `json:"env_vars"`
+	Secrets     map[string]string  `json:"secrets"`
+	HealthCheck HealthCheckConfig  `json:"health_check"`
+	Rollback    RollbackConfig     `json:"rollback"`
+	Deployment  DeploymentStrategy `json:"deployment"`
+	Database    DatabaseConfig     `json:"database"`
+	SSL         SSLConfig          `json:"ssl"`
+	Accessories []AccessoryConfig  `json:"accessories"`
 }
 
 // Server represents a deployment target
 type Server struct {
-	Host     string            `json:"host"`
-	User     string            `json:"user"`
-	Port     int               `json:"port"`
-	Roles    []string          `json:"roles"`
-	Labels   map[string]string `json:"labels"`
-	SSHKey   string            `json:"ssh_key"`
+	Host   string            `json:"host"`
+	User   string            `json:"user"`
+	Port   int               `json:"port"`
+	Roles  []string          `json:"roles"`
+	Labels map[string]string `json:"labels"`
+	SSHKey string            `json:"ssh_key"`
 }
 
 // HealthCheckConfig defines health check settings
 type HealthCheckConfig struct {
-	Path      string        `json:"path"`
-	Interval  time.Duration `json:"interval"`
-	Timeout   time.Duration `json:"timeout"`
-	Retries   int           `json:"retries"`
+	Path     string        `json:"path"`
+	Interval time.Duration `json:"interval"`
+	Timeout  time.Duration `json:"timeout"`
+	Retries  int           `json:"retries"`
 }
 
 // RollbackConfig defines rollback settings
@@ -60,26 +60,26 @@ type RollbackConfig struct {
 
 // DeploymentStrategy defines how to deploy
 type DeploymentStrategy struct {
-	Type            string        `json:"type"` // "rolling", "blue_green", "canary"
-	MaxSurge        int           `json:"max_surge"`
-	MaxUnavailable  int           `json:"max_unavailable"`
-	CanaryPercent   int           `json:"canary_percent"`
-	WaitTime        time.Duration `json:"wait_time"`
+	Type           string        `json:"type"` // "rolling", "blue_green", "canary"
+	MaxSurge       int           `json:"max_surge"`
+	MaxUnavailable int           `json:"max_unavailable"`
+	CanaryPercent  int           `json:"canary_percent"`
+	WaitTime       time.Duration `json:"wait_time"`
 }
 
 // DatabaseConfig defines database settings
 type DatabaseConfig struct {
-	URL            string `json:"url"`
-	MigrateOnDeploy bool   `json:"migrate_on_deploy"`
-	BackupBeforeMigrate bool `json:"backup_before_migrate"`
+	URL                 string `json:"url"`
+	MigrateOnDeploy     bool   `json:"migrate_on_deploy"`
+	BackupBeforeMigrate bool   `json:"backup_before_migrate"`
 }
 
 // SSLConfig defines SSL settings
 type SSLConfig struct {
-	Enabled     bool   `json:"enabled"`
-	CertPath    string `json:"cert_path"`
-	KeyPath     string `json:"key_path"`
-	LetsEncrypt bool   `json:"lets_encrypt"`
+	Enabled     bool     `json:"enabled"`
+	CertPath    string   `json:"cert_path"`
+	KeyPath     string   `json:"key_path"`
+	LetsEncrypt bool     `json:"lets_encrypt"`
 	Domains     []string `json:"domains"`
 }
 

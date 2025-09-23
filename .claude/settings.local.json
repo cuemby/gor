@@ -20,7 +20,15 @@
       "Bash(go test:*)",
       "Bash(find:*)",
       "Bash(go vet:*)",
-      "Bash(gofmt:*)"
+      "Bash(gofmt:*)",
+      "Bash(go list:*)",
+      "Bash(go env:*)",
+      "Bash(make:*)",
+      "Bash(fd:*)",
+      "Bash(for dir in internal/*/)",
+      "Bash(ls:*)",
+      "Bash(done)",
+      "Bash(go tool cover:*)"
     ],
     "deny": [],
     "ask": []

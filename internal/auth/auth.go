@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
-	"golang.org/x/crypto/bcrypt"
 	_ "github.com/mattn/go-sqlite3"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // Common errors
@@ -30,22 +30,22 @@ var (
 
 // User represents an authenticated user
 type User struct {
-	ID                int64
-	Email             string
-	PasswordHash      string
-	Name              string
-	Role              string
-	EmailVerified     bool
-	EmailVerifiedAt   *time.Time
-	RememberToken     *string
-	ResetToken        *string
-	ResetTokenExpiry  *time.Time
-	LastLoginAt       *time.Time
-	LastLoginIP       *string
-	FailedAttempts    int
-	LockedUntil       *time.Time
-	CreatedAt         time.Time
-	UpdatedAt         time.Time
+	ID               int64
+	Email            string
+	PasswordHash     string
+	Name             string
+	Role             string
+	EmailVerified    bool
+	EmailVerifiedAt  *time.Time
+	RememberToken    *string
+	ResetToken       *string
+	ResetTokenExpiry *time.Time
+	LastLoginAt      *time.Time
+	LastLoginIP      *string
+	FailedAttempts   int
+	LockedUntil      *time.Time
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
 }
 
 // Session represents a user session

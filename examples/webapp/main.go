@@ -261,14 +261,14 @@ type SimpleApp struct {
 }
 
 func (a *SimpleApp) Start(ctx context.Context) error { return nil }
-func (a *SimpleApp) Stop(ctx context.Context) error { return nil }
-func (a *SimpleApp) Router() gor.Router { return a.router }
-func (a *SimpleApp) ORM() gor.ORM { return a.orm }
-func (a *SimpleApp) Queue() gor.Queue { return nil }
-func (a *SimpleApp) Cache() gor.Cache { return nil }
-func (a *SimpleApp) Cable() gor.Cable { return nil }
-func (a *SimpleApp) Auth() interface{} { return nil }
-func (a *SimpleApp) Config() gor.Config { return nil }
+func (a *SimpleApp) Stop(ctx context.Context) error  { return nil }
+func (a *SimpleApp) Router() gor.Router              { return a.router }
+func (a *SimpleApp) ORM() gor.ORM                    { return a.orm }
+func (a *SimpleApp) Queue() gor.Queue                { return nil }
+func (a *SimpleApp) Cache() gor.Cache                { return nil }
+func (a *SimpleApp) Cable() gor.Cable                { return nil }
+func (a *SimpleApp) Auth() interface{}               { return nil }
+func (a *SimpleApp) Config() gor.Config              { return nil }
 
 func main() {
 	// Initialize ORM

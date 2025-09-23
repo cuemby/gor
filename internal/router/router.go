@@ -168,7 +168,7 @@ func (r *GorRouter) Namespace(prefix string, fn func(gor.Router)) gor.Router {
 func (r *GorRouter) Group(middleware ...gor.MiddlewareFunc) gor.Router {
 	// Create a sub-router that inherits parent routes but adds new middleware
 	return &GorRouter{
-		routes:      r.routes,      // Share routes
+		routes:      r.routes,                             // Share routes
 		middlewares: append(r.middlewares, middleware...), // Add new middleware
 		prefix:      r.prefix,
 		namedRoutes: r.namedRoutes,

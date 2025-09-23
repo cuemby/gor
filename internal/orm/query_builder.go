@@ -11,11 +11,11 @@ import (
 
 // QueryBuilder implements the gor.QueryBuilder interface
 type QueryBuilder struct {
-	model      interface{}
-	modelType  reflect.Type
-	tableName  string
-	db         *sql.DB
-	adapter    gor.DatabaseAdapter
+	model     interface{}
+	modelType reflect.Type
+	tableName string
+	db        *sql.DB
+	adapter   gor.DatabaseAdapter
 
 	// Query building state
 	whereConditions []string

@@ -10,14 +10,14 @@ import (
 
 // CSSProcessor processes CSS files
 type CSSProcessor struct {
-	minify bool
+	minify     bool
 	autoprefix bool
 }
 
 // NewCSSProcessor creates a new CSS processor
 func NewCSSProcessor(minify, autoprefix bool) *CSSProcessor {
 	return &CSSProcessor{
-		minify: minify,
+		minify:     minify,
 		autoprefix: autoprefix,
 	}
 }
@@ -60,16 +60,16 @@ func (p *CSSProcessor) processImports(css string) string {
 // addVendorPrefixes adds vendor prefixes to CSS properties
 func (p *CSSProcessor) addVendorPrefixes(css string) string {
 	prefixes := map[string][]string{
-		"transform":        {"-webkit-", "-moz-", "-ms-", "-o-"},
-		"transition":       {"-webkit-", "-moz-", "-o-"},
-		"animation":        {"-webkit-", "-moz-", "-o-"},
-		"box-shadow":       {"-webkit-", "-moz-"},
-		"border-radius":    {"-webkit-", "-moz-"},
+		"transform":       {"-webkit-", "-moz-", "-ms-", "-o-"},
+		"transition":      {"-webkit-", "-moz-", "-o-"},
+		"animation":       {"-webkit-", "-moz-", "-o-"},
+		"box-shadow":      {"-webkit-", "-moz-"},
+		"border-radius":   {"-webkit-", "-moz-"},
 		"flex":            {"-webkit-", "-ms-"},
 		"flexbox":         {"-webkit-", "-ms-"},
 		"user-select":     {"-webkit-", "-moz-", "-ms-"},
-		"background-size":  {"-webkit-", "-moz-", "-o-"},
-		"background-clip":  {"-webkit-"},
+		"background-size": {"-webkit-", "-moz-", "-o-"},
+		"background-clip": {"-webkit-"},
 	}
 
 	for property, vendorPrefixes := range prefixes {
@@ -122,14 +122,14 @@ func (p *CSSProcessor) minifyCSS(css string) string {
 
 // JavaScriptProcessor processes JavaScript files
 type JavaScriptProcessor struct {
-	minify    bool
+	minify     bool
 	sourceMaps bool
 }
 
 // NewJavaScriptProcessor creates a new JavaScript processor
 func NewJavaScriptProcessor(minify, sourceMaps bool) *JavaScriptProcessor {
 	return &JavaScriptProcessor{
-		minify:    minify,
+		minify:     minify,
 		sourceMaps: sourceMaps,
 	}
 }
@@ -190,16 +190,16 @@ func (p *JavaScriptProcessor) minifyJS(js string) string {
 
 // ImageProcessor processes image files
 type ImageProcessor struct {
-	optimize bool
-	maxWidth int
+	optimize  bool
+	maxWidth  int
 	maxHeight int
 }
 
 // NewImageProcessor creates a new image processor
 func NewImageProcessor(optimize bool, maxWidth, maxHeight int) *ImageProcessor {
 	return &ImageProcessor{
-		optimize: optimize,
-		maxWidth: maxWidth,
+		optimize:  optimize,
+		maxWidth:  maxWidth,
 		maxHeight: maxHeight,
 	}
 }
@@ -246,7 +246,7 @@ func (p *SassProcessor) Extensions() []string {
 
 // TypeScriptProcessor processes TypeScript files
 type TypeScriptProcessor struct {
-	minify    bool
+	minify     bool
 	sourceMaps bool
 	target     string // ES5, ES6, etc.
 }
@@ -254,7 +254,7 @@ type TypeScriptProcessor struct {
 // NewTypeScriptProcessor creates a new TypeScript processor
 func NewTypeScriptProcessor(minify, sourceMaps bool, target string) *TypeScriptProcessor {
 	return &TypeScriptProcessor{
-		minify:    minify,
+		minify:     minify,
 		sourceMaps: sourceMaps,
 		target:     target,
 	}

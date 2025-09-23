@@ -24,31 +24,31 @@ const (
 
 // jobRecord represents a job in the database
 type jobRecord struct {
-	ID           int64
-	Queue        string
-	Handler      string
-	Payload      string
-	Status       string
-	Attempts     int
-	MaxAttempts  int
-	Error        sql.NullString
-	ScheduledAt  time.Time
-	StartedAt    sql.NullTime
-	CompletedAt  sql.NullTime
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+	ID          int64
+	Queue       string
+	Handler     string
+	Payload     string
+	Status      string
+	Attempts    int
+	MaxAttempts int
+	Error       sql.NullString
+	ScheduledAt time.Time
+	StartedAt   sql.NullTime
+	CompletedAt sql.NullTime
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 // SolidQueue implements a database-backed job queue similar to Rails' Solid Queue
 type SolidQueue struct {
-	db         *sql.DB
-	handlers   map[string]JobHandler
-	mu         sync.RWMutex
-	ctx        context.Context
-	cancel     context.CancelFunc
-	workers    int
-	wg         sync.WaitGroup
-	processing sync.Map // Track jobs being processed
+	db           *sql.DB
+	handlers     map[string]JobHandler
+	mu           sync.RWMutex
+	ctx          context.Context
+	cancel       context.CancelFunc
+	workers      int
+	wg           sync.WaitGroup
+	processing   sync.Map // Track jobs being processed
 	pollInterval time.Duration
 }
 

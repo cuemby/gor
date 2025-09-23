@@ -123,7 +123,7 @@ func (c *PostsController) Show(ctx *gor.Context) error {
 	post := &Post{
 		Model: Model{ID: 1},
 		Title: "Sample Post",
-		Slug: slug,
+		Slug:  slug,
 	}
 
 	// In a real implementation, increment view count and cache
@@ -168,8 +168,8 @@ func (c *PostsController) Create(ctx *gor.Context) error {
 	post := Post{
 		Model: Model{ID: 1},
 		Title: title,
-		Body: body,
-		Slug: slugify(title),
+		Body:  body,
+		Slug:  slugify(title),
 	}
 
 	// In a real implementation, save to database
@@ -191,8 +191,8 @@ func (c *CommentsController) Create(ctx *gor.Context) error {
 	body := ctx.Request.FormValue("body")
 
 	comment := Comment{
-		Model: Model{ID: 1},
-		Body: body,
+		Model:  Model{ID: 1},
+		Body:   body,
 		PostID: atoi(postID),
 	}
 
@@ -253,9 +253,9 @@ func (c *AuthController) Register(ctx *gor.Context) error {
 	password := ctx.Request.FormValue("password")
 
 	user := User{
-		Model: Model{ID: 1},
-		Name: name,
-		Email: email,
+		Model:        Model{ID: 1},
+		Name:         name,
+		Email:        email,
 		PasswordHash: password, // In real implementation, hash this
 	}
 
@@ -291,7 +291,7 @@ type BlogApplication struct {
 func (a *BlogApplication) Start(ctx context.Context) error {
 	// Start HTTP server
 	server := &http.Server{
-		Addr: ":3000",
+		Addr:    ":3000",
 		Handler: a.router,
 	}
 
@@ -316,7 +316,7 @@ func main() {
 		queue: nil, // Would be initialized with real queue
 		cache: nil, // Would be initialized with real cache
 		cable: nil, // Would be initialized with real cable
-		auth: nil, // Would be initialized with real auth
+		auth:  nil, // Would be initialized with real auth
 	}
 
 	// Configure routes
@@ -404,10 +404,10 @@ type SimpleRouter struct {
 func (r *SimpleRouter) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	// Create context
 	ctx := &gor.Context{
-		Request: req,
+		Request:  req,
 		Response: w,
-		Params: make(map[string]string),
-		Query: req.URL.Query(),
+		Params:   make(map[string]string),
+		Query:    req.URL.Query(),
 	}
 
 	// Find and execute handler
@@ -424,7 +424,7 @@ func (r *SimpleRouter) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 }
 
 func (r *SimpleRouter) Resources(name string, controller gor.Controller) gor.Router { return r }
-func (r *SimpleRouter) Resource(name string, controller gor.Controller) gor.Router { return r }
+func (r *SimpleRouter) Resource(name string, controller gor.Controller) gor.Router  { return r }
 
 func (r *SimpleRouter) GET(path string, handler gor.HandlerFunc) gor.Router {
 	if r.routes[path] == nil {
@@ -442,13 +442,13 @@ func (r *SimpleRouter) POST(path string, handler gor.HandlerFunc) gor.Router {
 	return r
 }
 
-func (r *SimpleRouter) PUT(path string, handler gor.HandlerFunc) gor.Router { return r }
-func (r *SimpleRouter) PATCH(path string, handler gor.HandlerFunc) gor.Router { return r }
-func (r *SimpleRouter) DELETE(path string, handler gor.HandlerFunc) gor.Router { return r }
+func (r *SimpleRouter) PUT(path string, handler gor.HandlerFunc) gor.Router     { return r }
+func (r *SimpleRouter) PATCH(path string, handler gor.HandlerFunc) gor.Router   { return r }
+func (r *SimpleRouter) DELETE(path string, handler gor.HandlerFunc) gor.Router  { return r }
 func (r *SimpleRouter) Namespace(prefix string, fn func(gor.Router)) gor.Router { return r }
-func (r *SimpleRouter) Group(middleware ...gor.MiddlewareFunc) gor.Router { return r }
-func (r *SimpleRouter) Use(middleware ...gor.MiddlewareFunc) gor.Router { return r }
-func (r *SimpleRouter) Named(name string) gor.Router { return r }
+func (r *SimpleRouter) Group(middleware ...gor.MiddlewareFunc) gor.Router       { return r }
+func (r *SimpleRouter) Use(middleware ...gor.MiddlewareFunc) gor.Router         { return r }
+func (r *SimpleRouter) Named(name string) gor.Router                            { return r }
 
 // Helpers
 func slugify(s string) string {

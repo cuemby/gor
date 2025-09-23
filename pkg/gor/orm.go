@@ -158,19 +158,19 @@ type BaseModel struct {
 	UpdatedAt time.Time `gor:"updated_at" json:"updated_at"`
 }
 
-func (m *BaseModel) GetID() interface{}        { return m.ID }
-func (m *BaseModel) SetID(id interface{})      { m.ID = id.(uint) }
-func (m *BaseModel) GetCreatedAt() time.Time   { return m.CreatedAt }
-func (m *BaseModel) SetCreatedAt(t time.Time)  { m.CreatedAt = t }
-func (m *BaseModel) GetUpdatedAt() time.Time   { return m.UpdatedAt }
-func (m *BaseModel) SetUpdatedAt(t time.Time)  { m.UpdatedAt = t }
-func (m *BaseModel) Validate() error           { return nil }
-func (m *BaseModel) BeforeCreate() error       { return nil }
-func (m *BaseModel) AfterCreate() error        { return nil }
-func (m *BaseModel) BeforeUpdate() error       { return nil }
-func (m *BaseModel) AfterUpdate() error        { return nil }
-func (m *BaseModel) BeforeDelete() error       { return nil }
-func (m *BaseModel) AfterDelete() error        { return nil }
+func (m *BaseModel) GetID() interface{}       { return m.ID }
+func (m *BaseModel) SetID(id interface{})     { m.ID = id.(uint) }
+func (m *BaseModel) GetCreatedAt() time.Time  { return m.CreatedAt }
+func (m *BaseModel) SetCreatedAt(t time.Time) { m.CreatedAt = t }
+func (m *BaseModel) GetUpdatedAt() time.Time  { return m.UpdatedAt }
+func (m *BaseModel) SetUpdatedAt(t time.Time) { m.UpdatedAt = t }
+func (m *BaseModel) Validate() error          { return nil }
+func (m *BaseModel) BeforeCreate() error      { return nil }
+func (m *BaseModel) AfterCreate() error       { return nil }
+func (m *BaseModel) BeforeUpdate() error      { return nil }
+func (m *BaseModel) AfterUpdate() error       { return nil }
+func (m *BaseModel) BeforeDelete() error      { return nil }
+func (m *BaseModel) AfterDelete() error       { return nil }
 
 // Migration represents a database migration.
 type Migration struct {
@@ -227,9 +227,9 @@ type Validation interface {
 }
 
 type ValidationError struct {
-	Field   string `json:"field"`
-	Tag     string `json:"tag"`
-	Message string `json:"message"`
+	Field   string      `json:"field"`
+	Tag     string      `json:"tag"`
+	Message string      `json:"message"`
 	Value   interface{} `json:"value"`
 }
 

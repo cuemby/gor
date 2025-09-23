@@ -276,9 +276,9 @@ func demoCable() {
 
 	// User event
 	if err := sc.Publish(ctx, "user_events", map[string]interface{}{
-		"event": "user_registered",
+		"event":   "user_registered",
 		"user_id": 123,
-		"email": "newuser@example.com",
+		"email":   "newuser@example.com",
 	}); err != nil {
 		log.Printf("Failed to publish user event: %v", err)
 	} else {
@@ -286,13 +286,13 @@ func demoCable() {
 	}
 
 	// System notification
-	if err := sc.PublishWithMetadata(ctx, "system", 
+	if err := sc.PublishWithMetadata(ctx, "system",
 		map[string]interface{}{
-			"level": "warning",
+			"level":   "warning",
 			"message": "High memory usage detected",
 		},
 		map[string]string{
-			"severity": "medium",
+			"severity":  "medium",
 			"component": "cache",
 		},
 	); err != nil {
@@ -303,9 +303,9 @@ func demoCable() {
 
 	// Another user event
 	if err := sc.Publish(ctx, "user_events", map[string]interface{}{
-		"event": "user_login",
+		"event":   "user_login",
 		"user_id": 123,
-		"ip": "192.168.1.1",
+		"ip":      "192.168.1.1",
 	}); err != nil {
 		log.Printf("Failed to publish login event: %v", err)
 	} else {
@@ -315,7 +315,7 @@ func demoCable() {
 	// Broadcast to all
 	if err := sc.Broadcast(ctx, map[string]interface{}{
 		"announcement": "System maintenance in 1 hour",
-		"timestamp": time.Now().Format(time.RFC3339),
+		"timestamp":    time.Now().Format(time.RFC3339),
 	}); err != nil {
 		log.Printf("Failed to broadcast: %v", err)
 	} else {

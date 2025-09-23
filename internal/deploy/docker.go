@@ -12,8 +12,8 @@ import (
 
 // DockerBuilder builds and manages Docker images
 type DockerBuilder struct {
-	appName  string
-	registry string
+	appName   string
+	registry  string
 	buildArgs map[string]string
 }
 

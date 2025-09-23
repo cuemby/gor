@@ -58,22 +58,22 @@ type Job interface {
 
 // BaseJob provides a default implementation of common job functionality.
 type BaseJob struct {
-	JobID        string        `json:"id"`
-	JobType      string        `json:"type"`
-	QueueName    string        `json:"queue"`
-	JobPayload   interface{}   `json:"payload"`
-	JobPriority  int           `json:"priority"`
-	JobRetries   int           `json:"max_retries"`
-	JobDelay     time.Duration `json:"retry_delay"`
+	JobID       string        `json:"id"`
+	JobType     string        `json:"type"`
+	QueueName   string        `json:"queue"`
+	JobPayload  interface{}   `json:"payload"`
+	JobPriority int           `json:"priority"`
+	JobRetries  int           `json:"max_retries"`
+	JobDelay    time.Duration `json:"retry_delay"`
 }
 
-func (j *BaseJob) ID() string                    { return j.JobID }
-func (j *BaseJob) Type() string                  { return j.JobType }
-func (j *BaseJob) Queue() string                 { return j.QueueName }
-func (j *BaseJob) Payload() interface{}          { return j.JobPayload }
-func (j *BaseJob) Priority() int                 { return j.JobPriority }
-func (j *BaseJob) MaxRetries() int               { return j.JobRetries }
-func (j *BaseJob) RetryDelay() time.Duration     { return j.JobDelay }
+func (j *BaseJob) ID() string                { return j.JobID }
+func (j *BaseJob) Type() string              { return j.JobType }
+func (j *BaseJob) Queue() string             { return j.QueueName }
+func (j *BaseJob) Payload() interface{}      { return j.JobPayload }
+func (j *BaseJob) Priority() int             { return j.JobPriority }
+func (j *BaseJob) MaxRetries() int           { return j.JobRetries }
+func (j *BaseJob) RetryDelay() time.Duration { return j.JobDelay }
 
 // Worker defines the interface for job workers.
 type Worker interface {
@@ -189,24 +189,24 @@ type CleanupJob struct {
 
 // Job events for monitoring and hooks
 type JobEvent struct {
-	Type      JobEventType `json:"type"`
-	JobID     string       `json:"job_id"`
-	Queue     string       `json:"queue"`
-	Worker    string       `json:"worker,omitempty"`
-	Error     string       `json:"error,omitempty"`
+	Type      JobEventType  `json:"type"`
+	JobID     string        `json:"job_id"`
+	Queue     string        `json:"queue"`
+	Worker    string        `json:"worker,omitempty"`
+	Error     string        `json:"error,omitempty"`
 	Duration  time.Duration `json:"duration,omitempty"`
-	Timestamp time.Time    `json:"timestamp"`
+	Timestamp time.Time     `json:"timestamp"`
 }
 
 type JobEventType string
 
 const (
-	JobEventEnqueued   JobEventType = "enqueued"
-	JobEventStarted    JobEventType = "started"
-	JobEventCompleted  JobEventType = "completed"
-	JobEventFailed     JobEventType = "failed"
-	JobEventCancelled  JobEventType = "cancelled"
-	JobEventRetried    JobEventType = "retried"
+	JobEventEnqueued  JobEventType = "enqueued"
+	JobEventStarted   JobEventType = "started"
+	JobEventCompleted JobEventType = "completed"
+	JobEventFailed    JobEventType = "failed"
+	JobEventCancelled JobEventType = "cancelled"
+	JobEventRetried   JobEventType = "retried"
 )
 
 // JobEventListener allows listening to job events

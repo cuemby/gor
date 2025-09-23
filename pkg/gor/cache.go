@@ -96,25 +96,25 @@ type CacheConfig struct {
 	Database DatabaseCacheConfig `yaml:"database"`
 
 	// Global settings
-	DefaultTTL     time.Duration `yaml:"default_ttl"`
+	DefaultTTL      time.Duration `yaml:"default_ttl"`
 	CleanupInterval time.Duration `yaml:"cleanup_interval"`
-	MaxKeyLength   int           `yaml:"max_key_length"`
-	Compression    bool          `yaml:"compression"`
-	Encryption     bool          `yaml:"encryption"`
+	MaxKeyLength    int           `yaml:"max_key_length"`
+	Compression     bool          `yaml:"compression"`
+	Encryption      bool          `yaml:"encryption"`
 }
 
 type MemoryCacheConfig struct {
-	Enabled    bool          `yaml:"enabled"`
-	MaxSize    int64         `yaml:"max_size"`    // in bytes
-	MaxKeys    int           `yaml:"max_keys"`
-	TTL        time.Duration `yaml:"ttl"`
-	EvictPolicy string       `yaml:"evict_policy"` // LRU, LFU, FIFO
+	Enabled     bool          `yaml:"enabled"`
+	MaxSize     int64         `yaml:"max_size"` // in bytes
+	MaxKeys     int           `yaml:"max_keys"`
+	TTL         time.Duration `yaml:"ttl"`
+	EvictPolicy string        `yaml:"evict_policy"` // LRU, LFU, FIFO
 }
 
 type DiskCacheConfig struct {
 	Enabled   bool          `yaml:"enabled"`
 	Directory string        `yaml:"directory"`
-	MaxSize   int64         `yaml:"max_size"`    // in bytes
+	MaxSize   int64         `yaml:"max_size"` // in bytes
 	TTL       time.Duration `yaml:"ttl"`
 	FileMode  uint32        `yaml:"file_mode"`
 	DirMode   uint32        `yaml:"dir_mode"`
@@ -157,7 +157,7 @@ type CacheWarmer interface {
 type CacheEvent struct {
 	Type      CacheEventType `json:"type"`
 	Key       string         `json:"key"`
-	Tier      string         `json:"tier"`      // memory, disk, database
+	Tier      string         `json:"tier"` // memory, disk, database
 	Size      int64          `json:"size"`
 	TTL       time.Duration  `json:"ttl"`
 	Duration  time.Duration  `json:"duration"`
@@ -168,14 +168,14 @@ type CacheEvent struct {
 type CacheEventType string
 
 const (
-	CacheHit        CacheEventType = "hit"
-	CacheMiss       CacheEventType = "miss"
-	CacheSet        CacheEventType = "set"
-	CacheDelete     CacheEventType = "delete"
-	CacheEvict      CacheEventType = "evict"
-	CacheExpire     CacheEventType = "expire"
-	CachePromote    CacheEventType = "promote"    // move from lower to higher tier
-	CacheDemote     CacheEventType = "demote"     // move from higher to lower tier
+	CacheHit     CacheEventType = "hit"
+	CacheMiss    CacheEventType = "miss"
+	CacheSet     CacheEventType = "set"
+	CacheDelete  CacheEventType = "delete"
+	CacheEvict   CacheEventType = "evict"
+	CacheExpire  CacheEventType = "expire"
+	CachePromote CacheEventType = "promote" // move from lower to higher tier
+	CacheDemote  CacheEventType = "demote"  // move from higher to lower tier
 )
 
 // Cache strategies
@@ -234,8 +234,8 @@ type CacheMonitor interface {
 type AlertLevel string
 
 const (
-	AlertInfo    AlertLevel = "info"
-	AlertWarning AlertLevel = "warning"
-	AlertError   AlertLevel = "error"
+	AlertInfo     AlertLevel = "info"
+	AlertWarning  AlertLevel = "warning"
+	AlertError    AlertLevel = "error"
 	AlertCritical AlertLevel = "critical"
 )

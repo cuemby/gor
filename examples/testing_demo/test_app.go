@@ -3,7 +3,10 @@ package main
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
+	"io"
 	"net/http"
+	"strings"
 	"time"
 
 	gortest "github.com/cuemby/gor/internal/testing"
@@ -90,6 +93,54 @@ func NewMockRouter() *MockRouter {
 	}
 }
 
+// handleCreateArticle handles POST /articles with validation
+func (m *MockRouter) handleCreateArticle(w http.ResponseWriter, r *http.Request) {
+	// Parse request body
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Failed to read request body", http.StatusBadRequest)
+		return
+	}
+
+	// Parse JSON
+	var article map[string]interface{}
+	if err := json.Unmarshal(body, &article); err != nil {
+		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+
+	// Validate title
+	title, ok := article["title"]
+	if !ok {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Title is required"))
+		return
+	}
+
+	titleStr, ok := title.(string)
+	if !ok {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Title must be a string"))
+		return
+	}
+
+	titleStr = strings.TrimSpace(titleStr)
+	if titleStr == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Title is required"))
+		return
+	}
+
+	if len(titleStr) < 3 {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Title must be at least 3 characters"))
+		return
+	}
+
+	// If validation passes, return success
+	w.WriteHeader(http.StatusCreated)
+}
+
 func (m *MockRouter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	key := r.Method + ":" + r.URL.Path
 	if handler, ok := m.handlers[key]; ok {
@@ -101,7 +152,7 @@ func (m *MockRouter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("<h1>Test Article</h1>"))
 	} else if r.URL.Path == "/articles" && r.Method == http.MethodPost {
-		w.WriteHeader(http.StatusCreated)
+		m.handleCreateArticle(w, r)
 	} else if r.URL.Path == "/articles/1" && r.Method == http.MethodPut {
 		w.WriteHeader(http.StatusOK)
 	} else if r.URL.Path == "/articles/1" && r.Method == http.MethodDelete {

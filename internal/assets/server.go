@@ -11,12 +11,12 @@ import (
 
 // Server serves compiled assets
 type Server struct {
-	pipeline     *Pipeline
-	pathPrefix   string
-	maxAge       time.Duration
-	enableGzip   bool
-	enableCORS   bool
-	corsOrigins  []string
+	pipeline    *Pipeline
+	pathPrefix  string
+	maxAge      time.Duration
+	enableGzip  bool
+	enableCORS  bool
+	corsOrigins []string
 }
 
 // NewServer creates a new asset server
