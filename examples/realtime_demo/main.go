@@ -490,7 +490,7 @@ const homeHTML = `
 
             eventSource.addEventListener('notification', function(event) {
                 const data = JSON.parse(event.data);
-                addSSEMessage(`Notification: ${data.title} - ${data.message}`, 'notification');
+                addSSEMessage('Notification: ' + data.title + ' - ' + data.message, 'notification');
             });
 
             eventSource.addEventListener('progress', function(event) {
@@ -500,7 +500,7 @@ const homeHTML = `
 
             eventSource.addEventListener('data_update', function(event) {
                 const data = JSON.parse(event.data);
-                addSSEMessage(`Data Update: ${data.entity} ${data.action}`, 'message');
+                addSSEMessage('Data Update: ' + data.entity + ' ' + data.action, 'message');
             });
 
             eventSource.onerror = function(error) {
