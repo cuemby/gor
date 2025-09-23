@@ -155,9 +155,16 @@ func (c *Context) JSON(status int, data interface{}) error {
 
 // Render renders a template with data.
 func (c *Context) Render(template string, data interface{}) error {
-	// This will be properly implemented when we build the template engine
-	// For now, we'll just render JSON
+	// The actual rendering will be done by the view renderer
+	// which needs to be set by the application
+	// For now, fallback to JSON
 	return c.JSON(http.StatusOK, data)
+}
+
+// RenderView is a helper for rendering views with the template engine
+func (c *Context) RenderView(template string, data interface{}) error {
+	// This should be implemented by the application's view renderer
+	return c.Render(template, data)
 }
 
 // HTML renders an HTML response.

@@ -1,0 +1,27 @@
+<h1>User Details</h1>
+
+<div style="background: #f9f9f9; padding: 20px; border-radius: 5px; margin-top: 20px;">
+    <div style="margin-bottom: 15px;">
+        <strong>ID:</strong> {{.User.ID}}
+    </div>
+    <div style="margin-bottom: 15px;">
+        <strong>Name:</strong> {{.User.Name}}
+    </div>
+    <div style="margin-bottom: 15px;">
+        <strong>Email:</strong> {{.User.Email}}
+    </div>
+    <div style="margin-bottom: 15px;">
+        <strong>Bio:</strong> {{.User.Bio}}
+    </div>
+    <div style="margin-bottom: 15px;">
+        <strong>Created:</strong> {{.User.CreatedAt.Format "January 2, 2006 at 3:04 PM"}}
+    </div>
+    <div style="margin-bottom: 15px;">
+        <strong>Updated:</strong> {{.User.UpdatedAt.Format "January 2, 2006 at 3:04 PM"}}
+    </div>
+</div>
+
+<div style="margin-top: 30px;">
+    <a href="/users/{{.User.ID}}/edit" class="btn">Edit User</a>
+    <a href="/users" class="btn" style="background: #718096; margin-left: 10px;">Back to Users</a>
+</div>

@@ -1,0 +1,41 @@
+<h1>Users</h1>
+
+<div style="margin-bottom: 20px;">
+    <a href="/users/new" class="btn">New User</a>
+</div>
+
+{{if .Users}}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Bio</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .Users}}
+                <tr>
+                    <td>{{.ID}}</td>
+                    <td>{{.Name}}</td>
+                    <td>{{.Email}}</td>
+                    <td>{{.Bio}}</td>
+                    <td>{{.CreatedAt.Format "Jan 2, 2006"}}</td>
+                    <td>
+                        <a href="/users/{{.ID}}">Show</a> |
+                        <a href="/users/{{.ID}}/edit">Edit</a> |
+                        <form method="POST" action="/users/{{.ID}}/delete" style="display: inline;">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" style="background: none; border: none; color: #e53e3e; cursor: pointer;">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {{end}}
+        </tbody>
+    </table>
+{{else}}
+    <p>No users found. <a href="/users/new">Create the first user</a></p>
+{{end}}
