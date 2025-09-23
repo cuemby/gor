@@ -12,7 +12,9 @@
       "Bash(go run:*)",
       "Bash(curl:*)",
       "Bash(python3:*)",
-      "Bash(go get:*)"
+      "Bash(go get:*)",
+      "Bash(./gor --version)",
+      "Bash(./gor:*)"
     ],
     "deny": [],
     "ask": []
