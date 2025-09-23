@@ -40,13 +40,13 @@ type Plugin interface {
 
 // Metadata contains plugin metadata
 type Metadata struct {
-	Name        string   `json:"name"`
-	Version     string   `json:"version"`
-	Description string   `json:"description"`
-	Author      string   `json:"author"`
-	License     string   `json:"license"`
+	Name         string   `json:"name"`
+	Version      string   `json:"version"`
+	Description  string   `json:"description"`
+	Author       string   `json:"author"`
+	License      string   `json:"license"`
 	Dependencies []string `json:"dependencies"`
-	Tags        []string `json:"tags"`
+	Tags         []string `json:"tags"`
 }
 
 // Hook represents a plugin hook
@@ -97,14 +97,14 @@ type Middleware struct {
 
 // Manager manages plugins
 type Manager struct {
-	plugins   map[string]Plugin
-	loaded    map[string]bool
-	hooks     map[string][]Hook
-	commands  map[string]Command
-	routes    []Route
+	plugins    map[string]Plugin
+	loaded     map[string]bool
+	hooks      map[string][]Hook
+	commands   map[string]Command
+	routes     []Route
 	middleware []Middleware
-	app       gor.Application
-	mu        sync.RWMutex
+	app        gor.Application
+	mu         sync.RWMutex
 }
 
 // NewManager creates a new plugin manager

@@ -215,7 +215,7 @@ func (r *Registry) Update(name string) error {
 	}
 
 	// Find latest version
-	latestInfo, repo, err := r.findPlugin(name, "latest")
+	latestInfo, _, err := r.findPlugin(name, "latest")
 	if err != nil {
 		return err
 	}
