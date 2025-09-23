@@ -77,6 +77,7 @@ func (c *NewCommand) createDirectoryStructure(appPath string) error {
 		"app/models",
 		"app/views/layouts",
 		"app/views/shared",
+		"app/views/home",
 		"app/jobs",
 		"app/mailers",
 		"app/channels",

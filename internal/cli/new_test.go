@@ -52,13 +52,13 @@ func TestNewCommand_Run(t *testing.T) {
 		},
 		{
 			name:       "directory exists",
-			args:       []string{"myapp"},
+			args:       []string{"existingapp"},
 			wantError:  true,
 			fileExists: true,
 		},
 		{
 			name:      "create new app",
-			args:      []string{"myapp"},
+			args:      []string{"newapp"},
 			wantError: false,
 		},
 	}
@@ -77,15 +77,16 @@ func TestNewCommand_Run(t *testing.T) {
 
 			if !tt.wantError && len(tt.args) > 0 {
 				// Check key files were created
+				appName := tt.args[0]
 				expectedFiles := []string{
-					"myapp/go.mod",
-					"myapp/main.go",
-					"myapp/config/application.go",
-					"myapp/config/routes.go",
-					"myapp/app/controllers/application_controller.go",
-					"myapp/app/models/application_record.go",
-					"myapp/Gorfile",
-					"myapp/README.md",
+					appName + "/go.mod",
+					appName + "/main.go",
+					appName + "/config/application.go",
+					appName + "/config/routes.go",
+					appName + "/app/controllers/application_controller.go",
+					appName + "/app/models/application_record.go",
+					appName + "/Gorfile",
+					appName + "/README.md",
 				}
 
 				for _, file := range expectedFiles {
