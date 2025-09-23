@@ -5,6 +5,7 @@ package gor
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"time"
 )
@@ -42,6 +43,7 @@ type Application interface {
 
 // Router defines the HTTP routing interface following Rails-style conventions.
 type Router interface {
+	http.Handler // Router must implement ServeHTTP to handle requests
 	// RESTful resource routing
 	Resources(name string, controller Controller) Router
 	Resource(name string, controller Controller) Router
@@ -118,6 +120,16 @@ type Context struct {
 	app Application
 }
 
+// SetApp sets the application reference in the context
+func (c *Context) SetApp(app Application) {
+	c.app = app
+}
+
+// App returns the application instance
+func (c *Context) App() Application {
+	return c.app
+}
+
 // Param returns a route parameter value.
 func (c *Context) Param(key string) string {
 	return c.Params[key]
@@ -134,14 +146,34 @@ func (c *Context) QueryParam(key string) string {
 
 // JSON renders a JSON response.
 func (c *Context) JSON(status int, data interface{}) error {
-	// Implementation will be added in router package
-	return nil
+	c.Response.Header().Set("Content-Type", "application/json")
+	c.Response.WriteHeader(status)
+
+	encoder := json.NewEncoder(c.Response)
+	return encoder.Encode(data)
 }
 
 // Render renders a template with data.
 func (c *Context) Render(template string, data interface{}) error {
-	// Implementation will be added in views package
-	return nil
+	// This will be properly implemented when we build the template engine
+	// For now, we'll just render JSON
+	return c.JSON(http.StatusOK, data)
+}
+
+// HTML renders an HTML response.
+func (c *Context) HTML(status int, html string) error {
+	c.Response.Header().Set("Content-Type", "text/html; charset=utf-8")
+	c.Response.WriteHeader(status)
+	_, err := c.Response.Write([]byte(html))
+	return err
+}
+
+// Text renders a plain text response.
+func (c *Context) Text(status int, text string) error {
+	c.Response.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	c.Response.WriteHeader(status)
+	_, err := c.Response.Write([]byte(text))
+	return err
 }
 
 // Redirect performs an HTTP redirect.

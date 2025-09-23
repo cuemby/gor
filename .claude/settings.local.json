@@ -9,7 +9,9 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(go mod:*)",
-      "Bash(go run:*)"
+      "Bash(go run:*)",
+      "Bash(curl:*)",
+      "Bash(python3:*)"
     ],
     "deny": [],
     "ask": []
