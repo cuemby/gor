@@ -156,6 +156,7 @@ coverage.html
 coverage.out
 *.coverprofile
 /coverage/*
+/coverage_output/*
 
 # Benchmarks
 *.bench

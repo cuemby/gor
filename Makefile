@@ -9,8 +9,8 @@ INTERNAL_DIR := ./internal/...
 EXAMPLES_DIR := ./examples
 BUILD_DIR := ./build
 BIN_DIR := ./bin
-COVERAGE_FILE := coverage.out
-COVERAGE_HTML := coverage.html
+COVERAGE_FILE := coverage_output/coverage.out
+COVERAGE_HTML := coverage_output/coverage.html
 
 # Go commands
 GO := go
@@ -94,7 +94,7 @@ clean: ## Clean build artifacts and temporary files
 	@echo "$(YELLOW)Cleaning build artifacts...$(NC)"
 	@$(GOCLEAN)
 	@rm -rf $(BUILD_DIR) $(BIN_DIR)
-	@rm -f $(COVERAGE_FILE) $(COVERAGE_HTML)
+	@rm -rf coverage_output
 	@rm -f $(EXAMPLES_DIR)/*/*.test
 	@rm -f $(EXAMPLES_DIR)/*/$(shell basename $(EXAMPLES_DIR)/*)
 	@find . -name "*.db" -type f -delete 2>/dev/null || true
@@ -118,6 +118,7 @@ test-verbose: ## Run tests with verbose output
 .PHONY: test-coverage
 test-coverage: ## Generate test coverage report
 	@echo "$(GREEN)Running tests with coverage...$(NC)"
+	@mkdir -p coverage_output
 	@$(GOTEST) -coverprofile=$(COVERAGE_FILE) -covermode=atomic ./...
 	@$(GOCMD) tool cover -html=$(COVERAGE_FILE) -o $(COVERAGE_HTML)
 	@echo "$(GREEN)Coverage report generated: $(COVERAGE_HTML)$(NC)"

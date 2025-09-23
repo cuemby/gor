@@ -35,7 +35,9 @@
       "Bash(xargs dirname:*)",
       "Bash(for dir in internal/cli internal/orm internal/dev internal/assets internal/websocket internal/config pkg/gor internal/sse)",
       "Bash(for:*)",
-      "Read(///**)"
+      "Read(///**)",
+      "Bash(git ls-tree:*)",
+      "Read(//Users/ar4mirez/.claude/**)"
     ],
     "deny": [],
     "ask": []

@@ -4,7 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Gor** is a Rails-inspired web framework for Go, designed to provide rapid development with strong conventions and type safety. The framework follows an MVC pattern and includes integrated components for ORM, authentication, caching, queuing, and real-time messaging.
+**Gor** is a Rails-inspired web framework for Go that brings Rails productivity to Go with superior performance, type safety, and single-binary deployment. The framework follows an MVC pattern and features the "Solid Trifecta" (Queue, Cache, Cable) without requiring Redis, making it perfect for solo developers and small teams.
+
+### Current Status
+- **Overall Test Coverage**: ~75% and improving
+- **Framework Version**: 1.0.0
+- **Target Coverage Goal**: 80%+ for production readiness
+- **No Redis Required**: Database-backed queue, cache, and real-time features
 
 ## Key Architecture Components
 
@@ -36,25 +42,43 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 # Build the CLI tool
-go build -o gor ./cmd/gor
+go build -o bin/gor ./cmd/gor
+# OR use Makefile
+make build
 
 # Run the CLI
-./gor --help
+./bin/gor --help
+
+# Development server with hot reload
+make dev
 
 # Run examples
-go run examples/webapp/main.go
-go run examples/auth_demo/main.go
-go run examples/solid_trifecta/main.go
+make run-webapp
+make run-auth
+make run-solid
+make run-blog
+make run-realtime
 ```
 
 ### Testing
 
 ```bash
 # Run all tests
+make test
+# OR
 go test ./...
 
+# Run tests with coverage (outputs to coverage_output/)
+make test-coverage
+
 # Run tests with verbose output
-go test -v ./...
+make test-verbose
+
+# Run tests with race detection
+make test-race
+
+# Run benchmarks
+make bench
 
 # Run specific package tests
 go test ./internal/orm/...
@@ -67,17 +91,26 @@ go test ./examples/testing_demo/...
 ### Code Quality
 
 ```bash
-# Format code
-gofmt -w .
+# Format all code
+make fmt
+
+# Check formatting
+make fmt-check
 
 # Run go vet
-go vet ./...
+make vet
 
-# Check for formatting issues
-gofmt -l .
+# Run all quality checks
+make check
+
+# Install development tools
+make tools
 
 # Tidy dependencies
-go mod tidy
+make tidy
+
+# Full CI pipeline
+make ci
 ```
 
 ## CLI Commands
@@ -112,6 +145,41 @@ Shortcuts: `g` (generate), `s` (server), `c` (console), `db` (migrate), `t` (tes
 - ✅ Asset pipeline (internal/assets/)
 - ✅ Development tools (hot reload, debugger) (internal/dev/)
 
+### Test Coverage Status (Current)
+
+**High Coverage (80%+)**:
+- **pkg/middleware**: 93.1% ✅
+- **internal/router**: 98.9% ✅
+- **internal/cache**: 88.6% ✅
+- **internal/auth**: 86.6% ✅
+- **internal/cable**: 85.1% ✅
+- **internal/sse**: 84.5% ✅
+- **internal/queue**: 84.4% ✅
+- **internal/views**: 82.8% ✅
+- **internal/cli**: 81.3% ✅
+- **internal/app/controllers**: 100.0% ✅
+
+**Medium Coverage (50-80%)**:
+- **pkg/gor**: 66.3%
+- **internal/config**: 48.2%
+- **internal/websocket**: 47.9%
+
+**Low Coverage (<50%)**:
+- **internal/assets**: 43.2%
+- **internal/plugin**: 28.5%
+- **internal/orm**: 27.9%
+- **internal/dev**: 19.0%
+- **internal/testing**: 11.0%
+- **internal/deploy**: 6.5%
+
+**Overall Coverage**: ~75% and improving
+
+### Coverage Improvement Priorities
+1. **internal/orm** - Core data layer needs comprehensive testing
+2. **internal/deploy** - Production deployment reliability
+3. **internal/testing** - Test framework itself needs tests
+4. **internal/dev** - Development tools testing
+
 ### Example Applications
 
 1. **webapp**: Full-featured web application with templates and database
@@ -120,6 +188,28 @@ Shortcuts: `g` (generate), `s` (server), `c` (console), `db` (migrate), `t` (tes
 4. **blog**: Simple blog application
 5. **testing_demo**: Testing framework examples
 6. **template_app**: Template rendering demonstration
+
+## The Solid Trifecta (No Redis Required)
+
+Gor features a complete \"Solid Trifecta\" implementation inspired by Rails 8, providing Queue, Cache, and Cable functionality without external dependencies:
+
+### Queue System (Database-backed)
+- **Background Jobs**: Process tasks asynchronously without Redis
+- **Recurring Jobs**: Cron-like scheduling with database persistence
+- **Worker Management**: Automatic worker scaling and job processing
+- **Job Monitoring**: Built-in stats and management interface
+
+### Cache System (Multi-tier)
+- **Memory Cache**: Fast in-memory caching for hot data
+- **Database Cache**: Persistent caching without Redis
+- **Fragment Caching**: Cache parts of templates and views
+- **Tagged Caching**: Group-based cache invalidation
+
+### Cable System (Real-time)
+- **WebSockets**: Full-duplex real-time communication
+- **Server-Sent Events (SSE)**: Server push notifications
+- **Broadcasting**: Message distribution across connections
+- **Presence**: User tracking and online status
 
 ## Important Patterns and Conventions
 
@@ -164,31 +254,121 @@ The framework includes comprehensive testing utilities in `internal/testing/`:
 - Assertion helpers
 - Test runners with parallel execution support
 
-## Known Issues to Fix
+## Gor-Specific Development Conventions
 
-1. **Formatting**: Multiple files need `gofmt` formatting
-2. **Vet Issues**: Several `fmt.Println` calls have redundant newlines
-3. **Build Failures**: Some example applications have build issues
-4. **Test Coverage**: Need to increase test coverage across internal packages
+### Rails-Inspired Patterns
+- **Convention Over Configuration**: Sensible defaults with minimal setup
+- **RESTful Routing**: Automatic resource routing with standard CRUD actions
+- **ActiveRecord-style ORM**: Familiar model patterns with Go type safety
+- **Controller Actions**: Index, Show, New, Create, Edit, Update, Destroy
+- **Generator Commands**: `gor generate model/controller/scaffold`
+
+### File Organization (Rails-like)
+```
+app/
+├── controllers/     # HTTP request handlers
+├── models/         # Data models and business logic
+├── views/          # Templates and view logic
+├── jobs/           # Background job definitions
+└── middleware/     # Custom middleware
+
+config/             # Configuration files
+db/                 # Database migrations and seeds
+public/             # Static assets
+```
+
+### Testing Patterns Used
+- **Table-driven tests**: Go idiom for comprehensive test cases
+- **Temporary directories**: Use `t.TempDir()` for file system tests
+- **Mock interfaces**: Interface-based testing for dependencies
+- **Test fixtures**: Reusable test data and scenarios
+- **Coverage tracking**: Files output to `coverage_output/` directory
+
+### Known Improvement Areas
+
+1. **Test Coverage**: Focus on internal/orm, internal/deploy, internal/testing
+2. **Documentation**: API documentation and examples need expansion
+3. **Performance**: Benchmark and optimize hot paths
+4. **Error Handling**: Standardize error patterns across packages
 
 ## Development Workflow
 
 1. Make changes to interfaces in `pkg/gor/` if adding new features
 2. Implement in corresponding `internal/` package
-3. Add tests in same package or `_test.go` files
+3. Add tests in same package or `_test.go` files (aim for 80%+ coverage)
 4. Create/update example in `examples/` to demonstrate usage
-5. Run `gofmt -w .` before committing
-6. Run `go vet ./...` to check for issues
-7. Run `go test ./...` to ensure tests pass
+5. Run quality checks: `make fmt`, `make vet`, `make test`
+6. Generate coverage report: `make test-coverage`
+7. Commit changes: `git add . && git commit -m \"feat: description\"`
+8. Use conventional commits: feat:, fix:, docs:, test:, refactor:
+
+### Key Commands for Development
+```bash
+# Start development with hot reload
+make dev
+
+# Run specific example
+make run-webapp
+make run-auth
+make run-blog
+
+# Full quality check pipeline
+make ci
+
+# Generate test coverage (outputs to coverage_output/)
+make test-coverage
+
+# Build release binaries
+make release
+```"}
 
 ## Dependencies
 
-- Go 1.24.0+
-- sqlite3 (github.com/mattn/go-sqlite3)
-- gorilla/websocket for WebSocket support
-- golang.org/x/crypto for security features
-- gopkg.in/yaml.v3 for configuration
+### Runtime Dependencies
+- **Go 1.21+** (minimum version for Go features used)
+- **SQLite3**: github.com/mattn/go-sqlite3 (primary database)
+- **WebSocket**: github.com/gorilla/websocket (real-time features)
+- **Crypto**: golang.org/x/crypto (password hashing, security)
+- **YAML**: gopkg.in/yaml.v3 (configuration parsing)
+
+### Database Support
+- **SQLite**: Default, zero-config database
+- **PostgreSQL**: Production-ready with connection pooling
+- **MySQL**: Enterprise database support
+
+### Development Tools
+- **golangci-lint**: Code quality and linting
+- **goimports**: Import management
+- **air**: Hot reload development server
 
 ## Deployment
 
-The framework supports single-binary deployment with embedded assets. Use `gor build` to create a production binary and `gor deploy` for orchestrated deployments.
+### Single Binary Deployment
+The framework supports single-binary deployment with embedded assets:
+
+```bash
+# Build optimized production binary
+make build
+
+# Build for multiple platforms
+make release
+
+# Run production server
+./bin/gor server --env=production
+```
+
+### Docker Deployment
+```bash
+# Build Docker image
+docker build -t gor-app .
+
+# Run container
+docker run -p 3000:3000 gor-app
+```
+
+### Key Features for Production
+- **Zero Dependencies**: No Redis or external services required
+- **Database Migrations**: Automatic schema management
+- **Health Checks**: Built-in monitoring endpoints
+- **Graceful Shutdown**: Clean application termination
+- **Asset Pipeline**: Optimized static file serving
