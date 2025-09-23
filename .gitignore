@@ -270,3 +270,4 @@ vgcore.*
 !/**/.keep
 !/**/.gitkeepblog
 realtime_demo
+.claude/
