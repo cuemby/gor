@@ -18,7 +18,9 @@ The project is currently maintained by:
 ### Roles and Responsibilities
 
 #### Core Maintainers
+
 **Responsibilities:**
+
 - Technical direction and architecture decisions
 - Code review and merge authority
 - Release planning and management
@@ -26,29 +28,36 @@ The project is currently maintained by:
 - Security response coordination
 
 **Current Core Maintainers:**
+
 - To be determined as the project grows
 
 #### Contributors
+
 **Responsibilities:**
+
 - Submit pull requests and improvements
 - Report bugs and suggest features
 - Help with documentation and examples
 - Support community members
 
 **How to Become a Contributor:**
+
 - Follow the [Contributing Guidelines](CONTRIBUTING.md)
 - Submit quality pull requests
 - Engage positively with the community
 - Help maintain and improve the project
 
 #### Committers
+
 **Responsibilities:**
+
 - Regular significant contributions to the codebase
 - Code review and mentoring
 - Issue triage and community support
 - Technical leadership in specific areas
 
 **How to Become a Committer:**
+
 - Demonstrate sustained high-quality contributions
 - Show expertise in specific project areas
 - Exhibit good judgment in technical decisions
@@ -70,12 +79,14 @@ Gor follows a consensus-based decision-making model:
 ### Types of Decisions
 
 #### Technical Decisions
+
 - **Architecture changes**: Require maintainer consensus
 - **API changes**: Require community discussion and maintainer approval
 - **Breaking changes**: Require RFC process and migration planning
 - **Feature additions**: Require design discussion and implementation plan
 
 #### Administrative Decisions
+
 - **Governance changes**: Require unanimous maintainer agreement
 - **Code of conduct enforcement**: Handled by designated moderators
 - **Release planning**: Led by release manager with maintainer input
@@ -143,7 +154,7 @@ All community members must adhere to our [Code of Conduct](CODE_OF_CONDUCT.md).
 - **GitHub Issues**: Bug reports and feature requests
 - **GitHub Discussions**: General discussions and questions
 - **Pull Requests**: Code contributions and reviews
-- **Security Email**: security@cuemby.com for security issues
+- **Security Email**: <security@cuemby.com> for security issues
 
 ### Community Events
 
@@ -156,6 +167,7 @@ All community members must adhere to our [Code of Conduct](CODE_OF_CONDUCT.md).
 ### Current Phase: 1.0 Stabilization
 
 **Goals:**
+
 - Achieve 80%+ test coverage
 - Complete API stabilization
 - Comprehensive documentation
@@ -166,12 +178,14 @@ All community members must adhere to our [Code of Conduct](CODE_OF_CONDUCT.md).
 ### Future Phases
 
 **Phase 2: Ecosystem Growth**
+
 - Plugin system expansion
 - Third-party integrations
 - Community extensions
 - Performance optimizations
 
 **Phase 3: Enterprise Features**
+
 - Advanced monitoring and observability
 - Scalability improvements
 - Enterprise deployment guides
@@ -189,6 +203,7 @@ All community members must adhere to our [Code of Conduct](CODE_OF_CONDUCT.md).
 ### Appeal Process
 
 Community members can appeal decisions by:
+
 1. Submitting formal appeal with reasoning
 2. Requesting review by different maintainers
 3. Presenting case to full maintainer team
@@ -236,6 +251,7 @@ This governance document is reviewed annually and updated as needed.
 ### Maintainer Emeritus
 
 Former maintainers who have stepped down are recognized as Maintainer Emeritus with:
+
 - Continued recognition in project documentation
 - Advisory role in major decisions (if desired)
 - Invitation to community events and discussions
@@ -251,9 +267,9 @@ Former maintainers who have stepped down are recognized as Maintainer Emeritus w
 ### General Contact
 
 - **General inquiries**: Open GitHub discussion
-- **Security issues**: security@cuemby.com
-- **Legal/licensing**: legal@cuemby.com
-- **Business partnerships**: partnerships@cuemby.com
+- **Security issues**: <security@cuemby.com>
+- **Legal/licensing**: <legal@cuemby.com>
+- **Business partnerships**: <partnerships@cuemby.com>
 
 ---
 
@@ -262,6 +278,7 @@ Former maintainers who have stepped down are recognized as Maintainer Emeritus w
 This section maintains a record of major governance decisions:
 
 ### 2025-01-23: Initial Governance Structure
+
 - Established initial governance framework
 - Defined roles and responsibilities
 - Set up decision-making processes
