@@ -83,7 +83,7 @@ gor generate model Post title:string body:text published:bool author_id:int
 
 This generates:
 - `app/models/post.go` - Model definition
-- `db/migrations/XXX_create_posts.go` - Migration file
+- `db/migrations/[timestamp]_create_posts.go` - Migration file
 
 ### 4. Run Migrations
 

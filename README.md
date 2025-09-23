@@ -1,6 +1,29 @@
 # Gor - Rails-Inspired Web Framework for Go
 
+[![Go Version](https://img.shields.io/badge/Go-1.21+-blue.svg)](https://go.dev)
+[![Test Coverage](https://img.shields.io/badge/coverage-75%25-yellow.svg)](./coverage.out)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
+[![Build Status](https://img.shields.io/badge/build-passing-green.svg)](./actions)
+
 Gor is a "batteries included" web framework for Go, inspired by Ruby on Rails's productivity-focused approach while leveraging Go's performance, type safety, and concurrency advantages.
+
+## Quick Start
+
+```bash
+# Install Gor CLI
+go install github.com/cuemby/gor/cmd/gor@latest
+
+# Create and run your first app
+gor new myapp && cd myapp
+gor server
+# Visit http://localhost:3000
+```
+
+## Documentation
+
+- [Getting Started Guide](./docs/getting-started.md) - Step-by-step tutorial
+- [API Reference](./docs/api.md) - Complete API documentation
+- [Examples](./examples/) - Sample applications demonstrating features
 
 ## Overview
 
@@ -136,7 +159,7 @@ gor/
 - ✅ **Configuration**: Environment-based configuration
 - ✅ **Plugin System**: Dynamic plugin loading and management
 
-## Getting Started (Planned)
+## Getting Started
 
 ```bash
 # Install Gor CLI
