@@ -95,6 +95,7 @@ Gor aims to provide solo developers and small teams with the same rapid developm
 
 ## Directory Structure
 
+```shell
 gor/
 ├── cmd/gor/                 # CLI tool and generators
 ├── pkg/
@@ -118,6 +119,7 @@ gor/
 │   └── deployment/          # Deployment tools
 ├── examples/                # Example applications
 └── docs/                    # Documentation
+```
 
 ## Key Features Planned
 
