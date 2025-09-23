@@ -6,7 +6,10 @@
       "Bash(tree:*)",
       "Bash(go build:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(go mod:*)",
+      "Bash(go run:*)"
     ],
     "deny": [],
     "ask": []

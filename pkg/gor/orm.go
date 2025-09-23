@@ -260,4 +260,5 @@ type DatabaseAdapter interface {
 	GenerateSQL(query QueryBuilder) (string, []interface{}, error)
 	ColumnType(column Column) string
 	IndexSQL(index Index) string
+	CreateTableSQL(tableName string, columns []Column) string
 }
