@@ -1,48 +1,61 @@
-name: SLSA Go Releaser
+name: SLSA Provenance
 
 on:
-  release:
-    types: [published]
+  workflow_run:
+    workflows: ["Release"]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Release tag'
-        required: true
-        type: string
 
 permissions:
   contents: read
 
 jobs:
-  # Generate SLSA provenance using the slsa-framework/slsa-github-generator.
-  # The provenance file can be verified using https://github.com/slsa-framework/slsa-verifier.
-  # For more information about SLSA and how it improves the software supply chain, visit slsa.dev.
-  provenance:
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_go_slsa3.yml@v2.0.0
-    with:
-      go-version-file: "go.mod"
-      # Optional: only needed if using ldflags.
-      evaluated-envs: "COMMIT:${{github.sha}}, BRANCH:${{github.ref_name}}, VERSION:${{github.ref_name}}"
-
-  upload-assets:
-    permissions:
-      contents: write
+  # Get the release data to obtain checksums for SLSA provenance
+  get-checksums:
     runs-on: ubuntu-latest
-    needs: [provenance]
+    if: github.event.workflow_run.conclusion == 'success'
+    outputs:
+      hashes: ${{ steps.hash.outputs.hashes }}
+      tag: ${{ steps.tag.outputs.tag }}
     steps:
-      - name: Download assets
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ needs.provenance.outputs.go-binary-name }}
+      - name: Get release tag
+        id: tag
+        run: |
+          # Get the tag from the workflow that triggered this
+          TAG=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                     "https://api.github.com/repos/${{ github.repository }}/releases/latest" | \
+                     jq -r .tag_name)
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
 
-      - name: Download provenance
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ needs.provenance.outputs.go-provenance-name }}
+      - name: Download release assets
+        run: |
+          # Download all assets from the latest release
+          TAG="${{ steps.tag.outputs.tag }}"
+          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+               "https://api.github.com/repos/${{ github.repository }}/releases/tags/$TAG" | \
+               jq -r '.assets[] | select(.name | test("gor-.*-.*$"; "g")) | .browser_download_url' | \
+               xargs -I {} curl -L -O {}
 
-      - name: Upload assets to release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            ${{ needs.provenance.outputs.go-binary-name }}
-            ${{ needs.provenance.outputs.go-provenance-name }}
+      - name: Generate hashes for SLSA
+        id: hash
+        run: |
+          # Generate checksums for all downloaded binaries
+          find . -name "gor-*" -type f ! -name "*.tar.gz" ! -name "*.zip" | sort | xargs sha256sum > checksums.txt
+          echo "Generated checksums:"
+          cat checksums.txt
+
+          # Create base64 encoded hashes for SLSA
+          echo "hashes=$(cat checksums.txt | base64 -w0)" >> $GITHUB_OUTPUT
+
+  # Generate SLSA provenance using the generic generator
+  provenance:
+    needs: [get-checksums]
+    permissions:
+      actions: read
+      id-token: write
+      contents: write
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.0.0
+    with:
+      base64-subjects: "${{ needs.get-checksums.outputs.hashes }}"
+      upload-assets: true

@@ -98,6 +98,9 @@ jobs:
           -o $BINARY_NAME \
           ./cmd/gor
 
+        # Generate checksum for SLSA
+        sha256sum $BINARY_NAME > $BINARY_NAME.sha256
+
     - name: Create package
       run: |
         # Set binary and package names
@@ -121,8 +124,35 @@ jobs:
           gor-${{ matrix.goos }}-${{ matrix.goarch }}*
         retention-days: 1
 
+  checksums:
+    needs: [build]
+    runs-on: ubuntu-latest
+    outputs:
+      hashes: ${{ steps.hash.outputs.hashes }}
+    steps:
+    - name: Download all build artifacts
+      uses: actions/download-artifact@v4
+
+    - name: Generate combined checksums for SLSA
+      id: hash
+      run: |
+        # Find all binaries and generate combined checksums
+        find . -name "gor-*" -type f ! -name "*.sha256" ! -name "*.tar.gz" ! -name "*.zip" | sort > binaries.txt
+
+        # Generate checksums for all binaries
+        while read binary; do
+          sha256sum "$binary"
+        done < binaries.txt > checksums.txt
+
+        # Create base64 encoded hashes for SLSA
+        echo "hashes=$(cat checksums.txt | base64 -w0)" >> $GITHUB_OUTPUT
+
+        # Show what we generated
+        echo "Generated checksums:"
+        cat checksums.txt
+
   release:
-    needs: [changelog, build]
+    needs: [changelog, build, checksums]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -151,7 +181,7 @@ jobs:
   docker:
     needs: [build]
     runs-on: ubuntu-latest
-    if: "!contains(github.ref_name, '-')" # Only for stable releases
+    if: ${{ !contains(github.ref_name, '-') }} # Only for stable releases
     steps:
     - name: Checkout
       uses: actions/checkout@v4
