@@ -2,11 +2,13 @@ package dev
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"os"
 	"reflect"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/cuemby/gor/pkg/gor"
 )
@@ -287,7 +289,7 @@ func (c *Console) runMigrations() {
 	}
 
 	fmt.Println("Running migrations...")
-	if err := c.app.ORM().Migrate(); err != nil {
+	if err := c.app.ORM().Migrate(context.Background()); err != nil {
 		fmt.Printf("Migration failed: %v\n", err)
 	} else {
 		fmt.Println("Migrations completed successfully")
@@ -302,7 +304,7 @@ func (c *Console) rollbackMigrations() {
 	}
 
 	fmt.Println("Rolling back migrations...")
-	if err := c.app.ORM().Rollback(); err != nil {
+	if err := c.app.ORM().Rollback(context.Background(), 1); err != nil {
 		fmt.Printf("Rollback failed: %v\n", err)
 	} else {
 		fmt.Println("Rollback completed successfully")
@@ -322,7 +324,7 @@ func (c *Console) cacheCommand(args []string) {
 	switch action {
 	case "get":
 		if len(args) >= 2 {
-			value, err := cache.Get(args[1])
+			value, err := cache.Get(context.Background(), args[1])
 			if err != nil {
 				fmt.Printf("Error: %v\n", err)
 			} else {
@@ -334,7 +336,7 @@ func (c *Console) cacheCommand(args []string) {
 
 	case "set":
 		if len(args) >= 3 {
-			err := cache.Set(args[1], args[2], 0)
+			err := cache.Set(context.Background(), args[1], args[2], 5*time.Minute)
 			if err != nil {
 				fmt.Printf("Error: %v\n", err)
 			} else {
@@ -346,7 +348,7 @@ func (c *Console) cacheCommand(args []string) {
 
 	case "delete":
 		if len(args) >= 2 {
-			err := cache.Delete(args[1])
+			err := cache.Delete(context.Background(), args[1])
 			if err != nil {
 				fmt.Printf("Error: %v\n", err)
 			} else {
@@ -357,7 +359,7 @@ func (c *Console) cacheCommand(args []string) {
 		}
 
 	case "clear":
-		err := cache.Clear()
+		err := cache.Clear(context.Background())
 		if err != nil {
 			fmt.Printf("Error: %v\n", err)
 		} else {
@@ -378,12 +380,17 @@ func (c *Console) queueCommand(args []string) {
 
 	switch action {
 	case "status":
-		status := queue.Status()
+		stats, err := queue.Stats(context.Background())
+		if err != nil {
+			fmt.Printf("Error getting queue stats: %v\n", err)
+			return
+		}
 		fmt.Printf("Queue Status:\n")
-		fmt.Printf("  Pending:    %d\n", status.Pending)
-		fmt.Printf("  Processing: %d\n", status.Processing)
-		fmt.Printf("  Completed:  %d\n", status.Completed)
-		fmt.Printf("  Failed:     %d\n", status.Failed)
+		// Display total stats
+		fmt.Printf("  Pending:    %d\n", stats.Total.Pending)
+		fmt.Printf("  Processing: %d\n", stats.Total.Processing)
+		fmt.Printf("  Completed:  %d\n", stats.Total.Completed)
+		fmt.Printf("  Failed:     %d\n", stats.Total.Failed)
 
 	case "enqueue":
 		if len(args) >= 2 {

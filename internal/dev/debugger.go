@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	_ "net/http/pprof"
 	"runtime"
 	"runtime/debug"
 	"runtime/pprof"
@@ -88,11 +89,21 @@ func (d *Debugger) Start() error {
 	mux.HandleFunc("/api/goroutines", d.handleGoroutines)
 
 	// Profiling endpoints
-	mux.HandleFunc("/debug/pprof/", pprof.Index)
-	mux.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
-	mux.HandleFunc("/debug/pprof/profile", pprof.Profile)
-	mux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
-	mux.HandleFunc("/debug/pprof/trace", pprof.Trace)
+	mux.HandleFunc("/debug/pprof/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.DefaultServeMux.ServeHTTP(w, r)
+	}))
+	mux.HandleFunc("/debug/pprof/cmdline", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.DefaultServeMux.ServeHTTP(w, r)
+	}))
+	mux.HandleFunc("/debug/pprof/profile", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.DefaultServeMux.ServeHTTP(w, r)
+	}))
+	mux.HandleFunc("/debug/pprof/symbol", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.DefaultServeMux.ServeHTTP(w, r)
+	}))
+	mux.HandleFunc("/debug/pprof/trace", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.DefaultServeMux.ServeHTTP(w, r)
+	}))
 
 	d.server = &http.Server{
 		Addr:    fmt.Sprintf(":%d", d.port),
@@ -257,37 +268,36 @@ func (d *Debugger) handleDebugUI(w http.ResponseWriter, r *http.Request) {
 		}
 		
 		function formatMetrics(data) {
-			return `
-				<div class="metric">
-					<div class="metric-label">Requests</div>
-					<div class="metric-value">${data.request_count}</div>
-				</div>
-				<div class="metric">
-					<div class="metric-label">Errors</div>
-					<div class="metric-value">${data.error_count}</div>
-				</div>
-				<div class="metric">
-					<div class="metric-label">Goroutines</div>
-					<div class="metric-value">${data.goroutines}</div>
-				</div>
-				<div class="metric">
-					<div class="metric-label">Memory (MB)</div>
-					<div class="metric-value">${Math.round(data.memory_stats.Alloc / 1048576)}</div>
-				</div>
-			`;
+			return '' +
+				'<div class="metric">' +
+					'<div class="metric-label">Requests</div>' +
+					'<div class="metric-value">' + data.request_count + '</div>' +
+				'</div>' +
+				'<div class="metric">' +
+					'<div class="metric-label">Errors</div>' +
+					'<div class="metric-value">' + data.error_count + '</div>' +
+				'</div>' +
+				'<div class="metric">' +
+					'<div class="metric-label">Goroutines</div>' +
+					'<div class="metric-value">' + data.goroutines + '</div>' +
+				'</div>' +
+				'<div class="metric">' +
+					'<div class="metric-label">Memory (MB)</div>' +
+					'<div class="metric-value">' + Math.round(data.memory_stats.Alloc / 1048576) + '</div>' +
+				'</div>';
 		}
 		
 		function formatLogs(data) {
-			return data.map(log => 
-				`<div class="log-entry log-${log.level}">
-					<span>${new Date(log.time).toISOString()}</span> 
-					[${log.level}] ${log.message}
-				</div>`
-			).join('');
+			return data.map(function(log) {
+				return '<div class="log-entry log-' + log.level + '">' +
+					'<span>' + new Date(log.time).toISOString() + '</span> ' +
+					'[' + log.level + '] ' + log.message +
+				'</div>';
+			}).join('');
 		}
 		
 		// Auto-refresh
-		setInterval(() => {
+		setInterval(function() {
 			const activeTab = document.querySelector('.tab.active').textContent.toLowerCase();
 			loadData(activeTab);
 		}, 2000);
@@ -343,7 +353,10 @@ func (d *Debugger) handleHeap(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/octet-stream")
 	w.Header().Set("Content-Disposition", "attachment; filename=heap.prof")
 
-	pprof.WriteHeapProfile(w)
+	err := pprof.WriteHeapProfile(w)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 // handleGoroutines handles goroutines API
