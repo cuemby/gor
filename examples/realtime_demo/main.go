@@ -18,7 +18,7 @@ func main() {
 	fmt.Println("\n🌐 Gor Framework - Real-time Features Demo")
 	fmt.Println("===========================================")
 	fmt.Println("Visit http://localhost:8084")
-	fmt.Println("Press Ctrl+C to stop\n")
+	fmt.Println("Press Ctrl+C to stop")
 
 	// Initialize WebSocket hub
 	wsHub = websocket.NewHub()
@@ -131,12 +131,12 @@ func simulateActivity() {
 		counter++
 
 		// Send periodic updates via SSE
-		sseServer.SendProgress("", "background-task", (counter*10)%100, 
+		sseServer.SendProgress("", "background-task", (counter*10)%100,
 			fmt.Sprintf("Processing step %d", counter))
 
 		// Send periodic notifications
 		if counter%3 == 0 {
-			sseServer.SendNotification("", "System Update", 
+			sseServer.SendNotification("", "System Update",
 				fmt.Sprintf("Background task completed iteration %d", counter), "info")
 		}
 
