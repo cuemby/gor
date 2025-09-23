@@ -353,7 +353,7 @@ func main() {
 
 	// Start server
 	fmt.Println("\n🚀 Gor server starting on http://localhost:8080")
-	fmt.Println("   Press Ctrl+C to stop\n")
+	fmt.Println("   Press Ctrl+C to stop")
 
 	server := &http.Server{
 		Addr:    ":8080",

@@ -78,7 +78,7 @@ func main() {
 	fmt.Println("=======================================")
 	fmt.Println("Visit http://localhost:8082")
 	fmt.Println("Default admin: admin@example.com / admin123")
-	fmt.Println("Press Ctrl+C to stop\n")
+	fmt.Println("Press Ctrl+C to stop")
 
 	// Create router
 	app := &SimpleApp{}
