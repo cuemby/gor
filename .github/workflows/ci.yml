@@ -53,7 +53,7 @@ jobs:
 
     - name: Upload coverage to Codecov
       if: matrix.go-version == 'go.mod'
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       with:
         file: ./coverage_output/coverage.out
         flags: unittests
