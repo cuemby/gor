@@ -28,7 +28,10 @@
       "Bash(for dir in internal/*/)",
       "Bash(ls:*)",
       "Bash(done)",
-      "Bash(go tool cover:*)"
+      "Bash(go tool cover:*)",
+      "Bash(grep:*)",
+      "Bash(awk:*)",
+      "Bash(sort:*)"
     ],
     "deny": [],
     "ask": []
