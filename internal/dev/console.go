@@ -8,7 +8,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/ar4mirez/gor/pkg/gor"
+	"github.com/cuemby/gor/pkg/gor"
 )
 
 // Console provides an interactive REPL for debugging

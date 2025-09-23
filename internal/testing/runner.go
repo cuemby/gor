@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ar4mirez/gor/pkg/gor"
+	"github.com/cuemby/gor/pkg/gor"
 )
 
 // TestRunner manages test execution

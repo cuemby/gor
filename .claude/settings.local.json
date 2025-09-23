@@ -14,7 +14,11 @@
       "Bash(python3:*)",
       "Bash(go get:*)",
       "Bash(./gor --version)",
-      "Bash(./gor:*)"
+      "Bash(./gor:*)",
+      "WebFetch(domain:elysiajs.com)",
+      "Bash(git rm:*)",
+      "Bash(go test:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

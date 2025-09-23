@@ -8,7 +8,7 @@ import (
 	"plugin"
 	"sync"
 
-	"github.com/ar4mirez/gor/pkg/gor"
+	"github.com/cuemby/gor/pkg/gor"
 )
 
 // Plugin represents a Gor plugin

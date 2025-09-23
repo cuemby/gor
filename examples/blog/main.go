@@ -2,22 +2,25 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
+	"strconv"
+	"strings"
 	"syscall"
 	"time"
 
-	"github.com/ar4mirez/gor/internal/assets"
-	"github.com/ar4mirez/gor/internal/auth"
-	"github.com/ar4mirez/gor/internal/cable"
-	"github.com/ar4mirez/gor/internal/cache"
-	"github.com/ar4mirez/gor/internal/config"
-	"github.com/ar4mirez/gor/internal/orm"
-	"github.com/ar4mirez/gor/internal/queue"
-	"github.com/ar4mirez/gor/internal/router"
-	"github.com/ar4mirez/gor/internal/template"
-	"github.com/ar4mirez/gor/pkg/gor"
+	"github.com/cuemby/gor/internal/assets"
+	"github.com/cuemby/gor/internal/auth"
+	"github.com/cuemby/gor/internal/cable"
+	"github.com/cuemby/gor/internal/cache"
+	"github.com/cuemby/gor/internal/config"
+	"github.com/cuemby/gor/internal/orm"
+	"github.com/cuemby/gor/internal/queue"
+	"github.com/cuemby/gor/internal/router"
+	"github.com/cuemby/gor/internal/views"
+	"github.com/cuemby/gor/pkg/gor"
 )
 
 // Models
@@ -358,7 +361,7 @@ type BlogApplication struct {
 	cache    gor.Cache
 	cable    gor.Cable
 	auth     gor.Auth
-	template *template.Engine
+	template *views.TemplateEngine
 	assets   *assets.Pipeline
 	config   *config.Config
 }
@@ -420,7 +423,7 @@ func main() {
 		auth: auth.New(&auth.Config{
 			SessionKey: cfg.GetString("app.secret_key"),
 		}),
-		template: template.New("views"),
+		template: views.NewTemplateEngine("views", true),
 		assets: assets.New(&assets.Config{
 			PublicPath: "public",
 		}),

@@ -123,20 +123,20 @@ gor/
 
 ## Current Status
 
-✅ **Framework Architecture**: Core interfaces and principles defined
-✅ **ORM Layer**: Complete with migrations and multi-database support
-✅ **Router System**: RESTful routing with middleware chain
-✅ **Template Engine**: Rails-like templates with layouts and partials
-✅ **Solid Trifecta**: Queue, Cache, and Cable systems implemented
-✅ **Authentication**: Session and JWT auth with RBAC
-✅ **Asset Pipeline**: CSS/JS processing with fingerprinting
-✅ **CLI Tools**: Generators for models, controllers, and scaffolding
-✅ **Real-time Features**: WebSocket and SSE support
-✅ **Testing Framework**: Built-in testing utilities
-✅ **Deployment Tools**: Docker and orchestrator support
-✅ **Developer Experience**: Hot reload and debugging tools
-✅ **Configuration**: Environment-based configuration
-✅ **Plugin System**: Dynamic plugin loading and management
+- ✅ **Framework Architecture**: Core interfaces and principles defined
+- ✅ **ORM Layer**: Complete with migrations and multi-database support
+- ✅ **Router System**: RESTful routing with middleware chain
+- ✅ **Template Engine**: Rails-like templates with layouts and partials
+- ✅ **Solid Trifecta**: Queue, Cache, and Cable systems implemented
+- ✅ **Authentication**: Session and JWT auth with RBAC
+- ✅ **Asset Pipeline**: CSS/JS processing with fingerprinting
+- ✅ **CLI Tools**: Generators for models, controllers, and scaffolding
+- ✅ **Real-time Features**: WebSocket and SSE support
+- ✅ **Testing Framework**: Built-in testing utilities
+- ✅ **Deployment Tools**: Docker and orchestrator support
+- ✅ **Developer Experience**: Hot reload and debugging tools
+- ✅ **Configuration**: Environment-based configuration
+- ✅ **Plugin System**: Dynamic plugin loading and management
 
 ## Getting Started (Planned)
 

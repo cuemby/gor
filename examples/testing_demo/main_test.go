@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	gortest "github.com/ar4mirez/gor/internal/testing"
-	"github.com/ar4mirez/gor/pkg/gor"
+	gortest "github.com/cuemby/gor/internal/testing"
+	"github.com/cuemby/gor/pkg/gor"
 )
 
 // Example model for testing
@@ -450,9 +450,4 @@ func TestTransactions(t *testing.T) {
 	})
 }
 
-// Helper function to create test app
-func createTestApp() gor.Application {
-	// This would return your actual application instance
-	// configured for testing
-	return nil
-}
+// createTestApp is now defined in test_app.go
