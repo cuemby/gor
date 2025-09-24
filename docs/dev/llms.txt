@@ -22,50 +22,50 @@ A Rails-inspired web framework for Go that provides the rapid development experi
 
 ### Getting Started
 
-- [Quick Start Guide](./docs/getting-started.md) - Get up and running in 5 minutes
-- [Installation](./docs/getting-started.md#installation) - Install Gor CLI and dependencies
-- [Creating Your First App](./docs/getting-started.md#creating-your-first-application) - Step-by-step tutorial
-- [CLI Reference](./docs/cli-reference.md) - Complete command-line interface documentation
+- [Quick Start Guide](./docs/guides/getting-started.md) - Get up and running in 5 minutes
+- [Installation Guide](./docs/guides/installation.md) - Install Gor CLI and dependencies
+- [Creating Your First App](./docs/guides/first-app.md) - Step-by-step tutorial
+- [CLI Reference](./docs/api/cli-reference.md) - Complete command-line interface documentation
 - [Key Concepts](./README.md#core-philosophy) - MVC, conventions, and principles
-- [Development Workflow](./docs/getting-started.md#development-workflow) - Hot reload and productivity
+- [Development Workflow](./docs/guides/development-workflow.md) - Hot reload and productivity
 
 ### Core Framework
 
-- [Application](./docs/api.md#application) - Central application instance
-- [Configuration](./docs/api.md#configuration) - Environment-based config management
+- [Application](./docs/api/application.md) - Central application instance
+- [Configuration](./docs/api/configuration.md) - Environment-based config management
 - [Request Lifecycle](./pkg/gor/framework.go) - How requests are processed
-- [Context](./docs/api.md#context) - Request/response context
-- [Middleware](./docs/api.md#middleware) - Request processing pipeline
+- [Context](./docs/api/context.md) - Request/response context
+- [Middleware](./docs/api/middleware.md) - Request processing pipeline
 
 ### Routing & Controllers
 
-- [RESTful Routing](./docs/api.md#router) - Rails-style resource routing
-- [Route Definitions](./docs/api.md#basic-routing) - HTTP verbs and patterns
-- [Named Routes](./docs/api.md#named-routes) - URL generation helpers
-- [Route Constraints](./docs/api.md#route-constraints) - Parameter validation
-- [Route Groups](./docs/api.md#route-groups) - Organized routing
-- [Controllers](./docs/api.md#controllers) - Request handlers
-- [Controller Actions](./docs/api.md#basic-controller) - CRUD operations
-- [Controller Callbacks](./docs/api.md#controller-callbacks) - Before/after filters
+- [RESTful Routing](./docs/api/router.md) - Rails-style resource routing
+- [Route Definitions](./docs/api/routing.md) - HTTP verbs and patterns
+- [Named Routes](./docs/api/named-routes.md) - URL generation helpers
+- [Route Constraints](./docs/api/route-constraints.md) - Parameter validation
+- [Route Groups](./docs/api/route-groups.md) - Organized routing
+- [Controllers](./docs/api/controllers.md) - Request handlers
+- [Controller Actions](./docs/api/controller-actions.md) - CRUD operations
+- [Controller Callbacks](./docs/api/controller-callbacks.md) - Before/after filters
 
 ### Models & ORM
 
-- [Model Definition](./docs/api.md#model-definition) - Defining data models
-- [ORM Queries](./docs/api.md#querying) - Database operations
-- [Query Builder](./docs/api.md#querying) - Fluent query interface
-- [Associations](./docs/api.md#associations) - Relationships between models
-- [Validations](./docs/api.md#model-definition) - Data validation rules
-- [Callbacks](./docs/api.md#model-definition) - Lifecycle hooks
-- [Scopes](./docs/api.md#model-definition) - Reusable queries
-- [Transactions](./docs/api.md#transactions) - Database transactions
-- [Raw SQL](./docs/api.md#raw-sql) - Custom SQL queries
+- [Model Definition](./docs/api/models.md) - Defining data models
+- [ORM Queries](./docs/api/querying.md) - Database operations
+- [Query Builder](./docs/api/query-builder.md) - Fluent query interface
+- [Associations](./docs/api/associations.md) - Relationships between models
+- [Validations](./docs/api/validations.md) - Data validation rules
+- [Callbacks](./docs/api/model-callbacks.md) - Lifecycle hooks
+- [Scopes](./docs/api/scopes.md) - Reusable queries
+- [Transactions](./docs/api/transactions.md) - Database transactions
+- [Raw SQL](./docs/api/raw-sql.md) - Custom SQL queries
 - [Migrations](./internal/orm/migration.go) - Schema management
 - [Database Adapters](./internal/orm) - SQLite, PostgreSQL, MySQL
 
 ### Views & Templates
 
 - [Template Engine](./internal/views) - HTML templating
-- [Layouts](./docs/getting-started.md#create-views) - Master templates
+- [Layouts](./docs/api/layouts.md) - Master templates
 - [Partials](./internal/views/template.go) - Reusable components
 - [Template Helpers](./internal/views/helpers.go) - View utilities
 - [Asset Pipeline](./internal/assets) - CSS/JS processing
@@ -73,37 +73,37 @@ A Rails-inspired web framework for Go that provides the rapid development experi
 ### The Solid Trifecta
 
 #### Queue System
-- [Queue Overview](./docs/api.md#queue) - Background job processing
-- [Job Definition](./docs/api.md#job-definition) - Creating jobs
-- [Enqueueing Jobs](./docs/api.md#enqueueing-jobs) - Job scheduling
-- [Recurring Jobs](./docs/api.md#recurring-jobs) - Cron-like scheduling
+- [Queue Overview](./docs/api/queue.md) - Background job processing
+- [Job Definition](./docs/api/jobs.md) - Creating jobs
+- [Enqueueing Jobs](./docs/api/enqueuing.md) - Job scheduling
+- [Recurring Jobs](./docs/api/recurring-jobs.md) - Cron-like scheduling
 - [Worker Management](./internal/queue/worker.go) - Job workers
-- [Queue Monitoring](./docs/api.md#queue-management) - Stats and management
+- [Queue Monitoring](./docs/api/queue-monitoring.md) - Stats and management
 - [Database Backend](./internal/queue) - No Redis required
 
 #### Cache System
-- [Cache Overview](./docs/api.md#cache) - Multi-tier caching
-- [Basic Operations](./docs/api.md#basic-operations) - Get/Set/Delete
-- [Advanced Caching](./docs/api.md#advanced-caching) - Fetch, increment, tags
-- [Cache Stores](./docs/api.md#cache-stores) - Memory, disk, database
+- [Cache Overview](./docs/api/cache.md) - Multi-tier caching
+- [Basic Operations](./docs/api/cache-operations.md) - Get/Set/Delete
+- [Advanced Caching](./docs/api/advanced-caching.md) - Fetch, increment, tags
+- [Cache Stores](./docs/api/cache-stores.md) - Memory, disk, database
 - [Tagged Caching](./internal/cache) - Group invalidation
 - [Fragment Caching](./internal/cache) - Partial caching
 
 #### Cable System
-- [Cable Overview](./docs/api.md#cable) - Real-time features
-- [WebSockets](./docs/api.md#websocket-server) - Bidirectional communication
-- [Server-Sent Events](./docs/api.md#server-sent-events) - Server push
-- [Broadcasting](./docs/api.md#broadcasting) - Message distribution
+- [Cable Overview](./docs/api/cable.md) - Real-time features
+- [WebSockets](./docs/api/websockets.md) - Bidirectional communication
+- [Server-Sent Events](./docs/api/sse.md) - Server push
+- [Broadcasting](./docs/api/broadcasting.md) - Message distribution
 - [Channels](./internal/cable) - Organized messaging
 - [Presence](./internal/cable) - User tracking
 
 ### Authentication & Security
 
-- [Authentication System](./docs/api.md#authentication) - Built-in auth
-- [User Model](./docs/api.md#user-model) - Authentication model
-- [Sessions](./docs/api.md#authentication-methods) - Session management
+- [Authentication System](./docs/api/authentication.md) - Built-in auth
+- [User Model](./docs/api/user-model.md) - Authentication model
+- [Sessions](./docs/api/sessions.md) - Session management
 - [JWT](./internal/auth) - Token authentication
-- [Authorization](./docs/api.md#authorization) - RBAC and abilities
+- [Authorization](./docs/api/authorization.md) - RBAC and abilities
 - [Password Management](./internal/auth) - Hashing and reset
 - [CSRF Protection](./pkg/middleware) - Security middleware
 - [CORS](./pkg/middleware) - Cross-origin requests
@@ -111,12 +111,12 @@ A Rails-inspired web framework for Go that provides the rapid development experi
 
 ### Testing
 
-- [Testing Guide](./docs/testing-guide.md) - Comprehensive testing documentation
-- [Testing Framework](./docs/api.md#testing) - Built-in testing
-- [Test Helpers](./docs/api.md#test-helpers) - Testing utilities
-- [Controller Tests](./docs/api.md#controller-tests) - HTTP testing
-- [Model Tests](./docs/api.md#model-tests) - Data layer testing
-- [Job Tests](./docs/api.md#job-tests) - Background job testing
+- [Testing Guide](./docs/guides/testing.md) - Comprehensive testing documentation
+- [Testing Framework](./docs/api/testing.md) - Built-in testing
+- [Test Helpers](./docs/api/test-helpers.md) - Testing utilities
+- [Controller Tests](./docs/api/controller-tests.md) - HTTP testing
+- [Model Tests](./docs/api/model-tests.md) - Data layer testing
+- [Job Tests](./docs/api/job-tests.md) - Background job testing
 - [Test Factories](./internal/testing) - Test data generation
 - [Fixtures](./internal/testing) - Sample data
 
@@ -124,50 +124,32 @@ A Rails-inspired web framework for Go that provides the rapid development experi
 
 Current test coverage by package:
 
-- **pkg/middleware**: 93.1% ✅
-- **internal/router**: 98.9% ✅
-- **internal/cache**: 88.6% ✅
-- **internal/auth**: 86.6% ✅
-- **internal/cable**: 85.1% ✅
-- **internal/sse**: 84.5% ✅
-- **internal/queue**: 84.4% ✅
-- **internal/views**: 82.8% ✅
-- **internal/cli**: 81.3% ✅
-- **internal/app/controllers**: 100.0% ✅
-- **pkg/gor**: 66.3%
-- **internal/config**: 48.2%
-- **internal/websocket**: 47.9%
-- **internal/assets**: 43.2%
-- **internal/plugin**: 28.5%
-- **internal/orm**: 27.9%
-- **internal/dev**: 19.0%
-- **internal/testing**: 11.0%
-- **internal/deploy**: 6.5%
+
 
 **Overall Coverage**: ~75% and improving
 
 ### CLI & Generators
 
 - [CLI Overview](./cmd/gor) - Command-line interface
-- [New Application](./docs/getting-started.md#generate-a-new-application) - Create new projects
-- [Model Generator](./docs/getting-started.md#generate-a-model) - Generate models
-- [Controller Generator](./docs/getting-started.md#generate-a-controller) - Generate controllers
+- [New Application](./docs/guides/new-app.md) - Create new projects
+- [Model Generator](./docs/guides/generators.md#model) - Generate models
+- [Controller Generator](./docs/guides/generators.md#controller) - Generate controllers
 - [Scaffold Generator](./internal/cli/generators) - Full CRUD scaffolding
-- [Migration Generator](./docs/getting-started.md#generate-migration) - Database migrations
-- [Database Commands](./docs/getting-started.md#run-migrations) - Migration management
-- [Server Commands](./docs/getting-started.md#start-the-server) - Development server
+- [Migration Generator](./docs/guides/generators.md#migration) - Database migrations
+- [Database Commands](./docs/guides/database.md) - Migration management
+- [Server Commands](./docs/guides/server.md) - Development server
 
 ### Deployment
 
-- [Deployment Guide](./docs/deployment.md) - Complete deployment documentation
-- [Production Build](./docs/deployment.md#building-for-production) - Optimized builds
-- [Docker Deployment](./docs/deployment.md#docker-deployment) - Container deployment
-- [Kubernetes](./docs/deployment.md#kubernetes-deployment) - K8s deployment
-- [Cloud Platforms](./docs/deployment.md#cloud-platform-deployments) - AWS, GCP, Heroku, DO
-- [Environment Variables](./docs/deployment.md#environment-configuration) - Configuration
-- [Health Checks](./docs/deployment.md#monitoring-and-health-checks) - Monitoring endpoints
-- [Zero-downtime Deploy](./docs/deployment.md#zero-downtime-deployment) - Graceful updates
-- [Security](./docs/deployment.md#security-best-practices) - Production security
+- [Deployment Guide](./docs/guides/deployment.md) - Complete deployment documentation
+- [Production Build](./docs/guides/deployment.md#building-for-production) - Optimized builds
+- [Docker Deployment](./docs/guides/deployment.md#docker-deployment) - Container deployment
+- [Kubernetes](./docs/guides/deployment.md#kubernetes-deployment) - K8s deployment
+- [Cloud Platforms](./docs/guides/deployment.md#cloud-platform-deployments) - AWS, GCP, Heroku, DO
+- [Environment Variables](./docs/guides/deployment.md#environment-configuration) - Configuration
+- [Health Checks](./docs/guides/deployment.md#monitoring-and-health-checks) - Monitoring endpoints
+- [Zero-downtime Deploy](./docs/guides/deployment.md#zero-downtime-deployment) - Graceful updates
+- [Security](./docs/guides/deployment.md#security-best-practices) - Production security
 
 ### Developer Experience
 
@@ -179,43 +161,42 @@ Current test coverage by package:
 
 ### Plugin System
 
-- [Plugin Overview](./docs/api.md#plugins) - Extensibility
-- [Creating Plugins](./docs/api.md#creating-a-plugin) - Plugin development
+- [Plugin Overview](./docs/api/plugins.md) - Extensibility
+- [Creating Plugins](./docs/api/plugin-development.md) - Plugin development
 - [Plugin Hooks](./internal/plugin) - Extension points
 - [Plugin Registry](./internal/plugin/registry.go) - Plugin management
-- [Installing Plugins](./docs/api.md#using-plugins) - Plugin installation
+- [Installing Plugins](./docs/api/plugin-installation.md) - Plugin installation
 
 ### Examples
 
-- [Blog Application](./examples/blog) - Full-featured blog with auth
-- [WebApp Example](./examples/webapp) - Basic web application
-- [Authentication App](./examples/auth_app) - Authentication patterns
-- [Authentication Demo](./examples/auth_demo) - Auth implementation
-- [Real-time Chat](./examples/realtime_demo) - WebSocket example
-- [Solid Trifecta Demo](./examples/solid_trifecta) - Queue, cache, cable
-- [Template App](./examples/template_app) - Template engine usage
-- [Testing Demo](./examples/testing_demo) - Testing patterns
-- [ORM Example](./examples/orm_example.go) - Database operations
+- [auth_app Application](./examples/auth_app) - Handlers
+- [auth_demo Application](./examples/auth_demo) - Summary of features demonstrated:
+- [blog Application](./examples/blog) - Base Model struct for all models
+- [realtime_demo Application](./examples/realtime_demo) - Example application
+- [solid_trifecta Application](./examples/solid_trifecta) - Example application
+- [template_app Application](./examples/template_app) - PageData represents data passed to templates
+- [testing_demo Application](./examples/testing_demo) - Example application
+- [webapp Application](./examples/webapp) - WebUser model (renamed to avoid conflict with orm_example.go)
 
 ### Comparison & Migration
 
 - [vs Ruby on Rails](./README.md#comparison-with-rails) - Rails comparison
-- [vs Express.js](./README.md#comparison-with-rails) - Node.js comparison
-- [vs Django](./README.md#comparison-with-rails) - Python comparison
+- [vs Express.js](./README.md#comparison-with-express) - Node.js comparison
+- [vs Django](./README.md#comparison-with-django) - Python comparison
 - [Performance Benchmarks](./README.md#performance) - Speed comparisons
-- [Migration Guide](./docs/migration.md) - Porting applications (coming soon)
+- [Migration Guide](./docs/guides/migration.md) - Porting applications
 
 ### API Reference
 
-- [Complete API](./docs/api.md) - Full API documentation
-- [Application API](./docs/api.md#application) - App methods
-- [Router API](./docs/api.md#router) - Routing methods
-- [Context API](./docs/api.md#context) - Request/response
-- [ORM API](./docs/api.md#orm) - Database methods
-- [Queue API](./docs/api.md#queue) - Job methods
-- [Cache API](./docs/api.md#cache) - Caching methods
-- [Cable API](./docs/api.md#cable) - Real-time methods
-- [Auth API](./docs/api.md#authentication) - Auth methods
+- [Complete API](./docs/api/index.md) - Full API documentation
+- [Application API](./docs/api/application.md) - App methods
+- [Router API](./docs/api/router.md) - Routing methods
+- [Context API](./docs/api/context.md) - Request/response
+- [ORM API](./docs/api/orm.md) - Database methods
+- [Queue API](./docs/api/queue.md) - Job methods
+- [Cache API](./docs/api/cache.md) - Caching methods
+- [Cable API](./docs/api/cable.md) - Real-time methods
+- [Auth API](./docs/api/authentication.md) - Auth methods
 
 ### Integrations
 
@@ -223,27 +204,27 @@ Current test coverage by package:
 - [MySQL](./internal/orm) - MySQL adapter
 - [SQLite](./internal/orm) - SQLite adapter
 - [Redis Cache](./internal/cache) - Redis cache store
-- [S3 Storage](./internal/storage) - File uploads
-- [Email Services](./internal/mailer) - Email integration
+- [S3 Storage](./docs/integrations/s3.md) - File uploads
+- [Email Services](./docs/integrations/email.md) - Email integration
 - [OAuth Providers](./internal/auth) - Social login
-- [Monitoring Tools](./internal/monitoring) - APM integration
+- [Monitoring Tools](./docs/integrations/monitoring.md) - APM integration
 
 ### Best Practices
 
-- [Project Structure](./docs/best-practices.md) - Organizing code
-- [Performance Tips](https://github.com/cuemby/gor#performance) - Optimization
-- [Security Guidelines](./docs/security.md) - Secure coding
-- [Testing Strategy](./docs/testing-strategy.md) - Test coverage
-- [Deployment Strategy](./docs/deployment-strategy.md) - Production tips
-- [Database Design](./docs/database-design.md) - Schema best practices
+- [Project Structure](./docs/guides/project-structure.md) - Organizing code
+- [Performance Tips](./docs/guides/performance.md) - Optimization
+- [Security Guidelines](./docs/security/guidelines.md) - Secure coding
+- [Testing Strategy](./docs/guides/testing-strategy.md) - Test coverage
+- [Deployment Strategy](./docs/guides/deployment-strategy.md) - Production tips
+- [Database Design](./docs/guides/database-design.md) - Schema best practices
 
 ### Community & Support
 
 - [GitHub Repository](https://github.com/cuemby/gor) - Source code
-- [Issue Tracker](./issues) - Bug reports
-- [Discussions](./discussions) - Community forum
-- [Contributing](./CONTRIBUTING.md) - Contribution guide
-- [Code of Conduct](./CODE_OF_CONDUCT.md) - Community guidelines
+- [Issue Tracker](https://github.com/cuemby/gor/issues) - Bug reports
+- [Discussions](https://github.com/cuemby/gor/discussions) - Community forum
+- [Contributing](./docs/project/CONTRIBUTING.md) - Contribution guide
+- [Code of Conduct](./docs/project/CODE_OF_CONDUCT.md) - Community guidelines
 - [License](./LICENSE) - MIT License
 
 ## Framework Components
@@ -262,6 +243,27 @@ Current test coverage by package:
 - `internal/cli` - CLI tools
 - `internal/config` - Configuration
 - `internal/plugin` - Plugin system
+
+### Framework Components Detail
+
+- `internal/app` - Framework component
+- `internal/assets` - Framework component
+- `internal/auth` - Framework component
+- `internal/cable` - Framework component
+- `internal/cache` - Framework component
+- `internal/cli` - Framework component
+- `internal/config` - Framework component
+- `internal/deploy` - Framework component
+- `internal/deployment` - Framework component
+- `internal/dev` - Framework component
+- `internal/orm` - Framework component
+- `internal/plugin` - Framework component
+- `internal/queue` - Framework component
+- `internal/router` - Framework component
+- `internal/sse` - Framework component
+- `internal/testing` - Framework component
+- `internal/views` - Framework component
+- `internal/websocket` - Framework component
 
 ### Key Features
 - **Type-safe ORM** with compile-time checking
@@ -333,4 +335,8 @@ ctx.Cable().HandleWebSocket(func(conn *WebSocketConnection) {
 
 ---
 
-This documentation is optimized for Large Language Models (LLMs) to provide comprehensive context about the Gor framework. For the latest updates, visit the [GitHub repository](https://github.com/cuemby/gor).
+This documentation is automatically generated and kept in sync with the codebase.
+For the latest updates, visit the [GitHub repository](https://github.com/cuemby/gor).
+
+*Last updated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')*
+*Generated by: scripts/docs/sync-llms.sh*
