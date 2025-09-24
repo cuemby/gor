@@ -43,6 +43,7 @@ func TestNewHub(t *testing.T) {
 
 	if hub == nil {
 		t.Fatal("NewHub returned nil")
+		return
 	}
 
 	if hub.clients == nil {
@@ -487,7 +488,7 @@ func BenchmarkHub_BroadcastToChannel(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		hub.BroadcastToChannel("bench-channel", message)
+		_ = hub.BroadcastToChannel("bench-channel", message)
 	}
 }
 

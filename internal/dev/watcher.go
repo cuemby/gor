@@ -168,13 +168,13 @@ func (w *Watcher) rebuild() error {
 		if err := w.process.Process.Kill(); err != nil {
 			w.logger.Printf("Failed to kill process: %v\n", err)
 		}
-		w.process.Wait()
+		_ = w.process.Wait()
 		w.process = nil
 	}
 
 	// Build
 	w.logger.Println("Building...")
-	buildCmd := exec.Command("sh", "-c", w.buildCmd)
+	buildCmd := exec.Command("sh", "-c", w.buildCmd) // #nosec G204 - Build command is from config, not user input
 	buildCmd.Stdout = os.Stdout
 	buildCmd.Stderr = os.Stderr
 
@@ -184,7 +184,7 @@ func (w *Watcher) rebuild() error {
 
 	// Run
 	w.logger.Println("Starting application...")
-	w.process = exec.Command("sh", "-c", w.runCmd)
+	w.process = exec.Command("sh", "-c", w.runCmd) // #nosec G204 - Run command is from config, not user input
 	w.process.Stdout = os.Stdout
 	w.process.Stderr = os.Stderr
 
@@ -198,9 +198,22 @@ func (w *Watcher) rebuild() error {
 
 // shouldExclude checks if a path should be excluded
 func (w *Watcher) shouldExclude(path string) bool {
-	for _, exclude := range w.excludePaths {
-		if strings.Contains(path, exclude) {
-			return true
+	// Convert to relative path for consistent checking
+	relPath, err := filepath.Rel(w.root, path)
+	if err != nil {
+		// If we can't get relative path, fall back to absolute path checking
+		relPath = path
+	}
+
+	// Split path into components
+	parts := strings.Split(filepath.ToSlash(relPath), "/")
+
+	// Check if any path component matches an exclude pattern
+	for _, part := range parts {
+		for _, exclude := range w.excludePaths {
+			if part == exclude {
+				return true
+			}
 		}
 	}
 	return false

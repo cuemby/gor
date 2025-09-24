@@ -533,7 +533,7 @@ func TestAuthenticator_Authorization(t *testing.T) {
 		}
 
 		// Update user back to user role for permission test
-		auth.UpdateUserRole(user.ID, "user")
+		_ = auth.UpdateUserRole(user.ID, "user")
 
 		// User should now have permission
 		if !auth.HasPermission(user.ID, "read_posts") {
@@ -568,7 +568,7 @@ func TestAuthenticator_UtilityFunctions(t *testing.T) {
 		user, _ := auth.Register("cleanup@example.com", "password123", "Cleanup User")
 
 		// Create expired session
-		auth.CreateSession(user.ID, "127.0.0.1", "Test-Agent", -1*time.Hour)
+		_, _ = auth.CreateSession(user.ID, "127.0.0.1", "Test-Agent", -1*time.Hour)
 
 		// Create valid session
 		validSession, _ := auth.CreateSession(user.ID, "127.0.0.1", "Test-Agent", 1*time.Hour)
@@ -660,7 +660,7 @@ func TestAuthenticator_Middleware(t *testing.T) {
 		// Create test handler
 		testHandler := func(w http.ResponseWriter, r *http.Request) {
 			// Check if user is in context
-			contextUser, ok := r.Context().Value("user").(*User)
+			contextUser, ok := r.Context().Value(UserContextKey).(*User)
 			if !ok {
 				t.Error("User should be in request context")
 				return
@@ -670,7 +670,7 @@ func TestAuthenticator_Middleware(t *testing.T) {
 			}
 
 			// Check if session is in context
-			contextSession, ok := r.Context().Value("session").(*Session)
+			contextSession, ok := r.Context().Value(SessionContextKey).(*Session)
 			if !ok {
 				t.Error("Session should be in request context")
 				return
@@ -680,7 +680,7 @@ func TestAuthenticator_Middleware(t *testing.T) {
 			}
 
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte("authorized"))
+			_, _ = w.Write([]byte("authorized"))
 		}
 
 		// Wrap with auth middleware
@@ -765,7 +765,7 @@ func TestAuthenticator_Middleware(t *testing.T) {
 	t.Run("RequireRole_ValidRole", func(t *testing.T) {
 		testHandler := func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte("role_authorized"))
+			_, _ = w.Write([]byte("role_authorized"))
 		}
 
 		roleMiddleware := auth.RequireRole("user")
@@ -773,7 +773,7 @@ func TestAuthenticator_Middleware(t *testing.T) {
 
 		// Create request with user in context
 		req := httptest.NewRequest("GET", "/admin", nil)
-		ctx := context.WithValue(req.Context(), "user", user)
+		ctx := context.WithValue(req.Context(), UserContextKey, user)
 		req = req.WithContext(ctx)
 		w := httptest.NewRecorder()
 
@@ -794,7 +794,7 @@ func TestAuthenticator_Middleware(t *testing.T) {
 
 		// Create request with user in context (user role, not admin)
 		req := httptest.NewRequest("GET", "/admin", nil)
-		ctx := context.WithValue(req.Context(), "user", user)
+		ctx := context.WithValue(req.Context(), UserContextKey, user)
 		req = req.WithContext(ctx)
 		w := httptest.NewRecorder()
 

@@ -214,6 +214,7 @@ func TestPipeline_GetAsset(t *testing.T) {
 
 	if asset == nil {
 		t.Fatal("Asset should not be nil")
+		return
 	}
 
 	if asset.Content == nil {
@@ -239,7 +240,7 @@ func TestPipeline_AssetPath(t *testing.T) {
 	pipeline.manifest["styles.css"] = "styles-abcd1234.css"
 
 	path := pipeline.AssetPath("styles.css")
-	expected := "/assets/./styles-abcd1234.css"  // The implementation includes "./" for directory handling
+	expected := "/assets/./styles-abcd1234.css" // The implementation includes "./" for directory handling
 	if path != expected {
 		t.Errorf("Expected asset path %s, got %s", expected, path)
 	}
@@ -257,6 +258,7 @@ func TestCSSProcessor(t *testing.T) {
 
 	if processor == nil {
 		t.Fatal("NewCSSProcessor should not return nil")
+		return
 	}
 
 	if !processor.minify {
@@ -304,6 +306,7 @@ func TestJavaScriptProcessor(t *testing.T) {
 
 	if processor == nil {
 		t.Fatal("NewJavaScriptProcessor should not return nil")
+		return
 	}
 
 	if !processor.minify {
@@ -357,6 +360,7 @@ func TestImageProcessor(t *testing.T) {
 
 	if processor == nil {
 		t.Fatal("NewImageProcessor should not return nil")
+		return
 	}
 
 	if !processor.optimize {
@@ -393,6 +397,7 @@ func TestSassProcessor(t *testing.T) {
 
 	if processor == nil {
 		t.Fatal("NewSassProcessor should not return nil")
+		return
 	}
 
 	if !processor.minify {
@@ -436,6 +441,7 @@ func TestBundler(t *testing.T) {
 
 	if bundler == nil {
 		t.Fatal("NewBundler should not return nil")
+		return
 	}
 
 	if bundler.outputPath != tmpDir {
@@ -485,7 +491,7 @@ func TestAssetServer(t *testing.T) {
 
 	// Test with custom settings
 	customServer := NewServer(pipeline, "").
-		WithMaxAge(1*time.Hour).
+		WithMaxAge(1 * time.Hour).
 		WithCORS("example.com")
 
 	if customServer.pathPrefix != "/assets" {

@@ -3,7 +3,7 @@ package assets
 import (
 	"bytes"
 	"compress/gzip"
-	"crypto/md5"
+	"crypto/sha256"
 	"encoding/json"
 	"fmt"
 	"io/fs"
@@ -135,7 +135,7 @@ func (p *Pipeline) compileAsset(sourcePath string) error {
 	outputPath := filepath.Join(p.outputPath, relPath)
 
 	if p.fingerprint {
-		h := md5.Sum(output)
+		h := sha256.Sum256(output)
 		hash = fmt.Sprintf("%x", h)[:8]
 
 		// Add hash to filename
@@ -199,7 +199,7 @@ func (p *Pipeline) Watch() error {
 		lastModTimes := make(map[string]time.Time)
 
 		for range ticker.C {
-			filepath.WalkDir(p.sourcePath, func(path string, d fs.DirEntry, err error) error {
+			_ = filepath.WalkDir(p.sourcePath, func(path string, d fs.DirEntry, err error) error {
 				if err != nil || d.IsDir() {
 					return nil
 				}
@@ -215,7 +215,7 @@ func (p *Pipeline) Watch() error {
 					if exists {
 						// File changed, recompile
 						fmt.Printf("Asset changed: %s\n", path)
-						p.compileAsset(path)
+						_ = p.compileAsset(path)
 					}
 				}
 

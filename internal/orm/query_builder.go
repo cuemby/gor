@@ -25,7 +25,6 @@ type QueryBuilder struct {
 	offsetValue     *int
 	joins           []string
 	includes        []string
-	selectFields    []string
 	isCount         bool
 	rawSQL          string
 	rawArgs         []interface{}
@@ -302,7 +301,7 @@ func (qb *QueryBuilder) FindInBatches(dest interface{}, batchSize int, fn func(t
 
 		gorTx := &gorTransaction{tx: tx}
 		if err := fn(gorTx, batch); err != nil {
-			tx.Rollback()
+			_ = tx.Rollback()
 			return err
 		}
 
@@ -331,7 +330,7 @@ func (qb *QueryBuilder) UpdateAll(updates map[string]interface{}) (int64, error)
 		args = append(args, value)
 	}
 
-	sql := fmt.Sprintf("UPDATE %s SET %s", qb.tableName, strings.Join(setParts, ", "))
+	sql := fmt.Sprintf("UPDATE %s SET %s", qb.tableName, strings.Join(setParts, ", ")) // #nosec G201 - Table name from schema
 
 	if len(qb.whereConditions) > 0 {
 		sql += " WHERE " + strings.Join(qb.whereConditions, " AND ")
@@ -348,7 +347,7 @@ func (qb *QueryBuilder) UpdateAll(updates map[string]interface{}) (int64, error)
 
 // DeleteAll deletes all matching records
 func (qb *QueryBuilder) DeleteAll() (int64, error) {
-	sql := fmt.Sprintf("DELETE FROM %s", qb.tableName)
+	sql := fmt.Sprintf("DELETE FROM %s", qb.tableName) // #nosec G201 - Table name from schema
 
 	if len(qb.whereConditions) > 0 {
 		sql += " WHERE " + strings.Join(qb.whereConditions, " AND ")

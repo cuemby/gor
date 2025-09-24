@@ -25,7 +25,6 @@ type cacheEntry struct {
 // SolidCache implements a database-backed cache similar to Rails' Solid Cache
 type SolidCache struct {
 	db              *sql.DB
-	mu              sync.RWMutex
 	memCache        map[string]*memoryCacheEntry // L1 cache in memory
 	memCacheMu      sync.RWMutex
 	maxMemorySize   int64
@@ -109,21 +108,31 @@ func (sc *SolidCache) Get(key string) (interface{}, error) {
 	sc.memCacheMu.RLock()
 	if entry, exists := sc.memCache[key]; exists {
 		if entry.expiresAt.IsZero() || entry.expiresAt.After(time.Now()) {
-			entry.lastAccess = time.Now()
+			// Need to update lastAccess, so upgrade to write lock
 			sc.memCacheMu.RUnlock()
+			sc.memCacheMu.Lock()
+			// Re-check that entry still exists after lock upgrade
+			if entry, exists := sc.memCache[key]; exists {
+				entry.lastAccess = time.Now()
+				// Keep a copy of the value before unlocking
+				valueCopy := entry.value
+				sc.memCacheMu.Unlock()
 
-			var value interface{}
-			if err := json.Unmarshal(entry.value, &value); err != nil {
-				return nil, err
+				var value interface{}
+				if err := json.Unmarshal(valueCopy, &value); err != nil {
+					return nil, err
+				}
+				return value, nil
 			}
-			return value, nil
+			sc.memCacheMu.Unlock()
+		} else {
+			// Entry expired, remove from memory
+			sc.memCacheMu.RUnlock()
+			sc.memCacheMu.Lock()
+			sc.currentSize -= entry.size
+			delete(sc.memCache, key)
+			sc.memCacheMu.Unlock()
 		}
-		// Entry expired, remove from memory
-		sc.memCacheMu.RUnlock()
-		sc.memCacheMu.Lock()
-		sc.currentSize -= entry.size
-		delete(sc.memCache, key)
-		sc.memCacheMu.Unlock()
 	} else {
 		sc.memCacheMu.RUnlock()
 	}
@@ -149,7 +158,7 @@ func (sc *SolidCache) Get(key string) (interface{}, error) {
 	// Check expiration
 	if expiresAt.Valid && expiresAt.Time.Before(time.Now()) {
 		// Entry expired, delete it
-		sc.Delete(key)
+		_ = sc.Delete(key)
 		return nil, nil
 	}
 
@@ -362,7 +371,7 @@ func (sc *SolidCache) incrementHitCount(key string) {
 		SET hit_count = hit_count + 1
 		WHERE key = ?
 	`
-	sc.db.Exec(query, key)
+	_, _ = sc.db.Exec(query, key)
 }
 
 // cleanupWorker periodically removes expired entries

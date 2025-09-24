@@ -1,3 +1,6 @@
+//go:build debug
+// +build debug
+
 package dev
 
 import (
@@ -6,7 +9,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	_ "net/http/pprof"
+	_ "net/http/pprof" // Only enabled with debug build tag
 	"runtime"
 	"runtime/debug"
 	"runtime/pprof"
@@ -309,7 +312,7 @@ func (d *Debugger) handleDebugUI(w http.ResponseWriter, r *http.Request) {
 </html>`
 
 	w.Header().Set("Content-Type", "text/html")
-	w.Write([]byte(html))
+	_, _ = w.Write([]byte(html))
 }
 
 // handleBreakpoints handles breakpoint API
@@ -319,7 +322,10 @@ func (d *Debugger) handleBreakpoints(w http.ResponseWriter, r *http.Request) {
 	d.mu.RLock()
 	defer d.mu.RUnlock()
 
-	json.NewEncoder(w).Encode(d.breakpoints)
+	if err := json.NewEncoder(w).Encode(d.breakpoints); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // handleLogs handles logs API
@@ -327,7 +333,10 @@ func (d *Debugger) handleLogs(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	logs := d.logBuffer.GetAll()
-	json.NewEncoder(w).Encode(logs)
+	if err := json.NewEncoder(w).Encode(logs); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // handleMetrics handles metrics API
@@ -335,7 +344,10 @@ func (d *Debugger) handleMetrics(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	d.metrics.Update()
-	json.NewEncoder(w).Encode(d.metrics)
+	if err := json.NewEncoder(w).Encode(d.metrics); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // handleStack handles stack trace API
@@ -343,7 +355,7 @@ func (d *Debugger) handleStack(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	stack := debug.Stack()
-	json.NewEncoder(w).Encode(map[string]string{
+	_ = json.NewEncoder(w).Encode(map[string]string{
 		"stack": string(stack),
 	})
 }
@@ -366,7 +378,7 @@ func (d *Debugger) handleGoroutines(w http.ResponseWriter, r *http.Request) {
 	buf := make([]byte, 1<<20) // 1MB buffer
 	n := runtime.Stack(buf, true)
 
-	json.NewEncoder(w).Encode(map[string]interface{}{
+	_ = json.NewEncoder(w).Encode(map[string]interface{}{
 		"count":      runtime.NumGoroutine(),
 		"stacktrace": string(buf[:n]),
 	})

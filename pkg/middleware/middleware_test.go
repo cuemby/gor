@@ -208,7 +208,7 @@ func TestRequestID(t *testing.T) {
 
 	var capturedID string
 	handler := func(ctx *gor.Context) error {
-		if id, ok := ctx.Context.Value("request_id").(string); ok {
+		if id, ok := ctx.Context.Value(contextKey("request_id")).(string); ok {
 			capturedID = id
 		}
 		return nil
@@ -264,7 +264,7 @@ func TestRateLimit(t *testing.T) {
 	// Third request should be rate limited
 	ctx3 := createTestContext("GET", "/test")
 	ctx3.Request.RemoteAddr = "192.168.1.1:1234"
-	err = middleware(handler)(ctx3)
+	_ = middleware(handler)(ctx3)
 
 	w3 := ctx3.Response.(*httptest.ResponseRecorder)
 	if w3.Code != http.StatusTooManyRequests {
@@ -340,7 +340,7 @@ func TestBasicAuth(t *testing.T) {
 
 	// Test without credentials
 	ctx1 := createTestContext("GET", "/test")
-	err := middleware(handler)(ctx1)
+	_ = middleware(handler)(ctx1) // Error expected for unauthorized
 
 	w1 := ctx1.Response.(*httptest.ResponseRecorder)
 	if w1.Code != http.StatusUnauthorized {
@@ -353,7 +353,7 @@ func TestBasicAuth(t *testing.T) {
 	// Test with valid credentials
 	ctx2 := createTestContext("GET", "/test")
 	ctx2.Request.SetBasicAuth("admin", "password123")
-	err = middleware(handler)(ctx2)
+	err := middleware(handler)(ctx2)
 
 	if err != nil {
 		t.Errorf("Valid auth failed: %v", err)
@@ -371,7 +371,7 @@ func TestBasicAuth(t *testing.T) {
 	// Test with invalid credentials
 	ctx3 := createTestContext("GET", "/test")
 	ctx3.Request.SetBasicAuth("admin", "wrongpass")
-	err = middleware(handler)(ctx3)
+	_ = middleware(handler)(ctx3)
 
 	w3 := ctx3.Response.(*httptest.ResponseRecorder)
 	if w3.Code != http.StatusUnauthorized {
@@ -403,7 +403,7 @@ func TestCSRF(t *testing.T) {
 	// Test POST without token (should fail)
 	ctx2 := createTestContext("POST", "/test")
 	err = middleware(handler)(ctx2)
-
+	_ = err
 	w2 := ctx2.Response.(*httptest.ResponseRecorder)
 	if w2.Code != http.StatusForbidden {
 		t.Errorf("Expected 403 without CSRF token, got %d", w2.Code)
@@ -447,14 +447,21 @@ func TestTimeout(t *testing.T) {
 
 	// Test timeout
 	slowHandler := func(ctx *gor.Context) error {
-		time.Sleep(200 * time.Millisecond)
-		ctx.Response.WriteHeader(http.StatusOK)
+		select {
+		case <-time.After(200 * time.Millisecond):
+			// Only write if context is not done
+			if ctx.Context.Err() == nil {
+				ctx.Response.WriteHeader(http.StatusOK)
+			}
+		case <-ctx.Context.Done():
+			// Context cancelled, don't write
+		}
 		return nil
 	}
 
 	ctx2 := createTestContext("GET", "/test")
-	err = Timeout(50*time.Millisecond)(slowHandler)(ctx2)
-
+	err = Timeout(50 * time.Millisecond)(slowHandler)(ctx2)
+	_ = err
 	w2 := ctx2.Response.(*httptest.ResponseRecorder)
 	if w2.Code != http.StatusRequestTimeout {
 		t.Errorf("Expected timeout status 408, got %d", w2.Code)
@@ -463,10 +470,10 @@ func TestTimeout(t *testing.T) {
 
 func TestGetClientIP(t *testing.T) {
 	tests := []struct {
-		name        string
-		headers     map[string]string
-		remoteAddr  string
-		expectedIP  string
+		name       string
+		headers    map[string]string
+		remoteAddr string
+		expectedIP string
 	}{
 		{
 			name:       "X-Forwarded-For",
@@ -546,7 +553,7 @@ func BenchmarkLogger(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		ctx := createTestContext("GET", "/test")
-		middleware(handler)(ctx)
+		_ = middleware(handler)(ctx)
 	}
 }
 
@@ -557,7 +564,7 @@ func BenchmarkRequestID(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		ctx := createTestContext("GET", "/test")
-		middleware(handler)(ctx)
+		_ = middleware(handler)(ctx)
 	}
 }
 
@@ -569,6 +576,6 @@ func BenchmarkRateLimit(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		ctx := createTestContext("GET", "/test")
 		ctx.Request.RemoteAddr = fmt.Sprintf("192.168.1.%d:1234", i%256)
-		middleware(handler)(ctx)
+		_ = middleware(handler)(ctx)
 	}
 }

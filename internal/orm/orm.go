@@ -119,7 +119,7 @@ func (o *gorORM) Transaction(ctx context.Context, fn func(tx gor.Transaction) er
 
 	defer func() {
 		if r := recover(); r != nil {
-			tx.Rollback()
+			_ = tx.Rollback()
 			panic(r)
 		}
 	}()
@@ -326,7 +326,14 @@ func setID(model interface{}, id int64) {
 		case reflect.Int, reflect.Int32, reflect.Int64:
 			field.SetInt(id)
 		case reflect.Uint, reflect.Uint32, reflect.Uint64:
-			field.SetUint(uint64(id))
+			// Check for negative values before conversion to prevent overflow
+			if id < 0 {
+				// For unsigned types, we can't set negative values
+				// This shouldn't happen in normal operation, but we handle it gracefully
+				field.SetUint(0)
+			} else {
+				field.SetUint(uint64(id))
+			}
 		}
 	}
 }
@@ -466,7 +473,8 @@ func parseStructTag(tag string, column *gor.Column) {
 		column.Index = true
 	}
 	if contains(tag, "auto_increment") {
-		// Handle auto increment
+		// Handle auto increment - set as primary key
+		column.PrimaryKey = true
 	}
 }
 

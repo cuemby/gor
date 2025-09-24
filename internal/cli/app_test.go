@@ -32,6 +32,7 @@ func TestNewApp(t *testing.T) {
 
 	if app == nil {
 		t.Fatal("NewApp returned nil")
+		return
 	}
 
 	if app.version != "1.0.0" {
@@ -409,12 +410,16 @@ func BenchmarkApp_Run_Help(b *testing.B) {
 	defer func() {
 		w.Close()
 		os.Stdout = old
-		io.ReadAll(r) // Drain the pipe
+		if _, err := io.ReadAll(r); err != nil {
+			b.Logf("Failed to drain pipe: %v", err)
+		} // Drain the pipe
 	}()
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		app.Run([]string{"gor", "help"})
+		if err := app.Run([]string{"gor", "help"}); err != nil {
+			b.Logf("Failed to run help: %v", err)
+		}
 	}
 }
 
@@ -433,6 +438,8 @@ func BenchmarkApp_Run_Command(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		app.Run([]string{"gor", "bench", "arg1", "arg2"})
+		if err := app.Run([]string{"gor", "bench", "arg1", "arg2"}); err != nil {
+			b.Logf("Failed to run bench: %v", err)
+		}
 	}
 }

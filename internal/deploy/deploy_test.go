@@ -66,6 +66,7 @@ func TestDeployerCreation(t *testing.T) {
 
 	if deployer == nil {
 		t.Fatal("NewDeployer returned nil")
+		return
 	}
 
 	if deployer.config != config {

@@ -13,7 +13,7 @@ import (
 
 func main() {
 	fmt.Println("\n🚀 Gor Framework - Solid Trifecta Demo")
-	fmt.Println("=======================================\n")
+	fmt.Println("=======================================")
 
 	// Demo Queue
 	demoQueue()

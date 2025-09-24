@@ -5,6 +5,9 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 // GenerateCommand handles code generation
@@ -109,7 +112,7 @@ Don't forget to:
 }
 
 func (c *GenerateCommand) generateModel(name string, fields []string) error {
-	modelName := strings.Title(name)
+	modelName := toTitle(name)
 	tableName := strings.ToLower(name) + "s"
 
 	// Parse fields
@@ -134,7 +137,7 @@ func (c *GenerateCommand) generateModel(name string, fields []string) error {
 }
 
 func (c *GenerateCommand) generateController(name string, actions []string) error {
-	controllerName := strings.Title(name) + "Controller"
+	controllerName := toTitle(name) + "Controller"
 	controllerPath := filepath.Join("app/controllers", strings.ToLower(name)+"_controller.go")
 
 	if len(actions) == 0 {
@@ -152,7 +155,7 @@ func (c *GenerateCommand) generateController(name string, actions []string) erro
 }
 
 func (c *GenerateCommand) generateFullController(name string) error {
-	controllerName := strings.Title(name) + "Controller"
+	controllerName := toTitle(name) + "Controller"
 	controllerPath := filepath.Join("app/controllers", strings.ToLower(name)+"_controller.go")
 
 	controllerContent := c.generateFullControllerContent(controllerName, name)
@@ -200,7 +203,7 @@ func (c *GenerateCommand) generateViews(name string, fields []string) error {
 }
 
 func (c *GenerateCommand) generateJob(name string) error {
-	jobName := strings.Title(name) + "Job"
+	jobName := cases.Title(language.English).String(name) + "Job"
 	jobPath := filepath.Join("app/jobs", strings.ToLower(name)+"_job.go")
 
 	jobContent := c.generateJobContent(jobName)
@@ -214,7 +217,7 @@ func (c *GenerateCommand) generateJob(name string) error {
 }
 
 func (c *GenerateCommand) generateMailer(name string) error {
-	mailerName := strings.Title(name) + "Mailer"
+	mailerName := cases.Title(language.English).String(name) + "Mailer"
 	mailerPath := filepath.Join("app/mailers", strings.ToLower(name)+"_mailer.go")
 
 	mailerContent := c.generateMailerContent(mailerName)
@@ -228,7 +231,7 @@ func (c *GenerateCommand) generateMailer(name string) error {
 }
 
 func (c *GenerateCommand) generateChannel(name string) error {
-	channelName := strings.Title(name) + "Channel"
+	channelName := cases.Title(language.English).String(name) + "Channel"
 	channelPath := filepath.Join("app/channels", strings.ToLower(name)+"_channel.go")
 
 	channelContent := c.generateChannelContent(channelName)
@@ -245,7 +248,7 @@ func (c *GenerateCommand) addResourceRoute(name string) error {
 	// This would update the routes file
 	fmt.Printf("  ℹ️ Add this to config/routes.go:\n")
 	fmt.Printf("     r.Resources(\"%ss\", &controllers.%sController{})\n",
-		strings.ToLower(name), strings.Title(name))
+		strings.ToLower(name), cases.Title(language.English).String(name))
 	return nil
 }
 
@@ -316,13 +319,14 @@ func (c *GenerateCommand) generateModelContent(name string, fields []Field) stri
 		if tags != "" {
 			tags = fmt.Sprintf(" `gorm:\"%s\"`", tags)
 		}
-		fieldsStr += fmt.Sprintf("\t%s %s%s\n", strings.Title(f.Name), f.GoType, tags)
+		fieldsStr += fmt.Sprintf("\t%s %s%s\n", cases.Title(language.English).String(f.Name), f.GoType, tags)
 	}
 
 	return fmt.Sprintf(`package models
 
 import (
-	"time"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"	"time"
 )
 
 // %s model
@@ -359,7 +363,8 @@ func (c *GenerateCommand) generateFullControllerContent(name, modelName string) 
 	return fmt.Sprintf(`package controllers
 
 import (
-	"net/http"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"	"net/http"
 	"github.com/cuemby/gor/pkg/gor"
 	"../models"
 )
@@ -500,13 +505,14 @@ func (c *%s) %s(ctx *gor.Context) error {
 	// TODO: Implement %s action
 	return ctx.HTML(http.StatusOK, "%s action")
 }
-`, strings.Title(action), name, strings.Title(action), action, action)
+`, cases.Title(language.English).String(action), name, cases.Title(language.English).String(action), action, action)
 	}
 
 	return fmt.Sprintf(`package controllers
 
 import (
-	"net/http"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"	"net/http"
 	"github.com/cuemby/gor/pkg/gor"
 )
 
@@ -545,7 +551,8 @@ func (c *GenerateCommand) generateCreateTableMigration(name string, fields []str
 	return fmt.Sprintf(`package migrations
 
 import (
-	"database/sql"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"	"database/sql"
 )
 
 // Up migrates the database forward
@@ -573,7 +580,8 @@ func (c *GenerateCommand) generateChangeMigration(name string) string {
 	return fmt.Sprintf(`package migrations
 
 import (
-	"database/sql"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"	"database/sql"
 )
 
 // Up migrates the database forward
@@ -625,7 +633,7 @@ func (c *GenerateCommand) generateViewContent(modelName, viewType string, fields
     {{end}}
   </tbody>
 </table>
-`, strings.Title(pluralName), pluralName, modelName, pluralName, pluralName, pluralName, pluralName)
+`, cases.Title(language.English).String(pluralName), pluralName, modelName, pluralName, pluralName, pluralName, pluralName)
 
 	case "show":
 		return fmt.Sprintf(`<h1>%s #{{.%s.ID}}</h1>
@@ -634,7 +642,7 @@ func (c *GenerateCommand) generateViewContent(modelName, viewType string, fields
   <a href="/%s/{{.%s.ID}}/edit">Edit</a>
   <a href="/%s">Back to List</a>
 </p>
-`, strings.Title(modelName), lowerName, pluralName, lowerName, pluralName)
+`, cases.Title(language.English).String(modelName), lowerName, pluralName, lowerName, pluralName)
 
 	case "new":
 		return fmt.Sprintf(`<h1>New %s</h1>
@@ -644,7 +652,7 @@ func (c *GenerateCommand) generateViewContent(modelName, viewType string, fields
   <button type="submit">Create %s</button>
   <a href="/%s">Cancel</a>
 </form>
-`, strings.Title(modelName), pluralName, modelName, pluralName)
+`, cases.Title(language.English).String(modelName), pluralName, modelName, pluralName)
 
 	case "edit":
 		return fmt.Sprintf(`<h1>Edit %s</h1>
@@ -655,7 +663,7 @@ func (c *GenerateCommand) generateViewContent(modelName, viewType string, fields
   <button type="submit">Update %s</button>
   <a href="/%s/{{.%s.ID}}">Cancel</a>
 </form>
-`, strings.Title(modelName), pluralName, lowerName, modelName, pluralName, lowerName)
+`, cases.Title(language.English).String(modelName), pluralName, lowerName, modelName, pluralName, lowerName)
 
 	case "_form":
 		var formFields string
@@ -666,7 +674,7 @@ func (c *GenerateCommand) generateViewContent(modelName, viewType string, fields
     <label for="%s">%s</label>
     <textarea name="%s" id="%s">{{.%s.%s}}</textarea>
   </div>
-`, field.Name, strings.Title(field.Name), field.Name, field.Name, lowerName, strings.Title(field.Name))
+`, field.Name, cases.Title(language.English).String(field.Name), field.Name, field.Name, lowerName, cases.Title(language.English).String(field.Name))
 			} else {
 				if field.Type == "boolean" {
 					inputType = "checkbox"
@@ -681,7 +689,7 @@ func (c *GenerateCommand) generateViewContent(modelName, viewType string, fields
     <label for="%s">%s</label>
     <input type="%s" name="%s" id="%s" value="{{.%s.%s}}">
   </div>
-`, field.Name, strings.Title(field.Name), inputType, field.Name, field.Name, lowerName, strings.Title(field.Name))
+`, field.Name, cases.Title(language.English).String(field.Name), inputType, field.Name, field.Name, lowerName, cases.Title(language.English).String(field.Name))
 			}
 		}
 		return fmt.Sprintf(`{{define "form"}}
@@ -697,7 +705,8 @@ func (c *GenerateCommand) generateJobContent(name string) string {
 	return fmt.Sprintf(`package jobs
 
 import (
-	"context"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"	"context"
 	"log"
 )
 
@@ -720,7 +729,8 @@ func (c *GenerateCommand) generateMailerContent(name string) string {
 	return fmt.Sprintf(`package mailers
 
 import (
-	"github.com/cuemby/gor/pkg/gor"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"	"github.com/cuemby/gor/pkg/gor"
 )
 
 // %s mailer
@@ -744,7 +754,8 @@ func (c *GenerateCommand) generateChannelContent(name string) string {
 	return fmt.Sprintf(`package channels
 
 import (
-	"github.com/cuemby/gor/pkg/gor"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"	"github.com/cuemby/gor/pkg/gor"
 )
 
 // %s WebSocket channel
@@ -800,4 +811,12 @@ func contains(slice []string, item string) bool {
 		}
 	}
 	return false
+}
+
+// toTitle converts a string to title case (first letter uppercase)
+func toTitle(s string) string {
+	if len(s) == 0 {
+		return s
+	}
+	return strings.ToUpper(s[:1]) + s[1:]
 }

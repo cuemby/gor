@@ -39,7 +39,7 @@ func NewChatChannel(hub *Hub) *ChatChannel {
 
 func (cc *ChatChannel) OnSubscribe(client *Client, channel string) {
 	// Notify other users that someone joined
-	cc.hub.BroadcastToChannel(channel, map[string]interface{}{
+	_ = cc.hub.BroadcastToChannel(channel, map[string]interface{}{
 		"type":     "user_joined",
 		"user":     client.GetID(),
 		"userName": client.userName,
@@ -49,7 +49,7 @@ func (cc *ChatChannel) OnSubscribe(client *Client, channel string) {
 
 func (cc *ChatChannel) OnUnsubscribe(client *Client, channel string) {
 	// Notify other users that someone left
-	cc.hub.BroadcastToChannel(channel, map[string]interface{}{
+	_ = cc.hub.BroadcastToChannel(channel, map[string]interface{}{
 		"type":     "user_left",
 		"user":     client.GetID(),
 		"userName": client.userName,
@@ -59,7 +59,7 @@ func (cc *ChatChannel) OnUnsubscribe(client *Client, channel string) {
 
 func (cc *ChatChannel) OnMessage(client *Client, channel string, data map[string]interface{}) {
 	// Broadcast chat message to all users in the channel
-	cc.hub.BroadcastToChannel(channel, map[string]interface{}{
+	_ = cc.hub.BroadcastToChannel(channel, map[string]interface{}{
 		"type":     "chat_message",
 		"user":     client.GetID(),
 		"userName": client.userName,
@@ -102,7 +102,7 @@ func (pc *PresenceChannel) OnSubscribe(client *Client, channel string) {
 	})
 
 	// Notify others of new presence
-	pc.hub.BroadcastToChannel(channel, map[string]interface{}{
+	_ = pc.hub.BroadcastToChannel(channel, map[string]interface{}{
 		"type": "presence_join",
 		"user": userData,
 	})
@@ -113,7 +113,7 @@ func (pc *PresenceChannel) OnUnsubscribe(client *Client, channel string) {
 		delete(pc.presence[channel], client.GetID())
 
 		// Notify others of presence leave
-		pc.hub.BroadcastToChannel(channel, map[string]interface{}{
+		_ = pc.hub.BroadcastToChannel(channel, map[string]interface{}{
 			"type":   "presence_leave",
 			"userID": client.GetID(),
 		})
@@ -147,7 +147,7 @@ func NewNotificationChannel(hub *Hub) *NotificationChannel {
 func (nc *NotificationChannel) OnMessage(client *Client, channel string, data map[string]interface{}) {
 	// Send notification to specific user
 	if targetUser, ok := data["targetUser"].(string); ok {
-		nc.hub.SendToClient(targetUser, map[string]interface{}{
+		_ = nc.hub.SendToClient(targetUser, map[string]interface{}{
 			"type":         "notification",
 			"from":         client.GetID(),
 			"notification": data["notification"],
@@ -155,7 +155,7 @@ func (nc *NotificationChannel) OnMessage(client *Client, channel string, data ma
 		})
 	} else {
 		// Broadcast notification to all in channel
-		nc.hub.BroadcastToChannel(channel, map[string]interface{}{
+		_ = nc.hub.BroadcastToChannel(channel, map[string]interface{}{
 			"type":         "notification",
 			"notification": data["notification"],
 			"time":         time.Now().Format(time.RFC3339),
@@ -175,7 +175,7 @@ func NewLiveUpdateChannel(hub *Hub) *LiveUpdateChannel {
 
 func (lc *LiveUpdateChannel) OnMessage(client *Client, channel string, data map[string]interface{}) {
 	// Broadcast live update to all subscribers
-	lc.hub.BroadcastToChannel(channel, map[string]interface{}{
+	_ = lc.hub.BroadcastToChannel(channel, map[string]interface{}{
 		"type":   "update",
 		"entity": data["entity"],
 		"action": data["action"], // created, updated, deleted

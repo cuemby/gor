@@ -209,6 +209,7 @@ func TestNewTestCase(t *testing.T) {
 
 	if tc == nil {
 		t.Fatal("NewTestCase returned nil")
+		return
 	}
 
 	if tc.t != t {
@@ -270,7 +271,9 @@ func TestTestCase_TearDown(t *testing.T) {
 	}
 
 	// Create the file
-	db.Exec("CREATE TABLE test (id INTEGER)")
+	if _, err := db.Exec("CREATE TABLE test (id INTEGER)"); err != nil {
+		t.Fatalf("Failed to create test table: %v", err)
+	}
 	db.Close()
 
 	// Ensure file exists
@@ -290,7 +293,9 @@ func TestTestCase_TearDown(t *testing.T) {
 func TestTestCase_LoadFixtures(t *testing.T) {
 	// Create test fixtures directory
 	fixtureDir := filepath.Join("test", "fixtures")
-	os.MkdirAll(fixtureDir, 0755)
+	if err := os.MkdirAll(fixtureDir, 0755); err != nil {
+		t.Fatalf("Failed to create fixture directory: %v", err)
+	}
 	defer os.RemoveAll("test")
 
 	// Create a test fixture file
@@ -300,7 +305,9 @@ func TestTestCase_LoadFixtures(t *testing.T) {
 	}
 	data, _ := json.Marshal(fixture)
 	fixtureFile := filepath.Join(fixtureDir, "users.json")
-	os.WriteFile(fixtureFile, data, 0644)
+	if err := os.WriteFile(fixtureFile, data, 0644); err != nil {
+		t.Fatalf("Failed to write fixture file: %v", err)
+	}
 
 	// Create test case with mock ORM
 	mockORM := &MockORM{
@@ -326,15 +333,21 @@ func TestTestCase_HTTPMethods(t *testing.T) {
 		switch r.Method {
 		case http.MethodGet:
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte("GET"))
+			if _, err := w.Write([]byte("GET")); err != nil {
+				t.Errorf("Failed to write: %v", err)
+			}
 		case http.MethodPost:
 			body, _ := io.ReadAll(r.Body)
 			w.WriteHeader(http.StatusCreated)
-			w.Write(body)
+			if _, err := w.Write(body); err != nil {
+				t.Errorf("Failed to write body: %v", err)
+			}
 		case http.MethodPut:
 			body, _ := io.ReadAll(r.Body)
 			w.WriteHeader(http.StatusOK)
-			w.Write(body)
+			if _, err := w.Write(body); err != nil {
+				t.Errorf("Failed to write body: %v", err)
+			}
 		case http.MethodDelete:
 			w.WriteHeader(http.StatusNoContent)
 		}
@@ -362,7 +375,9 @@ func TestTestCase_HTTPMethods(t *testing.T) {
 		}
 
 		var result map[string]string
-		json.Unmarshal(resp.Body.Bytes(), &result)
+		if err := json.Unmarshal(resp.Body.Bytes(), &result); err != nil {
+			t.Errorf("Failed to unmarshal: %v", err)
+		}
 		if result["key"] != "value" {
 			t.Error("POST body not transmitted correctly")
 		}
@@ -389,7 +404,9 @@ func TestTestCase_HTTPRequest(t *testing.T) {
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Test", "true")
 		w.WriteHeader(http.StatusOK)
-		io.Copy(w, r.Body)
+		if _, err := io.Copy(w, r.Body); err != nil {
+			t.Errorf("Failed to copy: %v", err)
+		}
 	})
 
 	router := &MockRouter{handler: handler}
@@ -587,12 +604,16 @@ func BenchmarkHTTPRequest(b *testing.B) {
 func BenchmarkLoadFixtures(b *testing.B) {
 	// Setup fixture file
 	fixtureDir := filepath.Join("test", "fixtures")
-	os.MkdirAll(fixtureDir, 0755)
+	if err := os.MkdirAll(fixtureDir, 0755); err != nil {
+		b.Fatalf("Failed to create dir: %v", err)
+	}
 	defer os.RemoveAll("test")
 
 	fixture := map[string]interface{}{"id": 1}
 	data, _ := json.Marshal(fixture)
-	os.WriteFile(filepath.Join(fixtureDir, "bench.json"), data, 0644)
+	if err := os.WriteFile(filepath.Join(fixtureDir, "bench.json"), data, 0644); err != nil {
+		b.Fatalf("Failed to write file: %v", err)
+	}
 
 	app := &MockApplication{}
 	tc := NewTestCase(&testing.T{}, app)

@@ -170,9 +170,7 @@ func (m *MockQueue) Process() error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	for _, job := range m.jobs {
-		m.processed = append(m.processed, job)
-	}
+	m.processed = append(m.processed, m.jobs...)
 	m.jobs = make([]interface{}, 0)
 	return nil
 }

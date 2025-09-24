@@ -139,7 +139,7 @@ func (m *Migrator) applyMigration(ctx context.Context, migration gor.Migration) 
 	if err != nil {
 		return err
 	}
-	defer tx.Rollback()
+	defer func() { _ = tx.Rollback() }()
 
 	// Apply migration SQL
 	if _, err := tx.ExecContext(ctx, migration.SQL); err != nil {
@@ -163,7 +163,7 @@ func (m *Migrator) rollbackMigration(ctx context.Context, migration gor.Migratio
 	if err != nil {
 		return err
 	}
-	defer tx.Rollback()
+	defer func() { _ = tx.Rollback() }()
 
 	// For a real implementation, we would need to store rollback SQL
 	// or generate it based on the forward migration

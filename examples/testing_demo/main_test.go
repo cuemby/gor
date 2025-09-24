@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -353,14 +354,14 @@ func TestHelpers(t *testing.T) {
 	})
 
 	t.Run("wait for condition", func(t *testing.T) {
-		counter := 0
+		var counter int32
 		go func() {
 			time.Sleep(100 * time.Millisecond)
-			counter = 1
+			atomic.StoreInt32(&counter, 1)
 		}()
 
 		success := gortest.WaitFor(func() bool {
-			return counter == 1
+			return atomic.LoadInt32(&counter) == 1
 		}, 500*time.Millisecond)
 
 		if !success {

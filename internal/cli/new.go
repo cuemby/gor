@@ -3,7 +3,6 @@ package cli
 import (
 	"fmt"
 	"path/filepath"
-	"strings"
 )
 
 // NewCommand creates a new Gor application
@@ -687,5 +686,5 @@ A Gor Framework application.
 ## License
 
 MIT
-`, strings.Title(appName))
+`, appName)
 }

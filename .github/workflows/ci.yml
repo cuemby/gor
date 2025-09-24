@@ -66,11 +66,10 @@ jobs:
       with:
         go-version-file: 'go.mod'
 
-    - name: Run golangci-lint
-      uses: golangci/golangci-lint-action@v6
-      with:
-        version: latest
-        args: --timeout=5m
+    - name: Install and run golangci-lint
+      run: |
+        go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.62.2
+        $(go env GOPATH)/bin/golangci-lint run --timeout=5m
 
     - name: Run code quality checks
       run: |
@@ -108,14 +107,14 @@ jobs:
 
     - name: Install security tools
       run: |
-        go install github.com/securecodewarrior/gosec/v2/cmd/gosec@latest &
+        go install github.com/securego/gosec/v2/cmd/gosec@latest &
         go install golang.org/x/vuln/cmd/govulncheck@latest &
         wait
 
     - name: Run security scans
       run: |
         echo "Running Gosec..."
-        gosec -fmt sarif -out gosec.sarif ./... &
+        $(go env GOPATH)/bin/gosec -fmt sarif -out gosec.sarif ./... &
         GOSEC_PID=$!
 
         echo "Running govulncheck..."
@@ -150,6 +149,6 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: gor-binary
+        name: gor
         path: bin/gor
 

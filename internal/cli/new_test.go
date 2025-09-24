@@ -34,8 +34,8 @@ func TestNewCommand_Run(t *testing.T) {
 	// Create temp directory for testing
 	tempDir := t.TempDir()
 	oldDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(oldDir)
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	cmd := NewNewCommand()
 
@@ -67,7 +67,9 @@ func TestNewCommand_Run(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// For "directory exists" test, create the directory
 			if tt.fileExists && len(tt.args) > 0 {
-				os.Mkdir(tt.args[0], 0755)
+				if err := os.Mkdir(tt.args[0], 0755); err != nil {
+					t.Fatal(err)
+				}
 			}
 
 			err := cmd.Run(tt.args)
@@ -103,8 +105,8 @@ func TestNewCommand_CreateDirectoryStructure(t *testing.T) {
 	// Create temp directory for testing
 	tempDir := t.TempDir()
 	oldDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(oldDir)
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	cmd := NewNewCommand()
 	appPath := "testapp"
@@ -359,8 +361,8 @@ func TestNewCommand_GenerateFiles(t *testing.T) {
 	// Create temp directory for testing
 	tempDir := t.TempDir()
 	oldDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(oldDir)
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	// Create app directory structure first
 	cmd := NewNewCommand()
@@ -368,8 +370,12 @@ func TestNewCommand_GenerateFiles(t *testing.T) {
 	appName := "testapp"
 
 	// Manually create the missing directories
-	os.MkdirAll(filepath.Join(appPath, "app/views/home"), 0755)
-	cmd.createDirectoryStructure(appPath)
+	if err := os.MkdirAll(filepath.Join(appPath, "app/views/home"), 0755); err != nil {
+		t.Fatal(err)
+	}
+	if err := cmd.createDirectoryStructure(appPath); err != nil {
+		t.Fatal(err)
+	}
 
 	err := cmd.generateFiles(appPath, appName)
 	if err != nil {
@@ -409,8 +415,8 @@ func TestNewCommand_GenerateFiles(t *testing.T) {
 func BenchmarkNewCommand_Run(b *testing.B) {
 	tempDir := b.TempDir()
 	oldDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(oldDir)
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	cmd := NewNewCommand()
 
@@ -425,8 +431,8 @@ func BenchmarkNewCommand_Run(b *testing.B) {
 func BenchmarkNewCommand_CreateDirectoryStructure(b *testing.B) {
 	tempDir := b.TempDir()
 	oldDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(oldDir)
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	cmd := NewNewCommand()
 
@@ -440,8 +446,8 @@ func BenchmarkNewCommand_CreateDirectoryStructure(b *testing.B) {
 func BenchmarkNewCommand_GenerateFiles(b *testing.B) {
 	tempDir := b.TempDir()
 	oldDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(oldDir)
+	_ = os.Chdir(tempDir)
+	defer func() { _ = os.Chdir(oldDir) }()
 
 	cmd := NewNewCommand()
 
@@ -449,7 +455,9 @@ func BenchmarkNewCommand_GenerateFiles(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		appPath := filepath.Join("benchapp", string(rune(i)))
 		appName := "benchapp"
-		cmd.createDirectoryStructure(appPath)
+		if err := cmd.createDirectoryStructure(appPath); err != nil {
+			b.Fatal(err)
+		}
 		_ = cmd.generateFiles(appPath, appName)
 	}
 }

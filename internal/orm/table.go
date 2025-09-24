@@ -70,7 +70,7 @@ func (t *gorTable) Create(model interface{}) error {
 	// Generate insert SQL
 	fields, values, placeholders := t.extractFieldsAndValues(model, false)
 
-	sql := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)",
+	sql := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)", // #nosec G201 - Table name is from schema definition, not user input
 		t.name, fields, placeholders)
 
 	result, err := t.db.Exec(sql, values...)
@@ -231,7 +231,7 @@ func (t *gorTable) BulkUpdate(models interface{}) error {
 	if err != nil {
 		return err
 	}
-	defer tx.Rollback()
+	defer func() { _ = tx.Rollback() }()
 
 	for i := 0; i < v.Len(); i++ {
 		model := v.Index(i).Interface()

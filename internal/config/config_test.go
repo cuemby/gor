@@ -21,11 +21,11 @@ func TestNew(t *testing.T) {
 			t.Fatal("New() should return a config instance")
 		}
 
-		if config.configPath != tmpDir {
+		if config != nil && config.configPath != tmpDir {
 			t.Errorf("Config path should be %s, got %s", tmpDir, config.configPath)
 		}
 
-		if config.envPrefix != "GOR" {
+		if config != nil && config.envPrefix != "GOR" {
 			t.Errorf("Default env prefix should be GOR, got %s", config.envPrefix)
 		}
 	})
@@ -157,8 +157,8 @@ func TestConfigGettersAndSetters(t *testing.T) {
 			t.Errorf("GetDuration() = %v, want %v", got, expectedDuration)
 		}
 
-		expectedSeconds := 30 * time.Second
-		if got := config.GetDuration("duration_int"); got != expectedSeconds {
+		expected := 30 * time.Second
+		if got := config.GetDuration("duration_int"); got != expected {
 			t.Errorf("GetDuration() should convert int to seconds, got %v", got)
 		}
 

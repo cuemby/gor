@@ -6,11 +6,7 @@ import (
 	"testing"
 )
 
-// Mock tracking for testing
-var (
-	writeFileCalled  = make(map[string]string)
-	createdDirs      []string
-)
+// Mock tracking for testing - removed unused variables
 
 // Test GenerateCommand
 func TestGenerateCommand(t *testing.T) {
@@ -39,8 +35,14 @@ func TestGenerateCommand_Run(t *testing.T) {
 	// Create temp directory for testing
 	tempDir := t.TempDir()
 	oldDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(oldDir)
+	if err := os.Chdir(tempDir); err != nil {
+		t.Fatal(err)
+	}
+	defer func() {
+		if err := os.Chdir(oldDir); err != nil {
+			t.Logf("Failed to change back to old dir: %v", err)
+		}
+	}()
 
 	cmd := NewGenerateCommand()
 
@@ -105,18 +107,24 @@ func TestGenerateCommand_Run(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Create necessary directories for file generation
 			if !tt.wantError && len(tt.args) > 1 {
-				os.MkdirAll("app/models", 0755)
-				os.MkdirAll("app/controllers", 0755)
-				os.MkdirAll("app/jobs", 0755)
-				os.MkdirAll("app/mailers", 0755)
-				os.MkdirAll("app/channels", 0755)
-				os.MkdirAll("app/views", 0755)
-				os.MkdirAll("db/migrations", 0755)
+				if err := os.MkdirAll("app/models", 0755); err != nil {
+					t.Fatal(err)
+				}
+				if err := os.MkdirAll("app/controllers", 0755); err != nil {
+					t.Fatal(err)
+				}
+				if err := os.MkdirAll("app/jobs", 0755); err != nil {
+					t.Fatal(err)
+				}
+				_ = os.MkdirAll("app/mailers", 0755)
+				_ = os.MkdirAll("app/channels", 0755)
+				_ = os.MkdirAll("app/views", 0755)
+				_ = os.MkdirAll("db/migrations", 0755)
 
 				// Create subdirectories for views in scaffold
 				if tt.args[0] == "scaffold" {
 					viewDir := "app/views/" + strings.ToLower(tt.args[1]) + "s"
-					os.MkdirAll(viewDir, 0755)
+					_ = os.MkdirAll(viewDir, 0755)
 				}
 			}
 
@@ -365,8 +373,14 @@ func BenchmarkGenerateCommand_GenerateModel(b *testing.B) {
 	// Create temp directory
 	tempDir := b.TempDir()
 	oldDir, _ := os.Getwd()
-	os.Chdir(tempDir)
-	defer os.Chdir(oldDir)
+	if err := os.Chdir(tempDir); err != nil {
+		b.Fatal(err)
+	}
+	defer func() {
+		if err := os.Chdir(oldDir); err != nil {
+			b.Logf("Failed to change back to old dir: %v", err)
+		}
+	}()
 
 	cmd := &GenerateCommand{}
 	fields := []string{"name:string", "age:integer"}

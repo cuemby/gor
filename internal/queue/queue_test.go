@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"sync"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -33,7 +34,7 @@ func setupTestQueue(t *testing.T) *SolidQueue {
 	t.Cleanup(func() {
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 		defer cancel()
-		queue.Stop(ctx)
+		_ = queue.Stop(ctx)
 	})
 
 	return queue
@@ -55,7 +56,7 @@ func TestNewSolidQueue(t *testing.T) {
 		defer func() {
 			ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 			defer cancel()
-			queue.Stop(ctx)
+			_ = queue.Stop(ctx)
 		}()
 
 		if queue.workers != 3 {
@@ -82,7 +83,7 @@ func TestNewSolidQueue(t *testing.T) {
 		defer func() {
 			ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 			defer cancel()
-			queue.Stop(ctx)
+			_ = queue.Stop(ctx)
 		}()
 
 		if queue.workers != 5 {
@@ -231,10 +232,13 @@ func TestSolidQueue_ProcessJob(t *testing.T) {
 	t.Run("SuccessfulJob", func(t *testing.T) {
 		var processedPayload interface{}
 		var processedContext *JobContext
+		var mu sync.Mutex
 
 		queue.RegisterHandler("success_handler", func(ctx *JobContext) error {
+			mu.Lock()
 			processedPayload = ctx.Payload
 			processedContext = ctx
+			mu.Unlock()
 			return nil
 		})
 
@@ -251,23 +255,28 @@ func TestSolidQueue_ProcessJob(t *testing.T) {
 		// Start queue processing
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
-		queue.Start(ctx)
+		_ = queue.Start(ctx)
 
 		// Wait for job to be processed
 		time.Sleep(500 * time.Millisecond)
 
-		if processedPayload == nil {
+		mu.Lock()
+		payload := processedPayload
+		jobCtx := processedContext
+		mu.Unlock()
+
+		if payload == nil {
 			t.Error("Job should have been processed")
 		}
 
-		if processedContext == nil {
+		if jobCtx == nil {
 			t.Error("Job context should be set")
 		} else {
-			if processedContext.Handler != "success_handler" {
-				t.Errorf("Expected handler 'success_handler', got %s", processedContext.Handler)
+			if jobCtx.Handler != "success_handler" {
+				t.Errorf("Expected handler 'success_handler', got %s", jobCtx.Handler)
 			}
-			if processedContext.Queue != "default" {
-				t.Errorf("Expected queue 'default', got %s", processedContext.Queue)
+			if jobCtx.Queue != "default" {
+				t.Errorf("Expected queue 'default', got %s", jobCtx.Queue)
 			}
 		}
 	})
@@ -291,7 +300,7 @@ func TestSolidQueue_ProcessJob(t *testing.T) {
 		// Start queue processing
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
-		queue.Start(ctx)
+		_ = queue.Start(ctx)
 
 		// Wait for job to be processed
 		time.Sleep(500 * time.Millisecond)
@@ -323,7 +332,7 @@ func TestSolidQueue_ProcessJob(t *testing.T) {
 		// Start queue processing
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
-		queue.Start(ctx)
+		_ = queue.Start(ctx)
 
 		// Wait for job to be processed (first attempt)
 		time.Sleep(500 * time.Millisecond)
@@ -365,7 +374,7 @@ func TestSolidQueue_RetryJob(t *testing.T) {
 	// Start queue processing
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	queue.Start(ctx)
+	_ = queue.Start(ctx)
 
 	// Wait for initial job attempt
 	time.Sleep(500 * time.Millisecond)
@@ -432,7 +441,7 @@ func TestSolidQueue_ConcurrentProcessing(t *testing.T) {
 	// Start queue processing
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	queue.Start(ctx)
+	_ = queue.Start(ctx)
 
 	// Wait for all jobs to complete
 	time.Sleep(2 * time.Second)
@@ -456,15 +465,15 @@ func TestSolidQueue_GetStats(t *testing.T) {
 
 	// Enqueue jobs in different states
 	completedJob := &Job{Handler: "test_handler", Payload: "completed"}
-	queue.Enqueue(completedJob)
+	_ = queue.Enqueue(completedJob)
 	queue.markJobCompleted(&jobRecord{ID: 1})
 
 	failedJob := &Job{Handler: "test_handler", Payload: "failed"}
-	queue.Enqueue(failedJob)
+	_ = queue.Enqueue(failedJob)
 	queue.markJobFailed(&jobRecord{ID: 2, Attempts: 3, MaxAttempts: 3}, fmt.Errorf("test error"))
 
 	pendingJob := &Job{Handler: "test_handler", Payload: "pending"}
-	queue.Enqueue(pendingJob)
+	_ = queue.Enqueue(pendingJob)
 
 	stats, err := queue.GetStats()
 	if err != nil {

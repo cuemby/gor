@@ -84,7 +84,7 @@ func (r *MockRouter) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			Query:    req.URL.Query(),
 			Flash:    make(map[string]interface{}),
 		}
-		handler(ctx)
+		_ = handler(ctx) // Ignore error in mock
 	} else {
 		w.WriteHeader(http.StatusNotFound)
 	}
@@ -200,9 +200,9 @@ func (c *MockController) Destroy(ctx *gor.Context) error {
 
 // MockConfig implements gor.Config for testing
 type MockConfig struct {
-	environment string
-	values      map[string]interface{}
-	dbConfig    gor.DatabaseConfig
+	environment  string
+	values       map[string]interface{}
+	dbConfig     gor.DatabaseConfig
 	serverConfig gor.ServerConfig
 }
 
@@ -215,8 +215,8 @@ func NewMockConfig() *MockConfig {
 			Database: ":memory:",
 		},
 		serverConfig: gor.ServerConfig{
-			Host: "localhost",
-			Port: 8080,
+			Host:         "localhost",
+			Port:         8080,
 			ReadTimeout:  15 * time.Second,
 			WriteTimeout: 15 * time.Second,
 			IdleTimeout:  60 * time.Second,
@@ -337,7 +337,9 @@ func TestRouter(t *testing.T) {
 
 	t.Run("GET", func(t *testing.T) {
 		handler := func(ctx *gor.Context) error {
-			ctx.Text(200, "test")
+			if err := ctx.Text(200, "test"); err != nil {
+				t.Errorf("Failed to write text: %v", err)
+			}
 			return nil
 		}
 

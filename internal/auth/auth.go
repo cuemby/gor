@@ -17,6 +17,15 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// ContextKey is a type for context keys to avoid collisions
+type ContextKey string
+
+// Context keys for auth data
+const (
+	UserContextKey    = ContextKey("user")
+	SessionContextKey = ContextKey("session")
+)
+
 // Common errors
 var (
 	ErrInvalidCredentials = errors.New("invalid email or password")
@@ -320,7 +329,7 @@ func (a *Authenticator) ValidateSession(token string) (*Session, *User, error) {
 
 	// Update last used time
 	go func() {
-		a.db.Exec("UPDATE sessions SET last_used = ? WHERE id = ?", time.Now(), session.ID)
+		_, _ = a.db.Exec("UPDATE sessions SET last_used = ? WHERE id = ?", time.Now(), session.ID)
 	}()
 
 	return &session, &user, nil
@@ -426,7 +435,7 @@ func (a *Authenticator) ResetPassword(token, newPassword string) error {
 	}
 
 	// Invalidate all existing sessions for security
-	a.InvalidateUserSessions(userID)
+	_ = a.InvalidateUserSessions(userID)
 
 	return nil
 }
@@ -489,7 +498,7 @@ func (a *Authenticator) CleanupExpiredSessions() error {
 // incrementFailedAttempts increments failed login attempts and locks account if necessary
 func (a *Authenticator) incrementFailedAttempts(userID int64) {
 	var attempts int
-	a.db.QueryRow("SELECT failed_attempts FROM users WHERE id = ?", userID).Scan(&attempts)
+	_ = a.db.QueryRow("SELECT failed_attempts FROM users WHERE id = ?", userID).Scan(&attempts)
 	attempts++
 
 	var lockedUntil *time.Time
@@ -498,7 +507,7 @@ func (a *Authenticator) incrementFailedAttempts(userID int64) {
 		lockedUntil = &t
 	}
 
-	a.db.Exec(`
+	_, _ = a.db.Exec(`
 		UPDATE users
 		SET failed_attempts = ?, locked_until = ?, updated_at = ?
 		WHERE id = ?
@@ -508,7 +517,7 @@ func (a *Authenticator) incrementFailedAttempts(userID int64) {
 // generateToken generates a secure random token
 func (a *Authenticator) generateToken(length int) string {
 	b := make([]byte, length)
-	rand.Read(b)
+	_, _ = rand.Read(b)
 	return base64.URLEncoding.EncodeToString(b)
 }
 
@@ -612,8 +621,8 @@ func (a *Authenticator) AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		// Add user to context
-		ctx := context.WithValue(r.Context(), "user", user)
-		ctx = context.WithValue(ctx, "session", session)
+		ctx := context.WithValue(r.Context(), UserContextKey, user)
+		ctx = context.WithValue(ctx, SessionContextKey, session)
 
 		// Call next handler
 		next.ServeHTTP(w, r.WithContext(ctx))
@@ -624,7 +633,7 @@ func (a *Authenticator) AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 func (a *Authenticator) RequireRole(role string) func(http.HandlerFunc) http.HandlerFunc {
 	return func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
-			user, ok := r.Context().Value("user").(*User)
+			user, ok := r.Context().Value(UserContextKey).(*User)
 			if !ok || !a.HasRole(user.ID, role) {
 				http.Error(w, "Forbidden", http.StatusForbidden)
 				return
@@ -638,7 +647,7 @@ func (a *Authenticator) RequireRole(role string) func(http.HandlerFunc) http.Han
 func (a *Authenticator) RequirePermission(permission string) func(http.HandlerFunc) http.HandlerFunc {
 	return func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
-			user, ok := r.Context().Value("user").(*User)
+			user, ok := r.Context().Value(UserContextKey).(*User)
 			if !ok || !a.HasPermission(user.ID, permission) {
 				http.Error(w, "Forbidden", http.StatusForbidden)
 				return

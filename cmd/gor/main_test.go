@@ -66,8 +66,12 @@ func TestRun(t *testing.T) {
 
 			// Read captured output
 			var bufOut, bufErr bytes.Buffer
-			io.Copy(&bufOut, rOut)
-			io.Copy(&bufErr, rErr)
+			if _, err := io.Copy(&bufOut, rOut); err != nil {
+				t.Logf("Failed to copy stdout: %v", err)
+			}
+			if _, err := io.Copy(&bufErr, rErr); err != nil {
+				t.Logf("Failed to copy stderr: %v", err)
+			}
 
 			// Check error
 			if tt.wantError && err == nil {
@@ -105,7 +109,9 @@ func TestRunInvalidCommand(t *testing.T) {
 
 	// Read captured output
 	var buf bytes.Buffer
-	io.Copy(&buf, r)
+	if _, err := io.Copy(&buf, r); err != nil {
+		t.Logf("Failed to copy output: %v", err)
+	}
 
 	// Should return an error for invalid command
 	if err == nil {
@@ -144,7 +150,7 @@ func TestMainFunction(t *testing.T) {
 
 	w.Close()
 	var buf bytes.Buffer
-	io.Copy(&buf, r)
+	_, _ = io.Copy(&buf, r)
 
 	// Verify some error handling occurs
 	if err == nil {
@@ -190,8 +196,8 @@ func BenchmarkRun(b *testing.B) {
 	os.Stderr = wErr
 
 	// Drain pipes in background
-	go io.Copy(io.Discard, rOut)
-	go io.Copy(io.Discard, rErr)
+	go func() { _, _ = io.Copy(io.Discard, rOut) }()
+	go func() { _, _ = io.Copy(io.Discard, rErr) }()
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -243,8 +249,8 @@ func captureOutput(f func() error) (string, string, error) {
 	wErr.Close()
 
 	var stdout, stderr bytes.Buffer
-	io.Copy(&stdout, rOut)
-	io.Copy(&stderr, rErr)
+	_, _ = io.Copy(&stdout, rOut)
+	_, _ = io.Copy(&stderr, rErr)
 
 	return stdout.String(), stderr.String(), err
 }
@@ -325,7 +331,7 @@ func TestMainFunctionIntegration(t *testing.T) {
 		os.Stderr = oldStderr
 
 		var buf bytes.Buffer
-		io.Copy(&buf, r)
+		_, _ = io.Copy(&buf, r)
 
 		expected := "Error: test error\n"
 		if buf.String() != expected {

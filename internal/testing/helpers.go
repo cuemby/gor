@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"math/rand"
+	"math/rand" // #nosec G404 - This is for test data generation, not cryptographic use
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -105,11 +105,11 @@ func SaveJSON(filename string, v interface{}) error {
 // RandomString generates a random string
 func RandomString(length int) string {
 	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	rand.Seed(time.Now().UnixNano())
+	// rand.Seed is deprecated as of Go 1.20; automatic seeding is now done by default
 
 	b := make([]byte, length)
 	for i := range b {
-		b[i] = charset[rand.Intn(len(charset))]
+		b[i] = charset[rand.Intn(len(charset))] // #nosec G404 - This is for test data, not cryptographic use
 	}
 	return string(b)
 }
@@ -121,8 +121,8 @@ func RandomEmail() string {
 
 // RandomInt generates a random integer
 func RandomInt(min, max int) int {
-	rand.Seed(time.Now().UnixNano())
-	return rand.Intn(max-min+1) + min
+	// rand.Seed is deprecated as of Go 1.20; automatic seeding is now done by default
+	return rand.Intn(max-min+1) + min // #nosec G404 - This is for test data, not cryptographic use
 }
 
 // CreateTestDatabase creates a test database
@@ -231,13 +231,13 @@ func CaptureOutput(fn func()) (string, string, error) {
 	fn()
 
 	// Read captured output
-	stdoutFile.Seek(0, 0)
+	_, _ = stdoutFile.Seek(0, 0)
 	stdoutData, err := io.ReadAll(stdoutFile)
 	if err != nil {
 		return "", "", err
 	}
 
-	stderrFile.Seek(0, 0)
+	_, _ = stderrFile.Seek(0, 0)
 	stderrData, err := io.ReadAll(stderrFile)
 	if err != nil {
 		return "", "", err
