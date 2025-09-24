@@ -26,7 +26,7 @@ echo -e "${BLUE}🔍 Validating documentation consistency...${NC}"
 # Helper function to increment counters
 check_result() {
     TOTAL_CHECKS=$((TOTAL_CHECKS + 1))
-    if [ $1 -eq 0 ]; then
+    if [ "$1" -eq 0 ]; then
         PASSED_CHECKS=$((PASSED_CHECKS + 1))
         echo -e "${GREEN}✅ $2${NC}"
     else
@@ -51,7 +51,7 @@ check_file_references() {
     # Use process substitution to avoid subshell variable issues
     while read -r ref; do
         # Clean up the reference (remove trailing punctuation)
-        clean_ref=$(echo "$ref" | sed 's/[,;.:)]$//')
+        clean_ref="${ref%[,;.:)]}"
         full_path="$PROJECT_ROOT/$clean_ref"
 
         if [ ! -e "$full_path" ]; then

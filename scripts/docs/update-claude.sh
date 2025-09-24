@@ -6,11 +6,11 @@
 set -euo pipefail
 
 # Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+RED=$'\033[0;31m'
+GREEN=$'\033[0;32m'
+YELLOW=$'\033[1;33m'
+BLUE=$'\033[0;34m'
+NC=$'\033[0m' # No Color
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -28,7 +28,8 @@ get_coverage_stats() {
     local coverage_file="$PROJECT_ROOT/coverage_output/coverage.out"
     if [ -f "$coverage_file" ]; then
         # Get overall coverage
-        local overall_coverage=$(go tool cover -func="$coverage_file" 2>/dev/null | grep "total:" | awk '{print $3}' | sed 's/%//')
+        local overall_coverage
+        overall_coverage=$(go tool cover -func="$coverage_file" 2>/dev/null | grep "total:" | awk '{print $3}' | sed 's/%//')
 
         # Get detailed package coverage
         echo "### Test Coverage Status (Current)"

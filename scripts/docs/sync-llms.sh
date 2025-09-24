@@ -6,11 +6,11 @@
 set -euo pipefail
 
 # Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+RED=$'\033[0;31m'
+GREEN=$'\033[0;32m'
+YELLOW=$'\033[1;33m'
+BLUE=$'\033[0;34m'
+NC=$'\033[0m' # No Color
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -54,7 +54,8 @@ get_examples() {
 
     # Use process substitution for better performance and avoid subshell issues
     while read -r dir; do
-        local name=$(basename "$dir")
+        local name
+        name=$(basename "$dir")
         local main_file="$dir/main.go"
         local description="Example application"
 
