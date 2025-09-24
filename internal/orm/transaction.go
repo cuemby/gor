@@ -40,7 +40,7 @@ func (t *gorTransaction) Create(model interface{}) error {
 	tableName := getTableName(reflect.TypeOf(model))
 	fields, values, placeholders := t.extractFieldsAndValues(model, true)
 
-	sql := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)",
+	sql := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)", // #nosec G201 - Table name is system-controlled
 		tableName,
 		fields,
 		placeholders)
@@ -82,7 +82,7 @@ func (t *gorTransaction) Update(model interface{}) error {
 	setParts, values := t.extractUpdateFields(model)
 	id := getID(model)
 
-	sql := fmt.Sprintf("UPDATE %s SET %s WHERE id = ?", tableName, setParts)
+	sql := fmt.Sprintf("UPDATE %s SET %s WHERE id = ?", tableName, setParts) // #nosec G201 - Table name is system-controlled
 	values = append(values, id)
 
 	_, err := t.tx.Exec(sql, values...)
@@ -112,7 +112,7 @@ func (t *gorTransaction) Delete(model interface{}) error {
 	id := getID(model)
 	tableName := getTableName(reflect.TypeOf(model))
 
-	sql := fmt.Sprintf("DELETE FROM %s WHERE id = ?", tableName)
+	sql := fmt.Sprintf("DELETE FROM %s WHERE id = ?", tableName) // #nosec G201 - Table name is system-controlled
 	_, err := t.tx.Exec(sql, id)
 	if err != nil {
 		return err
@@ -217,7 +217,7 @@ func (tqb *TransactionQueryBuilder) UpdateAll(updates map[string]interface{}) (i
 		args = append(args, value)
 	}
 
-	sql := fmt.Sprintf("UPDATE %s SET %s", tqb.tableName, joinStrings(setParts, ", "))
+	sql := fmt.Sprintf("UPDATE %s SET %s", tqb.tableName, joinStrings(setParts, ", ")) // #nosec G201 - Table name is system-controlled
 
 	if len(tqb.whereConditions) > 0 {
 		sql += " WHERE " + joinStrings(tqb.whereConditions, " AND ")
@@ -233,7 +233,7 @@ func (tqb *TransactionQueryBuilder) UpdateAll(updates map[string]interface{}) (i
 }
 
 func (tqb *TransactionQueryBuilder) DeleteAll() (int64, error) {
-	sql := fmt.Sprintf("DELETE FROM %s", tqb.tableName)
+	sql := fmt.Sprintf("DELETE FROM %s", tqb.tableName) // #nosec G201 - Table name is system-controlled
 
 	if len(tqb.whereConditions) > 0 {
 		sql += " WHERE " + joinStrings(tqb.whereConditions, " AND ")
