@@ -447,8 +447,15 @@ func TestTimeout(t *testing.T) {
 
 	// Test timeout
 	slowHandler := func(ctx *gor.Context) error {
-		time.Sleep(200 * time.Millisecond)
-		ctx.Response.WriteHeader(http.StatusOK)
+		select {
+		case <-time.After(200 * time.Millisecond):
+			// Only write if context is not done
+			if ctx.Context.Err() == nil {
+				ctx.Response.WriteHeader(http.StatusOK)
+			}
+		case <-ctx.Context.Done():
+			// Context cancelled, don't write
+		}
 		return nil
 	}
 

@@ -312,7 +312,8 @@ func TestSolidCable_MultipleSubscribers(t *testing.T) {
 
 	// Verify subscribers received messages (may not be exact due to timing)
 	totalReceived := int32(0)
-	for i, count := range messageCounters {
+	for i := range messageCounters {
+		count := atomic.LoadInt32(&messageCounters[i])
 		totalReceived += count
 		t.Logf("Subscriber %d received %d messages", i, count)
 	}
@@ -369,9 +370,12 @@ func TestSolidCable_Broadcast(t *testing.T) {
 	ctx := context.Background()
 	messageReceived := make(chan bool, 1)
 	var receivedMessage *Message
+	var mu sync.Mutex
 
 	handler := func(ctx context.Context, msg *Message) error {
+		mu.Lock()
 		receivedMessage = msg
+		mu.Unlock()
 		messageReceived <- true
 		return nil
 	}
@@ -393,11 +397,14 @@ func TestSolidCable_Broadcast(t *testing.T) {
 	// Wait for message
 	select {
 	case <-messageReceived:
-		if receivedMessage == nil {
+		mu.Lock()
+		msg := receivedMessage
+		mu.Unlock()
+		if msg == nil {
 			t.Error("Received message should not be nil")
 		} else {
-			if receivedMessage.Channel != "*" {
-				t.Errorf("Expected channel '*', got %s", receivedMessage.Channel)
+			if msg.Channel != "*" {
+				t.Errorf("Expected channel '*', got %s", msg.Channel)
 			}
 		}
 	case <-time.After(2 * time.Second):

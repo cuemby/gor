@@ -1,6 +1,7 @@
 package main
 
 import (
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -127,16 +128,16 @@ func TestSimpleHelpers(t *testing.T) {
 	})
 
 	t.Run("wait for condition", func(t *testing.T) {
-		counter := 0
+		var counter int32
 		go func() {
 			// Simulate async operation
 			time.Sleep(50 * time.Millisecond)
-			counter = 1
+			atomic.StoreInt32(&counter, 1)
 		}()
 
 		// Wait up to 500ms for condition
 		success := gortest.WaitFor(func() bool {
-			return counter == 1
+			return atomic.LoadInt32(&counter) == 1
 		}, 500*time.Millisecond)
 
 		if !success {
