@@ -187,6 +187,54 @@ tidy: ## Run go mod tidy to clean up dependencies
 check: fmt-check vet lint ## Run all code quality checks
 
 # =============================================================================
+# Git Hooks and CI Targets
+# =============================================================================
+
+.PHONY: install-hooks
+install-hooks: ## Install git pre-commit and pre-push hooks
+	@echo "$(GREEN)Installing git hooks...$(NC)"
+	@./scripts/install-hooks.sh
+
+.PHONY: pre-commit
+pre-commit: fmt-check vet ## Run pre-commit checks (fast checks only)
+	@echo "$(GREEN)Running pre-commit checks...$(NC)"
+	@echo "$(GREEN)Checking test compilation...$(NC)"
+	@$(GOTEST) -run=^$$ ./... > /dev/null 2>&1
+	@echo "$(GREEN)All pre-commit checks passed!$(NC)"
+
+.PHONY: pre-push
+pre-push: fmt-check vet test test-race lint build ## Run pre-push checks (comprehensive)
+	@echo "$(GREEN)All pre-push checks passed!$(NC)"
+
+.PHONY: ci-local
+ci-local: ## Run full CI suite locally (equivalent to GitHub Actions)
+	@echo "$(BLUE)==============================================================$(NC)"
+	@echo "$(BLUE)Running Full CI Suite Locally$(NC)"
+	@echo "$(BLUE)==============================================================$(NC)"
+	@echo ""
+	@echo "$(YELLOW)1. Format Check$(NC)"
+	@$(MAKE) fmt-check
+	@echo ""
+	@echo "$(YELLOW)2. Vet Check$(NC)"
+	@$(MAKE) vet
+	@echo ""
+	@echo "$(YELLOW)3. Lint Check$(NC)"
+	@$(MAKE) lint
+	@echo ""
+	@echo "$(YELLOW)4. Unit Tests$(NC)"
+	@$(MAKE) test
+	@echo ""
+	@echo "$(YELLOW)5. Race Detection$(NC)"
+	@$(MAKE) test-race
+	@echo ""
+	@echo "$(YELLOW)6. Build$(NC)"
+	@$(MAKE) build
+	@echo ""
+	@echo "$(GREEN)==============================================================$(NC)"
+	@echo "$(GREEN)✅ All CI checks passed successfully!$(NC)"
+	@echo "$(GREEN)==============================================================$(NC)"
+
+# =============================================================================
 # Development Targets
 # =============================================================================
 

@@ -208,6 +208,71 @@ gor db migrate
 
 This framework is currently in early development. Contributions and feedback are welcome!
 
+### Development Setup
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/cuemby/gor.git
+   cd gor
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   go mod download
+   make tools  # Install development tools
+   ```
+
+3. **Install Git hooks** (recommended):
+   ```bash
+   make install-hooks
+   ```
+
+### Git Hooks
+
+Gor includes pre-commit and pre-push hooks to ensure code quality before changes reach GitHub Actions:
+
+#### Pre-commit Hook
+Fast checks that run automatically before each commit:
+- Code formatting with `gofmt`
+- Go vet for common issues
+- Test compilation verification
+- go.mod tidiness check
+
+#### Pre-push Hook
+Comprehensive checks before pushing to remote:
+- All pre-commit checks
+- Full test suite execution
+- Race condition detection
+- golangci-lint (if installed)
+- Build verification
+- Optional security scanning (if gosec installed)
+
+#### Installation
+```bash
+# Install hooks automatically
+make install-hooks
+
+# Or run checks manually
+make pre-commit  # Run pre-commit checks
+make pre-push    # Run comprehensive checks
+make ci-local    # Run full CI pipeline locally
+```
+
+#### Bypassing Hooks
+In emergency situations, you can bypass hooks (use sparingly):
+```bash
+git commit --no-verify
+git push --no-verify
+```
+
+### Code Quality Standards
+
+- **Test Coverage**: Aim for 80%+ coverage for new code
+- **Formatting**: Use `make fmt` to format code
+- **Linting**: Use `make lint` to check code quality
+- **Testing**: Use `make test` to run tests
+- **Race Detection**: Use `make test-race` for concurrent code
+
 ## License
 
 MIT License - see LICENSE file for details.
