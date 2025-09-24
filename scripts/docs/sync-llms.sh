@@ -6,11 +6,11 @@
 set -euo pipefail
 
 # Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+RED=$'\033[0;31m'
+GREEN=$'\033[0;32m'
+YELLOW=$'\033[1;33m'
+BLUE=$'\033[0;34m'
+NC=$'\033[0m' # No Color
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -50,35 +50,47 @@ get_coverage_stats() {
 
 # Helper function to get example applications
 get_examples() {
-    find "$PROJECT_ROOT/examples" -maxdepth 1 -type d -not -path "$PROJECT_ROOT/examples" | \
+    local examples=()
+
+    # Use process substitution for better performance and avoid subshell issues
     while read -r dir; do
-        local name=$(basename "$dir")
+        local name
+        name=$(basename "$dir")
         local main_file="$dir/main.go"
-        local description=""
+        local description="Example application"
 
         if [ -f "$main_file" ]; then
-            description=$(grep -E "^// .*" "$main_file" | head -1 | sed 's|^// ||' || echo "Example application")
+            description=$(grep -E "^// .*" "$main_file" | head -1 | sed 's|^// ||' 2>/dev/null || echo "Example application")
         fi
 
-        echo "- [$name Application](./examples/$name) - $description"
-    done | sort
+        examples+=("- [$name Application](./examples/$name) - $description")
+    done < <(find "$PROJECT_ROOT/examples" -maxdepth 1 -type d -not -path "$PROJECT_ROOT/examples")
+
+    # Sort and output
+    printf '%s\n' "${examples[@]}" | sort
 }
 
 # Helper function to scan for actual Go packages
 get_framework_components() {
-    find "$PROJECT_ROOT/internal" -maxdepth 1 -type d -not -path "$PROJECT_ROOT/internal" | \
+    local components=()
+
+    # Use process substitution for better performance and avoid subshell issues
     while read -r dir; do
         local name=$(basename "$dir")
-        local desc=""
+        local desc="Framework component"
 
         # Try to get description from main Go file
         if [ -f "$dir/$name.go" ]; then
-            desc=$(grep -E "^// Package $name" "$dir/$name.go" | head -1 | sed "s|^// Package $name ||" || echo "")
+            local extracted_desc
+            extracted_desc=$(grep -E "^// Package $name" "$dir/$name.go" | head -1 | sed "s|^// Package $name ||" 2>/dev/null)
+            [ -n "$extracted_desc" ] && desc="$extracted_desc"
         fi
 
-        [ -z "$desc" ] && desc="Framework component"
-        echo "- \`internal/$name\` - $desc"
-    done | sort
+        components+=("- \`internal/$name\` - $desc")
+    done < <(find "$PROJECT_ROOT/internal" -maxdepth 1 -type d -not -path "$PROJECT_ROOT/internal")
+
+    # Sort and output
+    printf '%s\n' "${components[@]}" | sort
 }
 
 # Start generating the new llms.txt

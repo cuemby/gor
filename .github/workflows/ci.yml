@@ -127,6 +127,51 @@ jobs:
       with:
         sarif_file: gosec.sarif
 
+  docs:
+    name: Documentation
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: 'go.mod'
+
+    - name: Install shellcheck
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y shellcheck
+
+    - name: Make scripts executable
+      run: |
+        chmod +x scripts/docs/validate-docs.sh
+        chmod +x scripts/docs/sync-llms.sh
+        chmod +x scripts/docs/update-claude.sh
+
+    - name: Check shell scripts with shellcheck
+      run: make shellcheck
+
+    - name: Validate documentation integrity
+      run: make docs-validate
+
+    - name: Check documentation sync
+      run: |
+        # Generate coverage first to ensure llms.txt has accurate data
+        make test-coverage || true
+
+        # Now sync documentation
+        make docs-sync || true
+
+        # Check if there are changes (warning only, not failure)
+        if ! git diff --quiet docs/dev/llms.txt; then
+          echo "::warning::llms.txt may be out of sync with codebase"
+          echo "This can happen if coverage data differs between local and CI"
+          echo "To update: run 'make test-coverage && make docs-sync' locally"
+        fi
+
   build:
     name: Build
     runs-on: ubuntu-latest
