@@ -117,14 +117,14 @@ func TestGenerateCommand_Run(t *testing.T) {
 					t.Fatal(err)
 				}
 				_ = os.MkdirAll("app/mailers", 0755)
-				os.MkdirAll("app/channels", 0755)
-				os.MkdirAll("app/views", 0755)
-				os.MkdirAll("db/migrations", 0755)
+				_ = os.MkdirAll("app/channels", 0755)
+				_ = os.MkdirAll("app/views", 0755)
+				_ = os.MkdirAll("db/migrations", 0755)
 
 				// Create subdirectories for views in scaffold
 				if tt.args[0] == "scaffold" {
 					viewDir := "app/views/" + strings.ToLower(tt.args[1]) + "s"
-					os.MkdirAll(viewDir, 0755)
+					_ = os.MkdirAll(viewDir, 0755)
 				}
 			}
 

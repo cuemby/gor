@@ -209,6 +209,7 @@ func TestNewTestCase(t *testing.T) {
 
 	if tc == nil {
 		t.Fatal("NewTestCase returned nil")
+		return
 	}
 
 	if tc.t != t {

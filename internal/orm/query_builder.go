@@ -301,7 +301,7 @@ func (qb *QueryBuilder) FindInBatches(dest interface{}, batchSize int, fn func(t
 
 		gorTx := &gorTransaction{tx: tx}
 		if err := fn(gorTx, batch); err != nil {
-			tx.Rollback()
+			_ = tx.Rollback()
 			return err
 		}
 

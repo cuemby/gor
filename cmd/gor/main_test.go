@@ -197,7 +197,7 @@ func BenchmarkRun(b *testing.B) {
 
 	// Drain pipes in background
 	go func() { _, _ = io.Copy(io.Discard, rOut) }()
-	go io.Copy(io.Discard, rErr)
+	go func() { _, _ = io.Copy(io.Discard, rErr) }()
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -249,8 +249,8 @@ func captureOutput(f func() error) (string, string, error) {
 	wErr.Close()
 
 	var stdout, stderr bytes.Buffer
-	io.Copy(&stdout, rOut)
-	io.Copy(&stderr, rErr)
+	_, _ = io.Copy(&stdout, rOut)
+	_, _ = io.Copy(&stderr, rErr)
 
 	return stdout.String(), stderr.String(), err
 }

@@ -101,6 +101,7 @@ func TestNewManager(t *testing.T) {
 
 	if manager == nil {
 		t.Fatal("NewManager returned nil")
+		return
 	}
 
 	if manager.app != app {

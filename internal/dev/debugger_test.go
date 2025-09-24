@@ -14,6 +14,7 @@ func TestNewDebugger(t *testing.T) {
 
 	if debugger == nil {
 		t.Fatal("NewDebugger returned nil")
+		return
 	}
 
 	if debugger.port != 8080 {
@@ -152,6 +153,7 @@ func TestCircularBuffer(t *testing.T) {
 
 	if buffer == nil {
 		t.Fatal("NewCircularBuffer returned nil")
+		return
 	}
 
 	if buffer.size != 3 {
@@ -215,6 +217,7 @@ func TestMetrics(t *testing.T) {
 
 	if metrics == nil {
 		t.Fatal("NewMetrics returned nil")
+		return
 	}
 
 	if metrics.CustomMetrics == nil {

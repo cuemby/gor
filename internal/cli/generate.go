@@ -319,7 +319,7 @@ func (c *GenerateCommand) generateModelContent(name string, fields []Field) stri
 		if tags != "" {
 			tags = fmt.Sprintf(" `gorm:\"%s\"`", tags)
 		}
-		fieldsStr += fmt.Sprintf("\t%s %s%s\n", strings.Title(f.Name), f.GoType, tags)
+		fieldsStr += fmt.Sprintf("\t%s %s%s\n", cases.Title(language.English).String(f.Name), f.GoType, tags)
 	}
 
 	return fmt.Sprintf(`package models
@@ -505,7 +505,7 @@ func (c *%s) %s(ctx *gor.Context) error {
 	// TODO: Implement %s action
 	return ctx.HTML(http.StatusOK, "%s action")
 }
-`, strings.Title(action), name, strings.Title(action), action, action)
+`, cases.Title(language.English).String(action), name, cases.Title(language.English).String(action), action, action)
 	}
 
 	return fmt.Sprintf(`package controllers
@@ -633,7 +633,7 @@ func (c *GenerateCommand) generateViewContent(modelName, viewType string, fields
     {{end}}
   </tbody>
 </table>
-`, strings.Title(pluralName), pluralName, modelName, pluralName, pluralName, pluralName, pluralName)
+`, cases.Title(language.English).String(pluralName), pluralName, modelName, pluralName, pluralName, pluralName, pluralName)
 
 	case "show":
 		return fmt.Sprintf(`<h1>%s #{{.%s.ID}}</h1>
@@ -642,7 +642,7 @@ func (c *GenerateCommand) generateViewContent(modelName, viewType string, fields
   <a href="/%s/{{.%s.ID}}/edit">Edit</a>
   <a href="/%s">Back to List</a>
 </p>
-`, strings.Title(modelName), lowerName, pluralName, lowerName, pluralName)
+`, cases.Title(language.English).String(modelName), lowerName, pluralName, lowerName, pluralName)
 
 	case "new":
 		return fmt.Sprintf(`<h1>New %s</h1>
@@ -652,7 +652,7 @@ func (c *GenerateCommand) generateViewContent(modelName, viewType string, fields
   <button type="submit">Create %s</button>
   <a href="/%s">Cancel</a>
 </form>
-`, strings.Title(modelName), pluralName, modelName, pluralName)
+`, cases.Title(language.English).String(modelName), pluralName, modelName, pluralName)
 
 	case "edit":
 		return fmt.Sprintf(`<h1>Edit %s</h1>
@@ -663,7 +663,7 @@ func (c *GenerateCommand) generateViewContent(modelName, viewType string, fields
   <button type="submit">Update %s</button>
   <a href="/%s/{{.%s.ID}}">Cancel</a>
 </form>
-`, strings.Title(modelName), pluralName, lowerName, modelName, pluralName, lowerName)
+`, cases.Title(language.English).String(modelName), pluralName, lowerName, modelName, pluralName, lowerName)
 
 	case "_form":
 		var formFields string
@@ -674,7 +674,7 @@ func (c *GenerateCommand) generateViewContent(modelName, viewType string, fields
     <label for="%s">%s</label>
     <textarea name="%s" id="%s">{{.%s.%s}}</textarea>
   </div>
-`, field.Name, strings.Title(field.Name), field.Name, field.Name, lowerName, strings.Title(field.Name))
+`, field.Name, cases.Title(language.English).String(field.Name), field.Name, field.Name, lowerName, cases.Title(language.English).String(field.Name))
 			} else {
 				if field.Type == "boolean" {
 					inputType = "checkbox"
@@ -689,7 +689,7 @@ func (c *GenerateCommand) generateViewContent(modelName, viewType string, fields
     <label for="%s">%s</label>
     <input type="%s" name="%s" id="%s" value="{{.%s.%s}}">
   </div>
-`, field.Name, strings.Title(field.Name), inputType, field.Name, field.Name, lowerName, strings.Title(field.Name))
+`, field.Name, cases.Title(language.English).String(field.Name), inputType, field.Name, field.Name, lowerName, cases.Title(language.English).String(field.Name))
 			}
 		}
 		return fmt.Sprintf(`{{define "form"}}

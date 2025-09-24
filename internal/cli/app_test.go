@@ -32,6 +32,7 @@ func TestNewApp(t *testing.T) {
 
 	if app == nil {
 		t.Fatal("NewApp returned nil")
+		return
 	}
 
 	if app.version != "1.0.0" {

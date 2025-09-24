@@ -769,7 +769,7 @@ func TestAuthenticator_Middleware(t *testing.T) {
 	t.Run("RequireRole_ValidRole", func(t *testing.T) {
 		testHandler := func(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte("role_authorized"))
+			_, _ = w.Write([]byte("role_authorized"))
 		}
 
 		roleMiddleware := auth.RequireRole("user")

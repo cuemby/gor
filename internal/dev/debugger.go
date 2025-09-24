@@ -309,7 +309,7 @@ func (d *Debugger) handleDebugUI(w http.ResponseWriter, r *http.Request) {
 </html>`
 
 	w.Header().Set("Content-Type", "text/html")
-	w.Write([]byte(html))
+	_, _ = w.Write([]byte(html))
 }
 
 // handleBreakpoints handles breakpoint API
@@ -352,7 +352,7 @@ func (d *Debugger) handleStack(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	stack := debug.Stack()
-	json.NewEncoder(w).Encode(map[string]string{
+	_ = json.NewEncoder(w).Encode(map[string]string{
 		"stack": string(stack),
 	})
 }
@@ -375,7 +375,7 @@ func (d *Debugger) handleGoroutines(w http.ResponseWriter, r *http.Request) {
 	buf := make([]byte, 1<<20) // 1MB buffer
 	n := runtime.Stack(buf, true)
 
-	json.NewEncoder(w).Encode(map[string]interface{}{
+	_ = json.NewEncoder(w).Encode(map[string]interface{}{
 		"count":      runtime.NumGoroutine(),
 		"stacktrace": string(buf[:n]),
 	})

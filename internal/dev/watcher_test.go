@@ -13,6 +13,7 @@ func TestNewWatcher(t *testing.T) {
 
 	if watcher == nil {
 		t.Fatal("NewWatcher returned nil")
+		return
 	}
 
 	if watcher.root != "/test/path" {
