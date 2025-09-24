@@ -17,12 +17,13 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// contextKey is a type for context keys to avoid collisions
-type contextKey string
+// ContextKey is a type for context keys to avoid collisions
+type ContextKey string
 
+// Context keys for auth data
 const (
-	userContextKey    = contextKey("user")
-	sessionContextKey = contextKey("session")
+	UserContextKey    = ContextKey("user")
+	SessionContextKey = ContextKey("session")
 )
 
 // Common errors
@@ -620,8 +621,8 @@ func (a *Authenticator) AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		// Add user to context
-		ctx := context.WithValue(r.Context(), userContextKey, user)
-		ctx = context.WithValue(ctx, sessionContextKey, session)
+		ctx := context.WithValue(r.Context(), UserContextKey, user)
+		ctx = context.WithValue(ctx, SessionContextKey, session)
 
 		// Call next handler
 		next.ServeHTTP(w, r.WithContext(ctx))
@@ -632,7 +633,7 @@ func (a *Authenticator) AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 func (a *Authenticator) RequireRole(role string) func(http.HandlerFunc) http.HandlerFunc {
 	return func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
-			user, ok := r.Context().Value("user").(*User)
+			user, ok := r.Context().Value(UserContextKey).(*User)
 			if !ok || !a.HasRole(user.ID, role) {
 				http.Error(w, "Forbidden", http.StatusForbidden)
 				return
@@ -646,7 +647,7 @@ func (a *Authenticator) RequireRole(role string) func(http.HandlerFunc) http.Han
 func (a *Authenticator) RequirePermission(permission string) func(http.HandlerFunc) http.HandlerFunc {
 	return func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
-			user, ok := r.Context().Value("user").(*User)
+			user, ok := r.Context().Value(UserContextKey).(*User)
 			if !ok || !a.HasPermission(user.ID, permission) {
 				http.Error(w, "Forbidden", http.StatusForbidden)
 				return

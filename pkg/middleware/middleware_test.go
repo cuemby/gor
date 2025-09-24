@@ -248,7 +248,7 @@ func TestRateLimit(t *testing.T) {
 	// First request should pass
 	ctx1 := createTestContext("GET", "/test")
 	ctx1.Request.RemoteAddr = "192.168.1.1:1234"
-	_ = middleware(handler)(ctx1)
+	err := middleware(handler)(ctx1)
 	if err != nil {
 		t.Errorf("First request failed: %v", err)
 	}
@@ -340,7 +340,7 @@ func TestBasicAuth(t *testing.T) {
 
 	// Test without credentials
 	ctx1 := createTestContext("GET", "/test")
-	_ = middleware(handler)(ctx1)
+	_ = middleware(handler)(ctx1)  // Error expected for unauthorized
 
 	w1 := ctx1.Response.(*httptest.ResponseRecorder)
 	if w1.Code != http.StatusUnauthorized {
@@ -353,7 +353,7 @@ func TestBasicAuth(t *testing.T) {
 	// Test with valid credentials
 	ctx2 := createTestContext("GET", "/test")
 	ctx2.Request.SetBasicAuth("admin", "password123")
-	err = middleware(handler)(ctx2)
+	err := middleware(handler)(ctx2)
 
 	if err != nil {
 		t.Errorf("Valid auth failed: %v", err)

@@ -660,7 +660,7 @@ func TestAuthenticator_Middleware(t *testing.T) {
 		// Create test handler
 		testHandler := func(w http.ResponseWriter, r *http.Request) {
 			// Check if user is in context
-			contextUser, ok := r.Context().Value("user").(*User)
+			contextUser, ok := r.Context().Value(UserContextKey).(*User)
 			if !ok {
 				t.Error("User should be in request context")
 				return
@@ -670,7 +670,7 @@ func TestAuthenticator_Middleware(t *testing.T) {
 			}
 
 			// Check if session is in context
-			contextSession, ok := r.Context().Value("session").(*Session)
+			contextSession, ok := r.Context().Value(SessionContextKey).(*Session)
 			if !ok {
 				t.Error("Session should be in request context")
 				return
@@ -773,9 +773,7 @@ func TestAuthenticator_Middleware(t *testing.T) {
 
 		// Create request with user in context
 		req := httptest.NewRequest("GET", "/admin", nil)
-		type contextKey string
-		const userContextKey = contextKey("user")
-		ctx := context.WithValue(req.Context(), userContextKey, user)
+		ctx := context.WithValue(req.Context(), UserContextKey, user)
 		req = req.WithContext(ctx)
 		w := httptest.NewRecorder()
 
