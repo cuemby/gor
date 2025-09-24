@@ -208,7 +208,7 @@ func TestRequestID(t *testing.T) {
 
 	var capturedID string
 	handler := func(ctx *gor.Context) error {
-		if id, ok := ctx.Context.Value("request_id").(string); ok {
+		if id, ok := ctx.Context.Value(contextKey("request_id")).(string); ok {
 			capturedID = id
 		}
 		return nil

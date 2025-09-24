@@ -3,9 +3,6 @@ package cli
 import (
 	"fmt"
 	"path/filepath"
-
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 )
 
 // NewCommand creates a new Gor application
@@ -689,5 +686,5 @@ A Gor Framework application.
 ## License
 
 MIT
-`, cases.Title(language.English).String(appName))
+`, appName)
 }
