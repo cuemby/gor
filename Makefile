@@ -302,8 +302,27 @@ migrate: build ## Run database migrations
 .PHONY: docs
 docs: ## Generate documentation
 	@echo "$(GREEN)Generating documentation...$(NC)"
-	@$(GOCMD) doc -all ./pkg/gor > docs/api-reference.txt
+	@$(GOCMD) doc -all ./pkg/gor > docs/api/api-reference.txt
 	@echo "$(GREEN)Documentation generated!$(NC)"
+
+.PHONY: docs-sync
+docs-sync: ## Auto-generate llms.txt from current codebase
+	@echo "$(GREEN)Syncing documentation with codebase...$(NC)"
+	@./scripts/docs/sync-llms.sh
+
+.PHONY: docs-validate
+docs-validate: ## Validate documentation consistency
+	@echo "$(GREEN)Validating documentation...$(NC)"
+	@./scripts/docs/validate-docs.sh
+
+.PHONY: docs-update-claude
+docs-update-claude: ## Update CLAUDE.md with current project state
+	@echo "$(GREEN)Updating CLAUDE.md...$(NC)"
+	@./scripts/docs/update-claude.sh
+
+.PHONY: docs-all
+docs-all: docs-sync docs-update-claude docs-validate docs ## Update all documentation and validate
+	@echo "$(GREEN)All documentation tasks complete!$(NC)"
 
 # =============================================================================
 # CI/CD Targets
