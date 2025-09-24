@@ -66,8 +66,12 @@ func TestRun(t *testing.T) {
 
 			// Read captured output
 			var bufOut, bufErr bytes.Buffer
-			io.Copy(&bufOut, rOut)
-			io.Copy(&bufErr, rErr)
+			if _, err := io.Copy(&bufOut, rOut); err != nil {
+				t.Logf("Failed to copy stdout: %v", err)
+			}
+			if _, err := io.Copy(&bufErr, rErr); err != nil {
+				t.Logf("Failed to copy stderr: %v", err)
+			}
 
 			// Check error
 			if tt.wantError && err == nil {
@@ -105,7 +109,9 @@ func TestRunInvalidCommand(t *testing.T) {
 
 	// Read captured output
 	var buf bytes.Buffer
-	io.Copy(&buf, r)
+	if _, err := io.Copy(&buf, r); err != nil {
+		t.Logf("Failed to copy output: %v", err)
+	}
 
 	// Should return an error for invalid command
 	if err == nil {

@@ -33,7 +33,7 @@ func setupTestQueue(t *testing.T) *SolidQueue {
 	t.Cleanup(func() {
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 		defer cancel()
-		queue.Stop(ctx)
+		_ = queue.Stop(ctx)
 	})
 
 	return queue
@@ -55,7 +55,7 @@ func TestNewSolidQueue(t *testing.T) {
 		defer func() {
 			ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 			defer cancel()
-			queue.Stop(ctx)
+			_ = queue.Stop(ctx)
 		}()
 
 		if queue.workers != 3 {
@@ -82,7 +82,7 @@ func TestNewSolidQueue(t *testing.T) {
 		defer func() {
 			ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 			defer cancel()
-			queue.Stop(ctx)
+			_ = queue.Stop(ctx)
 		}()
 
 		if queue.workers != 5 {
@@ -251,7 +251,7 @@ func TestSolidQueue_ProcessJob(t *testing.T) {
 		// Start queue processing
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
-		queue.Start(ctx)
+		_ = queue.Start(ctx)
 
 		// Wait for job to be processed
 		time.Sleep(500 * time.Millisecond)
@@ -291,7 +291,7 @@ func TestSolidQueue_ProcessJob(t *testing.T) {
 		// Start queue processing
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
-		queue.Start(ctx)
+		_ = queue.Start(ctx)
 
 		// Wait for job to be processed
 		time.Sleep(500 * time.Millisecond)
@@ -323,7 +323,7 @@ func TestSolidQueue_ProcessJob(t *testing.T) {
 		// Start queue processing
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
-		queue.Start(ctx)
+		_ = queue.Start(ctx)
 
 		// Wait for job to be processed (first attempt)
 		time.Sleep(500 * time.Millisecond)
@@ -365,7 +365,7 @@ func TestSolidQueue_RetryJob(t *testing.T) {
 	// Start queue processing
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	queue.Start(ctx)
+	_ = queue.Start(ctx)
 
 	// Wait for initial job attempt
 	time.Sleep(500 * time.Millisecond)
@@ -432,7 +432,7 @@ func TestSolidQueue_ConcurrentProcessing(t *testing.T) {
 	// Start queue processing
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	queue.Start(ctx)
+	_ = queue.Start(ctx)
 
 	// Wait for all jobs to complete
 	time.Sleep(2 * time.Second)
@@ -456,15 +456,15 @@ func TestSolidQueue_GetStats(t *testing.T) {
 
 	// Enqueue jobs in different states
 	completedJob := &Job{Handler: "test_handler", Payload: "completed"}
-	queue.Enqueue(completedJob)
+	_ = queue.Enqueue(completedJob)
 	queue.markJobCompleted(&jobRecord{ID: 1})
 
 	failedJob := &Job{Handler: "test_handler", Payload: "failed"}
-	queue.Enqueue(failedJob)
+	_ = queue.Enqueue(failedJob)
 	queue.markJobFailed(&jobRecord{ID: 2, Attempts: 3, MaxAttempts: 3}, fmt.Errorf("test error"))
 
 	pendingJob := &Job{Handler: "test_handler", Payload: "pending"}
-	queue.Enqueue(pendingJob)
+	_ = queue.Enqueue(pendingJob)
 
 	stats, err := queue.GetStats()
 	if err != nil {

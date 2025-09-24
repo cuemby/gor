@@ -109,7 +109,7 @@ Don't forget to:
 }
 
 func (c *GenerateCommand) generateModel(name string, fields []string) error {
-	modelName := strings.Title(name)
+	modelName := toTitle(name)
 	tableName := strings.ToLower(name) + "s"
 
 	// Parse fields
@@ -134,7 +134,7 @@ func (c *GenerateCommand) generateModel(name string, fields []string) error {
 }
 
 func (c *GenerateCommand) generateController(name string, actions []string) error {
-	controllerName := strings.Title(name) + "Controller"
+	controllerName := toTitle(name) + "Controller"
 	controllerPath := filepath.Join("app/controllers", strings.ToLower(name)+"_controller.go")
 
 	if len(actions) == 0 {
@@ -152,7 +152,7 @@ func (c *GenerateCommand) generateController(name string, actions []string) erro
 }
 
 func (c *GenerateCommand) generateFullController(name string) error {
-	controllerName := strings.Title(name) + "Controller"
+	controllerName := toTitle(name) + "Controller"
 	controllerPath := filepath.Join("app/controllers", strings.ToLower(name)+"_controller.go")
 
 	controllerContent := c.generateFullControllerContent(controllerName, name)
@@ -800,4 +800,12 @@ func contains(slice []string, item string) bool {
 		}
 	}
 	return false
+}
+
+// toTitle converts a string to title case (first letter uppercase)
+func toTitle(s string) string {
+	if len(s) == 0 {
+		return s
+	}
+	return strings.ToUpper(s[:1]) + s[1:]
 }

@@ -25,7 +25,6 @@ type cacheEntry struct {
 // SolidCache implements a database-backed cache similar to Rails' Solid Cache
 type SolidCache struct {
 	db              *sql.DB
-	mu              sync.RWMutex
 	memCache        map[string]*memoryCacheEntry // L1 cache in memory
 	memCacheMu      sync.RWMutex
 	maxMemorySize   int64
@@ -149,7 +148,7 @@ func (sc *SolidCache) Get(key string) (interface{}, error) {
 	// Check expiration
 	if expiresAt.Valid && expiresAt.Time.Before(time.Now()) {
 		// Entry expired, delete it
-		sc.Delete(key)
+		_ = sc.Delete(key)
 		return nil, nil
 	}
 
@@ -362,7 +361,7 @@ func (sc *SolidCache) incrementHitCount(key string) {
 		SET hit_count = hit_count + 1
 		WHERE key = ?
 	`
-	sc.db.Exec(query, key)
+	_, _ = sc.db.Exec(query, key)
 }
 
 // cleanupWorker periodically removes expired entries

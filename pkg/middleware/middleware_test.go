@@ -248,7 +248,7 @@ func TestRateLimit(t *testing.T) {
 	// First request should pass
 	ctx1 := createTestContext("GET", "/test")
 	ctx1.Request.RemoteAddr = "192.168.1.1:1234"
-	err := middleware(handler)(ctx1)
+	_ = middleware(handler)(ctx1)
 	if err != nil {
 		t.Errorf("First request failed: %v", err)
 	}
@@ -264,7 +264,7 @@ func TestRateLimit(t *testing.T) {
 	// Third request should be rate limited
 	ctx3 := createTestContext("GET", "/test")
 	ctx3.Request.RemoteAddr = "192.168.1.1:1234"
-	err = middleware(handler)(ctx3)
+	_ = middleware(handler)(ctx3)
 
 	w3 := ctx3.Response.(*httptest.ResponseRecorder)
 	if w3.Code != http.StatusTooManyRequests {
@@ -340,7 +340,7 @@ func TestBasicAuth(t *testing.T) {
 
 	// Test without credentials
 	ctx1 := createTestContext("GET", "/test")
-	err := middleware(handler)(ctx1)
+	_ = middleware(handler)(ctx1)
 
 	w1 := ctx1.Response.(*httptest.ResponseRecorder)
 	if w1.Code != http.StatusUnauthorized {
@@ -371,7 +371,7 @@ func TestBasicAuth(t *testing.T) {
 	// Test with invalid credentials
 	ctx3 := createTestContext("GET", "/test")
 	ctx3.Request.SetBasicAuth("admin", "wrongpass")
-	err = middleware(handler)(ctx3)
+	_ = middleware(handler)(ctx3)
 
 	w3 := ctx3.Response.(*httptest.ResponseRecorder)
 	if w3.Code != http.StatusUnauthorized {
@@ -395,7 +395,7 @@ func TestCSRF(t *testing.T) {
 
 	// Test GET request (should pass without token)
 	ctx1 := createTestContext("GET", "/test")
-	err := middleware(handler)(ctx1)
+	_ = middleware(handler)(ctx1)
 	if err != nil {
 		t.Errorf("GET request failed: %v", err)
 	}
@@ -412,7 +412,7 @@ func TestCSRF(t *testing.T) {
 	// Test POST with token in header
 	ctx3 := createTestContext("POST", "/test")
 	ctx3.Request.Header.Set("X-CSRF-Token", "valid-token-with-more-than-20-chars")
-	err = middleware(handler)(ctx3)
+	_ = middleware(handler)(ctx3)
 
 	if err != nil {
 		t.Errorf("POST with CSRF token failed: %v", err)

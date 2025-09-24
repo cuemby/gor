@@ -533,7 +533,7 @@ func TestAuthenticator_Authorization(t *testing.T) {
 		}
 
 		// Update user back to user role for permission test
-		auth.UpdateUserRole(user.ID, "user")
+		_ = auth.UpdateUserRole(user.ID, "user")
 
 		// User should now have permission
 		if !auth.HasPermission(user.ID, "read_posts") {
@@ -568,7 +568,7 @@ func TestAuthenticator_UtilityFunctions(t *testing.T) {
 		user, _ := auth.Register("cleanup@example.com", "password123", "Cleanup User")
 
 		// Create expired session
-		auth.CreateSession(user.ID, "127.0.0.1", "Test-Agent", -1*time.Hour)
+		_, _ = auth.CreateSession(user.ID, "127.0.0.1", "Test-Agent", -1*time.Hour)
 
 		// Create valid session
 		validSession, _ := auth.CreateSession(user.ID, "127.0.0.1", "Test-Agent", 1*time.Hour)
@@ -680,7 +680,7 @@ func TestAuthenticator_Middleware(t *testing.T) {
 			}
 
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte("authorized"))
+			_, _ = w.Write([]byte("authorized"))
 		}
 
 		// Wrap with auth middleware
@@ -773,7 +773,9 @@ func TestAuthenticator_Middleware(t *testing.T) {
 
 		// Create request with user in context
 		req := httptest.NewRequest("GET", "/admin", nil)
-		ctx := context.WithValue(req.Context(), "user", user)
+		type contextKey string
+		const userContextKey = contextKey("user")
+		ctx := context.WithValue(req.Context(), userContextKey, user)
 		req = req.WithContext(ctx)
 		w := httptest.NewRecorder()
 

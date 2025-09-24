@@ -347,12 +347,16 @@ func BenchmarkMigrateCommand_Run(b *testing.B) {
 	defer func() {
 		w.Close()
 		os.Stdout = old
-		io.ReadAll(r) // Drain the pipe
+		if _, err := io.ReadAll(r); err != nil {
+			b.Logf("Failed to drain pipe: %v", err)
+		} // Drain the pipe
 	}()
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		cmd.Run([]string{"status"})
+		if err := cmd.Run([]string{"status"}); err != nil {
+			b.Logf("Failed to run status: %v", err)
+		}
 	}
 }
 
@@ -366,12 +370,16 @@ func BenchmarkRoutesCommand_Run(b *testing.B) {
 	defer func() {
 		w.Close()
 		os.Stdout = old
-		io.ReadAll(r) // Drain the pipe
+		if _, err := io.ReadAll(r); err != nil {
+			b.Logf("Failed to drain pipe: %v", err)
+		} // Drain the pipe
 	}()
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		cmd.Run([]string{})
+		if err := cmd.Run([]string{}); err != nil {
+			b.Logf("Failed to run: %v", err)
+		}
 	}
 }
 
@@ -385,11 +393,15 @@ func BenchmarkDeployCommand_Run(b *testing.B) {
 	defer func() {
 		w.Close()
 		os.Stdout = old
-		io.ReadAll(r) // Drain the pipe
+		if _, err := io.ReadAll(r); err != nil {
+			b.Logf("Failed to drain pipe: %v", err)
+		} // Drain the pipe
 	}()
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		cmd.Run([]string{"staging"})
+		if err := cmd.Run([]string{"staging"}); err != nil {
+			b.Logf("Failed to run staging: %v", err)
+		}
 	}
 }

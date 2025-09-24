@@ -290,7 +290,7 @@ func TestSolidCable_MultipleSubscribers(t *testing.T) {
 	// Clean up subscriptions
 	defer func() {
 		for _, sub := range subs {
-			cable.Unsubscribe(sub)
+			_ = cable.Unsubscribe(sub)
 		}
 	}()
 
@@ -342,7 +342,7 @@ func TestSolidCable_PatternSubscription(t *testing.T) {
 	if err != nil {
 		t.Fatalf("SubscribePattern() should not return error: %v", err)
 	}
-	defer cable.Unsubscribe(sub)
+	defer func() { _ = cable.Unsubscribe(sub) }()
 
 	// Give subscription time to register
 	time.Sleep(200 * time.Millisecond)
@@ -381,7 +381,7 @@ func TestSolidCable_Broadcast(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to subscribe to wildcard: %v", err)
 	}
-	defer cable.Unsubscribe(sub)
+	defer func() { _ = cable.Unsubscribe(sub) }()
 
 	// Broadcast message
 	broadcastData := map[string]string{"type": "broadcast", "message": "hello everyone"}
@@ -510,7 +510,7 @@ func TestSolidCable_GetStats(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to subscribe: %v", err)
 	}
-	defer cable.Unsubscribe(sub)
+	defer func() { _ = cable.Unsubscribe(sub) }()
 
 	// Publish some messages
 	for i := 0; i < 3; i++ {
@@ -562,7 +562,7 @@ func TestSolidCable_ErrorHandling(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to subscribe: %v", err)
 	}
-	defer cable.Unsubscribe(sub)
+	defer func() { _ = cable.Unsubscribe(sub) }()
 
 	// Publish message - should not crash despite handler error
 	err = cable.Publish(ctx, channel, "test message")
@@ -631,7 +631,7 @@ func TestSolidCable_ConcurrentAccess(t *testing.T) {
 				t.Errorf("Subscriber %d failed to subscribe: %v", id, err)
 				return
 			}
-			defer cable.Unsubscribe(sub)
+			defer func() { _ = cable.Unsubscribe(sub) }()
 
 			// Keep subscription alive for message processing
 			time.Sleep(500 * time.Millisecond)

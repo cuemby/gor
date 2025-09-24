@@ -25,7 +25,6 @@ type QueryBuilder struct {
 	offsetValue     *int
 	joins           []string
 	includes        []string
-	selectFields    []string
 	isCount         bool
 	rawSQL          string
 	rawArgs         []interface{}

@@ -105,7 +105,7 @@ func SaveJSON(filename string, v interface{}) error {
 // RandomString generates a random string
 func RandomString(length int) string {
 	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	rand.Seed(time.Now().UnixNano())
+	// rand.Seed is deprecated as of Go 1.20; automatic seeding is now done by default
 
 	b := make([]byte, length)
 	for i := range b {
@@ -121,7 +121,7 @@ func RandomEmail() string {
 
 // RandomInt generates a random integer
 func RandomInt(min, max int) int {
-	rand.Seed(time.Now().UnixNano())
+	// rand.Seed is deprecated as of Go 1.20; automatic seeding is now done by default
 	return rand.Intn(max-min+1) + min
 }
 
@@ -231,13 +231,13 @@ func CaptureOutput(fn func()) (string, string, error) {
 	fn()
 
 	// Read captured output
-	stdoutFile.Seek(0, 0)
+	_, _ = stdoutFile.Seek(0, 0)
 	stdoutData, err := io.ReadAll(stdoutFile)
 	if err != nil {
 		return "", "", err
 	}
 
-	stderrFile.Seek(0, 0)
+	_, _ = stderrFile.Seek(0, 0)
 	stderrData, err := io.ReadAll(stderrFile)
 	if err != nil {
 		return "", "", err

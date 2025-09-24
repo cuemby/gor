@@ -67,7 +67,9 @@ func TestNewCommand_Run(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// For "directory exists" test, create the directory
 			if tt.fileExists && len(tt.args) > 0 {
-				os.Mkdir(tt.args[0], 0755)
+				if err := os.Mkdir(tt.args[0], 0755); err != nil {
+					t.Fatal(err)
+				}
 			}
 
 			err := cmd.Run(tt.args)
@@ -368,8 +370,12 @@ func TestNewCommand_GenerateFiles(t *testing.T) {
 	appName := "testapp"
 
 	// Manually create the missing directories
-	os.MkdirAll(filepath.Join(appPath, "app/views/home"), 0755)
-	cmd.createDirectoryStructure(appPath)
+	if err := os.MkdirAll(filepath.Join(appPath, "app/views/home"), 0755); err != nil {
+		t.Fatal(err)
+	}
+	if err := cmd.createDirectoryStructure(appPath); err != nil {
+		t.Fatal(err)
+	}
 
 	err := cmd.generateFiles(appPath, appName)
 	if err != nil {
@@ -449,7 +455,9 @@ func BenchmarkNewCommand_GenerateFiles(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		appPath := filepath.Join("benchapp", string(rune(i)))
 		appName := "benchapp"
-		cmd.createDirectoryStructure(appPath)
+		if err := cmd.createDirectoryStructure(appPath); err != nil {
+			b.Fatal(err)
+		}
 		_ = cmd.generateFiles(appPath, appName)
 	}
 }

@@ -199,7 +199,7 @@ func (p *Pipeline) Watch() error {
 		lastModTimes := make(map[string]time.Time)
 
 		for range ticker.C {
-			filepath.WalkDir(p.sourcePath, func(path string, d fs.DirEntry, err error) error {
+			_ = filepath.WalkDir(p.sourcePath, func(path string, d fs.DirEntry, err error) error {
 				if err != nil || d.IsDir() {
 					return nil
 				}
@@ -215,7 +215,7 @@ func (p *Pipeline) Watch() error {
 					if exists {
 						// File changed, recompile
 						fmt.Printf("Asset changed: %s\n", path)
-						p.compileAsset(path)
+						_ = p.compileAsset(path)
 					}
 				}
 

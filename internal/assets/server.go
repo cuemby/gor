@@ -84,14 +84,14 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if compressedContent, err := os.ReadFile(compressedPath); err == nil {
 			w.Header().Set("Content-Encoding", "gzip")
 			w.Header().Set("Content-Length", fmt.Sprintf("%d", len(compressedContent)))
-			w.Write(compressedContent)
+			_, _ = w.Write(compressedContent)
 			return
 		}
 	}
 
 	// Serve the asset
 	w.Header().Set("Content-Length", fmt.Sprintf("%d", len(asset.Content)))
-	w.Write(asset.Content)
+	_, _ = w.Write(asset.Content)
 }
 
 // setHeaders sets response headers

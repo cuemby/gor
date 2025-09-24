@@ -271,7 +271,9 @@ func (sq *SolidQueue) claimNextJob() *jobRecord {
 		log.Printf("Failed to begin transaction: %v", err)
 		return nil
 	}
-	defer tx.Rollback()
+	defer func() {
+		_ = tx.Rollback()
+	}()
 
 	// Select next available job
 	query := `

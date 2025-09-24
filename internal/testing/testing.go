@@ -183,7 +183,9 @@ func (tc *TestCase) RunInTransaction(fn func()) {
 	if err != nil {
 		tc.t.Fatalf("Failed to begin transaction: %v", err)
 	}
-	defer tx.Rollback()
+	defer func() {
+		_ = tx.Rollback()
+	}()
 
 	// Note: In a real implementation, you'd need to handle transaction scoping properly
 	// For now, just run the function
