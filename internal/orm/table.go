@@ -231,7 +231,9 @@ func (t *gorTable) BulkUpdate(models interface{}) error {
 	if err != nil {
 		return err
 	}
-	defer tx.Rollback()
+	defer func() {
+		_ = tx.Rollback() // Ignore error, tx.Commit() will handle success case
+	}()
 
 	for i := 0; i < v.Len(); i++ {
 		model := v.Index(i).Interface()

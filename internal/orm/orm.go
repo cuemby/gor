@@ -119,7 +119,7 @@ func (o *gorORM) Transaction(ctx context.Context, fn func(tx gor.Transaction) er
 
 	defer func() {
 		if r := recover(); r != nil {
-			tx.Rollback()
+			_ = tx.Rollback() // Ignore rollback errors in panic recovery
 			panic(r)
 		}
 	}()
@@ -470,7 +470,8 @@ func parseStructTag(tag string, column *gor.Column) {
 		column.Index = true
 	}
 	if contains(tag, "auto_increment") {
-		// Handle auto increment
+		// TODO: Implement auto_increment support when Column struct supports it
+		_ = tag // Use tag to prevent unused warning
 	}
 }
 
