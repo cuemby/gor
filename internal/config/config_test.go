@@ -157,8 +157,8 @@ func TestConfigGettersAndSetters(t *testing.T) {
 			t.Errorf("GetDuration() = %v, want %v", got, expectedDuration)
 		}
 
-		expectedSeconds := 30 * time.Second
-		if got := config.GetDuration("duration_int"); got != expectedSeconds {
+		expected := 30 * time.Second
+		if got := config.GetDuration("duration_int"); got != expected {
 			t.Errorf("GetDuration() should convert int to seconds, got %v", got)
 		}
 
