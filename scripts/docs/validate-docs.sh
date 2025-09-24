@@ -67,7 +67,13 @@ docs_errors=0
 for doc in "$PROJECT_ROOT/README.md" \
           "$PROJECT_ROOT/docs/dev/llms.txt" \
           "$PROJECT_ROOT/docs/dev/CLAUDE.md" \
-          "$PROJECT_ROOT/docs/project/CONTRIBUTING.md"; do
+          "$PROJECT_ROOT/docs/project/CONTRIBUTING.md" \
+          "$PROJECT_ROOT/CONTRIBUTING.md" \
+          "$PROJECT_ROOT/CODE_OF_CONDUCT.md" \
+          "$PROJECT_ROOT/SECURITY.md" \
+          "$PROJECT_ROOT/SUPPORT.md" \
+          "$PROJECT_ROOT/CHANGELOG.md" \
+          "$PROJECT_ROOT/AUTHORS.md"; do
     if [ -f "$doc" ]; then
         if ! check_file_references "$doc"; then
             docs_errors=$((docs_errors + 1))
@@ -148,6 +154,17 @@ for dir in "${doc_dirs[@]}"; do
         structure_errors=$((structure_errors + 1))
     else
         echo -e "${GREEN}  ✓ $dir exists${NC}"
+    fi
+done
+
+# Check community health files in root directory for GitHub visibility
+community_files=("README.md" "LICENSE" "CONTRIBUTING.md" "CODE_OF_CONDUCT.md" "SECURITY.md" "SUPPORT.md" "CHANGELOG.md" "AUTHORS.md")
+for file in "${community_files[@]}"; do
+    if [ ! -f "$PROJECT_ROOT/$file" ]; then
+        echo -e "${RED}  Missing community health file: $file${NC}"
+        structure_errors=$((structure_errors + 1))
+    else
+        echo -e "${GREEN}  ✓ $file exists in root${NC}"
     fi
 done
 

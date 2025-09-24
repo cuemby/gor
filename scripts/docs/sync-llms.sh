@@ -311,8 +311,12 @@ cat >> "$TEMP_FILE" << 'EOF'
 - [GitHub Repository](https://github.com/cuemby/gor) - Source code
 - [Issue Tracker](https://github.com/cuemby/gor/issues) - Bug reports
 - [Discussions](https://github.com/cuemby/gor/discussions) - Community forum
-- [Contributing](./docs/project/CONTRIBUTING.md) - Contribution guide
-- [Code of Conduct](./docs/project/CODE_OF_CONDUCT.md) - Community guidelines
+- [Contributing](./CONTRIBUTING.md) - Contribution guide
+- [Code of Conduct](./CODE_OF_CONDUCT.md) - Community guidelines
+- [Security Policy](./SECURITY.md) - Security vulnerability reporting
+- [Support](./SUPPORT.md) - Getting help and community support
+- [Authors](./AUTHORS.md) - Contributors and maintainers
+- [Changelog](./CHANGELOG.md) - Release notes and version history
 - [License](./LICENSE) - MIT License
 
 ## Framework Components
