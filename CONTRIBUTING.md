@@ -66,6 +66,18 @@ We use GitHub to host code, to track issues and feature requests, as well as acc
 - Write self-documenting code with clear variable names
 - Add comments for exported functions and complex logic
 
+### Security Standards
+
+- **Security scanning**: All code is scanned with gosec
+- **Build tags**: Use `//go:build debug` for debug-only features (e.g., pprof)
+- **Integer safety**: Check bounds before type conversions to prevent overflow
+- **HTTP security**: Always set timeouts on HTTP servers
+- **Template safety**: Document when bypassing HTML escaping (#nosec G203)
+- **Cryptography**: Use SHA256+ for hashing, never MD5 for security
+- **Type safety**: Use consistent context key types across packages
+
+See `.gosec.toml` for configuration and accepted security exclusions.
+
 ### Testing Requirements
 
 - **Write tests** for all new functionality

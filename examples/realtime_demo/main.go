@@ -45,9 +45,17 @@ func main() {
 	// Simulate some background activity
 	go simulateActivity()
 
-	// Start server
+	// Start server with proper timeouts for security
+	server := &http.Server{
+		Addr:         ":8084",
+		Handler:      http.DefaultServeMux,
+		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 15 * time.Second,
+		IdleTimeout:  60 * time.Second,
+	}
+
 	log.Println("Real-time server starting on :8084")
-	if err := http.ListenAndServe(":8084", nil); err != nil {
+	if err := server.ListenAndServe(); err != nil {
 		log.Fatal("Server failed:", err)
 	}
 }

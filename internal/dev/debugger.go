@@ -1,3 +1,6 @@
+//go:build debug
+// +build debug
+
 package dev
 
 import (
@@ -6,7 +9,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	_ "net/http/pprof"
+	_ "net/http/pprof" // Only enabled with debug build tag
 	"runtime"
 	"runtime/debug"
 	"runtime/pprof"

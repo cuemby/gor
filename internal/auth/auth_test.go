@@ -13,10 +13,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type contextKey string
-
-const userContextKey contextKey = "user"
-
 // Helper function to create a test authenticator with in-memory SQLite
 func setupTestAuth(t *testing.T) *Authenticator {
 	// Use temp file for test database
@@ -798,7 +794,7 @@ func TestAuthenticator_Middleware(t *testing.T) {
 
 		// Create request with user in context (user role, not admin)
 		req := httptest.NewRequest("GET", "/admin", nil)
-		ctx := context.WithValue(req.Context(), userContextKey, user)
+		ctx := context.WithValue(req.Context(), UserContextKey, user)
 		req = req.WithContext(ctx)
 		w := httptest.NewRecorder()
 

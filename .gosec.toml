@@ -1,0 +1,49 @@
+# Gosec configuration file for Gor framework
+# This configuration manages security scanning settings and exclusions
+
+[global]
+# Set the severity level for issues
+severity = "medium"
+
+# Exclude generated files and test files from certain checks
+excludes = [
+    "G104", # Unhandled errors - too many false positives in tests
+    "G304", # File path traversal - framework needs flexible file access
+]
+
+# Exclude test files from certain security checks
+[[rules]]
+path = "_test\\.go$"
+excludes = ["G404", "G107"] # Allow weak RNG and URL construction in tests
+
+# Template rendering functions - intentionally bypass escaping for trusted content
+[[rules]]
+path = "internal/views/template\\.go$"
+linters = ["G203"]
+text = "#nosec G203"
+
+# Debug-only profiling endpoints with build tags
+[[rules]]
+path = "internal/dev/debugger\\.go$"
+linters = ["G108"]
+text = "//go:build debug"
+
+# Allow SHA256 for non-cryptographic hashing (asset fingerprinting)
+[[rules]]
+path = "internal/assets/pipeline\\.go$"
+linters = ["G401", "G501", "G505"]
+
+# Examples are meant to be simple demonstrations
+[[rules]]
+path = "^examples/"
+excludes = ["G114", "G402", "G404"]
+
+# Allow graceful degradation patterns in middleware
+[[rules]]
+path = "pkg/middleware/"
+excludes = ["G104"]
+
+# Config loading with trusted paths
+[[rules]]
+path = "internal/config/"
+excludes = ["G304", "G307"]
