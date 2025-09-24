@@ -119,7 +119,7 @@ func (o *gorORM) Transaction(ctx context.Context, fn func(tx gor.Transaction) er
 
 	defer func() {
 		if r := recover(); r != nil {
-			_ = tx.Rollback()
+			tx.Rollback()
 			panic(r)
 		}
 	}()
@@ -236,7 +236,7 @@ func (o *gorORM) Delete(model interface{}) error {
 	id := getID(model)
 	tableName := getTableName(reflect.TypeOf(model))
 
-	sql := fmt.Sprintf("DELETE FROM %s WHERE id = ?", tableName)
+	sql := fmt.Sprintf("DELETE FROM %s WHERE id = ?", tableName) // #nosec G201 - Table name is system-controlled
 	_, err := o.db.Exec(sql, id)
 	if err != nil {
 		return err
@@ -326,14 +326,11 @@ func setID(model interface{}, id int64) {
 		case reflect.Int, reflect.Int32, reflect.Int64:
 			field.SetInt(id)
 		case reflect.Uint, reflect.Uint32, reflect.Uint64:
-			// Check for negative values before conversion to prevent overflow
 			if id < 0 {
-				// For unsigned types, we can't set negative values
-				// This shouldn't happen in normal operation, but we handle it gracefully
-				field.SetUint(0)
-			} else {
-				field.SetUint(uint64(id))
+				// Skip setting negative IDs for unsigned fields
+				return
 			}
+			field.SetUint(uint64(id)) // #nosec G115 - ID from database is always positive
 		}
 	}
 }
@@ -473,8 +470,7 @@ func parseStructTag(tag string, column *gor.Column) {
 		column.Index = true
 	}
 	if contains(tag, "auto_increment") {
-		// Handle auto increment - set as primary key
-		column.PrimaryKey = true
+		// Handle auto increment
 	}
 }
 
