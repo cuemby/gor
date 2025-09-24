@@ -127,6 +127,45 @@ jobs:
       with:
         sarif_file: gosec.sarif
 
+  docs:
+    name: Documentation
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: 'go.mod'
+
+    - name: Install shellcheck
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y shellcheck
+
+    - name: Make scripts executable
+      run: |
+        chmod +x scripts/docs/validate-docs.sh
+        chmod +x scripts/docs/sync-llms.sh
+        chmod +x scripts/docs/update-claude.sh
+
+    - name: Check shell scripts with shellcheck
+      run: make shellcheck
+
+    - name: Validate documentation integrity
+      run: make docs-validate
+
+    - name: Check documentation sync
+      run: |
+        make docs-sync
+        if ! git diff --quiet docs/dev/llms.txt; then
+          echo "::warning::llms.txt is out of sync with codebase"
+          echo "Run 'make docs-sync' locally and commit the changes"
+          git diff docs/dev/llms.txt
+        fi
+
   build:
     name: Build
     runs-on: ubuntu-latest

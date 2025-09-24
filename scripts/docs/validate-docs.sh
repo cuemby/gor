@@ -48,7 +48,8 @@ check_file_references() {
     fi
 
     # Extract file references like ./path/to/file.md, ./internal/package, etc.
-    grep -oE '\./[^)]*' "$doc_file" 2>/dev/null | while read -r ref; do
+    # Use process substitution to avoid subshell variable issues
+    while read -r ref; do
         # Clean up the reference (remove trailing punctuation)
         clean_ref=$(echo "$ref" | sed 's/[,;.:)]$//')
         full_path="$PROJECT_ROOT/$clean_ref"
@@ -57,7 +58,7 @@ check_file_references() {
             echo -e "${RED}  Missing: $clean_ref (referenced in $(basename "$doc_file"))${NC}"
             errors=$((errors + 1))
         fi
-    done
+    done < <(grep -oE '\./[^)]*' "$doc_file" 2>/dev/null)
 
     return $errors
 }

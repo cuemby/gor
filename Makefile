@@ -185,6 +185,11 @@ tidy: ## Run go mod tidy to clean up dependencies
 
 .PHONY: check
 check: fmt-check vet lint ## Run all code quality checks
+	@if command -v shellcheck >/dev/null 2>&1; then \
+		$(MAKE) shellcheck; \
+	else \
+		echo "$(YELLOW)Skipping shellcheck (not installed)$(NC)"; \
+	fi
 
 # =============================================================================
 # Git Hooks and CI Targets
@@ -302,6 +307,7 @@ migrate: build ## Run database migrations
 .PHONY: docs
 docs: ## Generate documentation
 	@echo "$(GREEN)Generating documentation...$(NC)"
+	@mkdir -p docs/api
 	@$(GOCMD) doc -all ./pkg/gor > docs/api/api-reference.txt
 	@echo "$(GREEN)Documentation generated!$(NC)"
 
@@ -320,8 +326,26 @@ docs-update-claude: ## Update CLAUDE.md with current project state
 	@echo "$(GREEN)Updating CLAUDE.md...$(NC)"
 	@./scripts/docs/update-claude.sh
 
+.PHONY: shellcheck
+shellcheck: ## Check shell scripts with shellcheck
+	@echo "$(GREEN)Running shellcheck on shell scripts...$(NC)"
+	@if command -v shellcheck >/dev/null 2>&1; then \
+		echo "Checking scripts/docs/validate-docs.sh..."; \
+		shellcheck scripts/docs/validate-docs.sh; \
+		echo "Checking scripts/docs/sync-llms.sh..."; \
+		shellcheck scripts/docs/sync-llms.sh; \
+		echo "Checking scripts/docs/update-claude.sh..."; \
+		shellcheck scripts/docs/update-claude.sh; \
+		echo "$(GREEN)Shell script checks complete!$(NC)"; \
+	else \
+		echo "$(YELLOW)shellcheck not installed. Install with:$(NC)"; \
+		echo "  # Ubuntu/Debian: apt-get install shellcheck"; \
+		echo "  # macOS: brew install shellcheck"; \
+		echo "  # Or download from: https://github.com/koalaman/shellcheck"; \
+	fi
+
 .PHONY: docs-all
-docs-all: docs-sync docs-update-claude docs-validate docs ## Update all documentation and validate
+docs-all: docs-sync docs-update-claude docs-validate shellcheck docs ## Update all documentation and validate
 	@echo "$(GREEN)All documentation tasks complete!$(NC)"
 
 # =============================================================================
