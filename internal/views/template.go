@@ -255,7 +255,7 @@ func defaultHelpers() template.FuncMap {
 		// String helpers
 		"upper":       strings.ToUpper,
 		"lower":       strings.ToLower,
-		"title": cases.Title(language.English).String,
+		"title":       cases.Title(language.English).String,
 		"trim":        strings.TrimSpace,
 		"capitalize":  capitalize,
 		"pluralize":   pluralize,
