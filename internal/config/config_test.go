@@ -21,11 +21,11 @@ func TestNew(t *testing.T) {
 			t.Fatal("New() should return a config instance")
 		}
 
-		if config.configPath != tmpDir {
+		if config != nil && config.configPath != tmpDir {
 			t.Errorf("Config path should be %s, got %s", tmpDir, config.configPath)
 		}
 
-		if config.envPrefix != "GOR" {
+		if config != nil && config.envPrefix != "GOR" {
 			t.Errorf("Default env prefix should be GOR, got %s", config.envPrefix)
 		}
 	})
