@@ -487,7 +487,7 @@ func BenchmarkHub_BroadcastToChannel(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		hub.BroadcastToChannel("bench-channel", message)
+		_ = hub.BroadcastToChannel("bench-channel", message)
 	}
 }
 

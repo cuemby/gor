@@ -33,11 +33,8 @@ func (a *SQLiteAdapter) Connect(config gor.DatabaseConfig) (*sql.DB, error) {
 		return nil, err
 	}
 
-	if _, err := db.Exec("PRAGMA journal_mode = WAL"); err != nil {
-		// WAL mode might not be available in all SQLite builds, so we'll continue
-		// without it rather than failing
-	}
-
+	// Enable WAL mode for better performance
+	_, _ = db.Exec("PRAGMA journal_mode = WAL")
 	return db, nil
 }
 

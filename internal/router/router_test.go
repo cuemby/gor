@@ -83,7 +83,7 @@ func (m *mockController) Destroy(ctx *gor.Context) error {
 func testHandler(message string) gor.HandlerFunc {
 	return func(ctx *gor.Context) error {
 		ctx.Response.WriteHeader(http.StatusOK)
-		ctx.Response.Write([]byte(message))
+		_, _ = ctx.Response.Write([]byte(message))
 		return nil
 	}
 }
@@ -99,7 +99,7 @@ func errorHandler() gor.HandlerFunc {
 func testMiddleware(prefix string) gor.MiddlewareFunc {
 	return func(next gor.HandlerFunc) gor.HandlerFunc {
 		return func(ctx *gor.Context) error {
-			ctx.Response.Write([]byte(prefix + ":"))
+			_, _ = ctx.Response.Write([]byte(prefix + ":"))
 			return next(ctx)
 		}
 	}
@@ -235,7 +235,7 @@ func TestRouter_Parameters(t *testing.T) {
 		id := ctx.Params["id"]
 		slug := ctx.Params["slug"]
 		ctx.Response.WriteHeader(http.StatusOK)
-		ctx.Response.Write([]byte("id:" + id + ",slug:" + slug))
+		_, _ = ctx.Response.Write([]byte("id:" + id + ",slug:" + slug))
 		return nil
 	}
 
@@ -759,7 +759,7 @@ func TestRouter_Context(t *testing.T) {
 		}
 
 		ctx.Response.WriteHeader(http.StatusOK)
-		ctx.Response.Write([]byte("context_test"))
+		_, _ = ctx.Response.Write([]byte("context_test"))
 		return nil
 	}
 

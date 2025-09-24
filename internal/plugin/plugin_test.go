@@ -557,8 +557,8 @@ func TestManager_List(t *testing.T) {
 		},
 	}
 
-	manager.Register(plugin1)
-	manager.Register(plugin2)
+	_ = manager.Register(plugin1)
+	_ = manager.Register(plugin2)
 
 	metadataList := manager.List()
 	if len(metadataList) != 2 {

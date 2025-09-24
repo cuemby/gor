@@ -12,6 +12,8 @@ import (
 	"sync"
 
 	"github.com/cuemby/gor/pkg/gor"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 // TemplateEngine provides Rails-style templating with layouts and partials
@@ -253,7 +255,7 @@ func defaultHelpers() template.FuncMap {
 		// String helpers
 		"upper":       strings.ToUpper,
 		"lower":       strings.ToLower,
-		"title":       strings.Title,
+		"title": cases.Title(language.English).String,
 		"trim":        strings.TrimSpace,
 		"capitalize":  capitalize,
 		"pluralize":   pluralize,

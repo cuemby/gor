@@ -479,7 +479,7 @@ func TestSolidCable_ChannelManagement(t *testing.T) {
 	}
 
 	// Clean up
-	cable.Unsubscribe(sub2)
+	_ = cable.Unsubscribe(sub2)
 }
 
 func TestSolidCable_GetStats(t *testing.T) {

@@ -319,7 +319,10 @@ func (d *Debugger) handleBreakpoints(w http.ResponseWriter, r *http.Request) {
 	d.mu.RLock()
 	defer d.mu.RUnlock()
 
-	json.NewEncoder(w).Encode(d.breakpoints)
+	if err := json.NewEncoder(w).Encode(d.breakpoints); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // handleLogs handles logs API
@@ -327,7 +330,10 @@ func (d *Debugger) handleLogs(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	logs := d.logBuffer.GetAll()
-	json.NewEncoder(w).Encode(logs)
+	if err := json.NewEncoder(w).Encode(logs); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // handleMetrics handles metrics API
@@ -335,7 +341,10 @@ func (d *Debugger) handleMetrics(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	d.metrics.Update()
-	json.NewEncoder(w).Encode(d.metrics)
+	if err := json.NewEncoder(w).Encode(d.metrics); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // handleStack handles stack trace API

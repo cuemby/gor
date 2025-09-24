@@ -403,7 +403,7 @@ func TestCSRF(t *testing.T) {
 	// Test POST without token (should fail)
 	ctx2 := createTestContext("POST", "/test")
 	err = middleware(handler)(ctx2)
-
+	_ = err
 	w2 := ctx2.Response.(*httptest.ResponseRecorder)
 	if w2.Code != http.StatusForbidden {
 		t.Errorf("Expected 403 without CSRF token, got %d", w2.Code)
@@ -454,7 +454,7 @@ func TestTimeout(t *testing.T) {
 
 	ctx2 := createTestContext("GET", "/test")
 	err = Timeout(50 * time.Millisecond)(slowHandler)(ctx2)
-
+	_ = err
 	w2 := ctx2.Response.(*httptest.ResponseRecorder)
 	if w2.Code != http.StatusRequestTimeout {
 		t.Errorf("Expected timeout status 408, got %d", w2.Code)
@@ -546,7 +546,7 @@ func BenchmarkLogger(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		ctx := createTestContext("GET", "/test")
-		middleware(handler)(ctx)
+		_ = middleware(handler)(ctx)
 	}
 }
 
@@ -557,7 +557,7 @@ func BenchmarkRequestID(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		ctx := createTestContext("GET", "/test")
-		middleware(handler)(ctx)
+		_ = middleware(handler)(ctx)
 	}
 }
 
@@ -569,6 +569,6 @@ func BenchmarkRateLimit(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		ctx := createTestContext("GET", "/test")
 		ctx.Request.RemoteAddr = fmt.Sprintf("192.168.1.%d:1234", i%256)
-		middleware(handler)(ctx)
+		_ = middleware(handler)(ctx)
 	}
 }

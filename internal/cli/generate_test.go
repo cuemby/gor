@@ -116,7 +116,7 @@ func TestGenerateCommand_Run(t *testing.T) {
 				if err := os.MkdirAll("app/jobs", 0755); err != nil {
 					t.Fatal(err)
 				}
-				os.MkdirAll("app/mailers", 0755)
+				_ = os.MkdirAll("app/mailers", 0755)
 				os.MkdirAll("app/channels", 0755)
 				os.MkdirAll("app/views", 0755)
 				os.MkdirAll("db/migrations", 0755)

@@ -12,6 +12,10 @@ import (
 	"github.com/cuemby/gor/pkg/gor"
 )
 
+type contextKey string
+
+const requestIDKey contextKey = "request_id"
+
 // Logger middleware logs HTTP requests
 func Logger() gor.MiddlewareFunc {
 	return func(next gor.HandlerFunc) gor.HandlerFunc {
@@ -48,7 +52,7 @@ func Recovery() gor.MiddlewareFunc {
 
 					// Return 500 Internal Server Error
 					ctx.Response.WriteHeader(http.StatusInternalServerError)
-					ctx.Text(http.StatusInternalServerError, "Internal Server Error")
+					_ = ctx.Text(http.StatusInternalServerError, "Internal Server Error")
 				}
 			}()
 
@@ -117,7 +121,7 @@ func RequestID() gor.MiddlewareFunc {
 			requestID := generateRequestID()
 
 			// Add to context
-			ctx.Context = context.WithValue(ctx.Context, "request_id", requestID)
+			ctx.Context = context.WithValue(ctx.Context, requestIDKey, requestID)
 
 			// Add to response header
 			ctx.Response.Header().Set("X-Request-ID", requestID)

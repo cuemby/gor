@@ -168,7 +168,7 @@ func (w *Watcher) rebuild() error {
 		if err := w.process.Process.Kill(); err != nil {
 			w.logger.Printf("Failed to kill process: %v\n", err)
 		}
-		w.process.Wait()
+		_ = w.process.Wait()
 		w.process = nil
 	}
 

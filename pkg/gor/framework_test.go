@@ -84,7 +84,9 @@ func (r *MockRouter) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			Query:    req.URL.Query(),
 			Flash:    make(map[string]interface{}),
 		}
-		handler(ctx)
+		if err := handler(ctx); err != nil {
+			t.Errorf("Handler error: %v", err)
+		}
 	} else {
 		w.WriteHeader(http.StatusNotFound)
 	}
@@ -337,7 +339,9 @@ func TestRouter(t *testing.T) {
 
 	t.Run("GET", func(t *testing.T) {
 		handler := func(ctx *gor.Context) error {
-			ctx.Text(200, "test")
+			if err := ctx.Text(200, "test"); err != nil {
+				t.Errorf("Failed to write text: %v", err)
+			}
 			return nil
 		}
 

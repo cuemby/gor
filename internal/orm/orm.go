@@ -119,7 +119,7 @@ func (o *gorORM) Transaction(ctx context.Context, fn func(tx gor.Transaction) er
 
 	defer func() {
 		if r := recover(); r != nil {
-			tx.Rollback()
+			_ = tx.Rollback()
 			panic(r)
 		}
 	}()

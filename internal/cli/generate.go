@@ -5,6 +5,9 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 // GenerateCommand handles code generation
@@ -200,7 +203,7 @@ func (c *GenerateCommand) generateViews(name string, fields []string) error {
 }
 
 func (c *GenerateCommand) generateJob(name string) error {
-	jobName := strings.Title(name) + "Job"
+	jobName := cases.Title(language.English).String(name) + "Job"
 	jobPath := filepath.Join("app/jobs", strings.ToLower(name)+"_job.go")
 
 	jobContent := c.generateJobContent(jobName)
@@ -214,7 +217,7 @@ func (c *GenerateCommand) generateJob(name string) error {
 }
 
 func (c *GenerateCommand) generateMailer(name string) error {
-	mailerName := strings.Title(name) + "Mailer"
+	mailerName := cases.Title(language.English).String(name) + "Mailer"
 	mailerPath := filepath.Join("app/mailers", strings.ToLower(name)+"_mailer.go")
 
 	mailerContent := c.generateMailerContent(mailerName)
@@ -228,7 +231,7 @@ func (c *GenerateCommand) generateMailer(name string) error {
 }
 
 func (c *GenerateCommand) generateChannel(name string) error {
-	channelName := strings.Title(name) + "Channel"
+	channelName := cases.Title(language.English).String(name) + "Channel"
 	channelPath := filepath.Join("app/channels", strings.ToLower(name)+"_channel.go")
 
 	channelContent := c.generateChannelContent(channelName)
@@ -245,7 +248,7 @@ func (c *GenerateCommand) addResourceRoute(name string) error {
 	// This would update the routes file
 	fmt.Printf("  ℹ️ Add this to config/routes.go:\n")
 	fmt.Printf("     r.Resources(\"%ss\", &controllers.%sController{})\n",
-		strings.ToLower(name), strings.Title(name))
+		strings.ToLower(name), cases.Title(language.English).String(name))
 	return nil
 }
 
@@ -322,7 +325,8 @@ func (c *GenerateCommand) generateModelContent(name string, fields []Field) stri
 	return fmt.Sprintf(`package models
 
 import (
-	"time"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"	"time"
 )
 
 // %s model
@@ -359,7 +363,8 @@ func (c *GenerateCommand) generateFullControllerContent(name, modelName string) 
 	return fmt.Sprintf(`package controllers
 
 import (
-	"net/http"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"	"net/http"
 	"github.com/cuemby/gor/pkg/gor"
 	"../models"
 )
@@ -506,7 +511,8 @@ func (c *%s) %s(ctx *gor.Context) error {
 	return fmt.Sprintf(`package controllers
 
 import (
-	"net/http"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"	"net/http"
 	"github.com/cuemby/gor/pkg/gor"
 )
 
@@ -545,7 +551,8 @@ func (c *GenerateCommand) generateCreateTableMigration(name string, fields []str
 	return fmt.Sprintf(`package migrations
 
 import (
-	"database/sql"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"	"database/sql"
 )
 
 // Up migrates the database forward
@@ -573,7 +580,8 @@ func (c *GenerateCommand) generateChangeMigration(name string) string {
 	return fmt.Sprintf(`package migrations
 
 import (
-	"database/sql"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"	"database/sql"
 )
 
 // Up migrates the database forward
@@ -697,7 +705,8 @@ func (c *GenerateCommand) generateJobContent(name string) string {
 	return fmt.Sprintf(`package jobs
 
 import (
-	"context"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"	"context"
 	"log"
 )
 
@@ -720,7 +729,8 @@ func (c *GenerateCommand) generateMailerContent(name string) string {
 	return fmt.Sprintf(`package mailers
 
 import (
-	"github.com/cuemby/gor/pkg/gor"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"	"github.com/cuemby/gor/pkg/gor"
 )
 
 // %s mailer
@@ -744,7 +754,8 @@ func (c *GenerateCommand) generateChannelContent(name string) string {
 	return fmt.Sprintf(`package channels
 
 import (
-	"github.com/cuemby/gor/pkg/gor"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"	"github.com/cuemby/gor/pkg/gor"
 )
 
 // %s WebSocket channel

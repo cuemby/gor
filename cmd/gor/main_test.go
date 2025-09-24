@@ -150,7 +150,7 @@ func TestMainFunction(t *testing.T) {
 
 	w.Close()
 	var buf bytes.Buffer
-	io.Copy(&buf, r)
+	_, _ = io.Copy(&buf, r)
 
 	// Verify some error handling occurs
 	if err == nil {
@@ -196,7 +196,7 @@ func BenchmarkRun(b *testing.B) {
 	os.Stderr = wErr
 
 	// Drain pipes in background
-	go io.Copy(io.Discard, rOut)
+	go func() { _, _ = io.Copy(io.Discard, rOut) }()
 	go io.Copy(io.Discard, rErr)
 
 	b.ResetTimer()
@@ -331,7 +331,7 @@ func TestMainFunctionIntegration(t *testing.T) {
 		os.Stderr = oldStderr
 
 		var buf bytes.Buffer
-		io.Copy(&buf, r)
+		_, _ = io.Copy(&buf, r)
 
 		expected := "Error: test error\n"
 		if buf.String() != expected {
