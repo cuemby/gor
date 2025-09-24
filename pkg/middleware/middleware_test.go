@@ -395,7 +395,7 @@ func TestCSRF(t *testing.T) {
 
 	// Test GET request (should pass without token)
 	ctx1 := createTestContext("GET", "/test")
-	_ = middleware(handler)(ctx1)
+	err := middleware(handler)(ctx1)
 	if err != nil {
 		t.Errorf("GET request failed: %v", err)
 	}
@@ -412,7 +412,7 @@ func TestCSRF(t *testing.T) {
 	// Test POST with token in header
 	ctx3 := createTestContext("POST", "/test")
 	ctx3.Request.Header.Set("X-CSRF-Token", "valid-token-with-more-than-20-chars")
-	_ = middleware(handler)(ctx3)
+	err = middleware(handler)(ctx3)
 
 	if err != nil {
 		t.Errorf("POST with CSRF token failed: %v", err)
