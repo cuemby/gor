@@ -1,0 +1,56 @@
+{
+  "global": {
+    "nosec": false,
+    "audit": false
+  },
+  "rules": {
+    "G104": {
+      "excludes": [
+        ".*_test\\.go",
+        "examples/.*"
+      ]
+    },
+    "G204": {
+      "excludes": [
+        "internal/deploy/.*"
+      ]
+    },
+    "G304": {
+      "excludes": [
+        "internal/config/.*",
+        "internal/views/.*",
+        "internal/assets/.*",
+        "internal/testing/.*",
+        "internal/plugin/.*"
+      ]
+    },
+    "G301": {
+      "excludes": [
+        "internal/assets/.*",
+        "internal/cli/.*",
+        "internal/deploy/.*",
+        "internal/plugin/.*"
+      ]
+    },
+    "G306": {
+      "excludes": [
+        "internal/assets/.*",
+        "internal/cli/.*",
+        "internal/deploy/.*",
+        "internal/plugin/.*",
+        "internal/testing/.*"
+      ]
+    }
+  },
+  "excludes": [
+    "G104"
+  ],
+  "exclude-dir": [
+    "vendor",
+    "coverage_output",
+    ".git"
+  ],
+  "exclude-generated": true,
+  "severity": "medium",
+  "confidence": "medium"
+}

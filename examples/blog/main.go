@@ -291,8 +291,12 @@ type BlogApplication struct {
 func (a *BlogApplication) Start(ctx context.Context) error {
 	// Start HTTP server
 	server := &http.Server{
-		Addr:    ":3000",
-		Handler: a.router,
+		Addr:              ":3000",
+		Handler:           a.router,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		ReadHeaderTimeout: 5 * time.Second,
 	}
 
 	log.Println("Starting server on :3000")

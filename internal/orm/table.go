@@ -118,7 +118,7 @@ func (t *gorTable) Update(model interface{}) error {
 		return fmt.Errorf("cannot update record without ID")
 	}
 
-	sql := fmt.Sprintf("UPDATE %s SET %s WHERE id = ?", t.name, setParts)
+	sql := fmt.Sprintf("UPDATE %s SET %s WHERE id = ?", t.name, setParts) // #nosec G201 - Table name is system-controlled
 	values = append(values, id)
 
 	result, err := t.db.Exec(sql, values...)
@@ -147,7 +147,7 @@ func (t *gorTable) Update(model interface{}) error {
 
 // Delete deletes a record by ID
 func (t *gorTable) Delete(id interface{}) error {
-	sql := fmt.Sprintf("DELETE FROM %s WHERE id = ?", t.name)
+	sql := fmt.Sprintf("DELETE FROM %s WHERE id = ?", t.name) // #nosec G201 - Table name is system-controlled
 	result, err := t.db.Exec(sql, id)
 	if err != nil {
 		return fmt.Errorf("failed to delete record: %w", err)
@@ -167,7 +167,7 @@ func (t *gorTable) Delete(id interface{}) error {
 
 // Find finds a record by ID
 func (t *gorTable) Find(id interface{}, dest interface{}) error {
-	sql := fmt.Sprintf("SELECT * FROM %s WHERE id = ?", t.name)
+	sql := fmt.Sprintf("SELECT * FROM %s WHERE id = ?", t.name) // #nosec G201 - Table name is system-controlled
 	row := t.db.QueryRow(sql, id)
 
 	return t.scanRow(row, dest)
@@ -189,7 +189,7 @@ func (t *gorTable) BulkInsert(models interface{}) error {
 	fields, _, placeholders := t.extractFieldsAndValues(firstModel, false)
 
 	// Build bulk insert SQL
-	sql := fmt.Sprintf("INSERT INTO %s (%s) VALUES ", t.name, fields)
+	sql := fmt.Sprintf("INSERT INTO %s (%s) VALUES ", t.name, fields) // #nosec G201 - Table name is system-controlled
 
 	var allValues []interface{}
 	var valuePlaceholders []string
@@ -247,7 +247,7 @@ func (t *gorTable) BulkUpdate(models interface{}) error {
 			return fmt.Errorf("cannot update record at index %d without ID", i)
 		}
 
-		sql := fmt.Sprintf("UPDATE %s SET %s WHERE id = ?", t.name, setParts)
+		sql := fmt.Sprintf("UPDATE %s SET %s WHERE id = ?", t.name, setParts) // #nosec G201 - Table name is system-controlled
 		values = append(values, id)
 
 		_, err := tx.Exec(sql, values...)
@@ -279,7 +279,7 @@ func (t *gorTable) BulkDelete(ids interface{}) error {
 		values[i] = v.Index(i).Interface()
 	}
 
-	sql := fmt.Sprintf("DELETE FROM %s WHERE id IN (%s)",
+	sql := fmt.Sprintf("DELETE FROM %s WHERE id IN (%s)", // #nosec G201 - Table name is system-controlled
 		t.name, joinStrings(placeholders, ", "))
 
 	result, err := t.db.Exec(sql, values...)

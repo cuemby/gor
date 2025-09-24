@@ -236,7 +236,7 @@ func (o *gorORM) Delete(model interface{}) error {
 	id := getID(model)
 	tableName := getTableName(reflect.TypeOf(model))
 
-	sql := fmt.Sprintf("DELETE FROM %s WHERE id = ?", tableName)
+	sql := fmt.Sprintf("DELETE FROM %s WHERE id = ?", tableName) // #nosec G201 - Table name is system-controlled
 	_, err := o.db.Exec(sql, id)
 	if err != nil {
 		return err

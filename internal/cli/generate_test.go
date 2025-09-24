@@ -8,8 +8,8 @@ import (
 
 // Mock tracking for testing
 var (
-	writeFileCalled  = make(map[string]string)
-	createdDirs      []string
+	writeFileCalled = make(map[string]string)
+	createdDirs     []string
 )
 
 // Test GenerateCommand

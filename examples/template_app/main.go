@@ -267,11 +267,15 @@ func main() {
 	// Start server
 	fmt.Println("\n🚀 Template demo server starting on http://localhost:8081")
 	fmt.Println("   Visit http://localhost:8081 to see the template engine in action")
-	fmt.Println("   Press Ctrl+C to stop\n")
+	fmt.Println("   Press Ctrl+C to stop")
 
 	server := &http.Server{
-		Addr:    ":8081",
-		Handler: appRouter,
+		Addr:              ":8081",
+		Handler:           appRouter,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		ReadHeaderTimeout: 5 * time.Second,
 	}
 
 	if err := server.ListenAndServe(); err != nil {

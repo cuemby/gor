@@ -561,9 +561,9 @@ func TestSendDataUpdate(t *testing.T) {
 
 	// Test without channel (broadcast to all)
 	server.SendDataUpdate("", "post", "updated", map[string]string{"title": "Test"})
-	
+
 	time.Sleep(10 * time.Millisecond)
-	
+
 	select {
 	case event := <-client.EventChannel:
 		if event.Type != "data_update" {
@@ -626,9 +626,9 @@ func TestSendProgress(t *testing.T) {
 
 	// Test without channel (broadcast to all)
 	server.SendProgress("", "task-456", 100, "Complete")
-	
+
 	time.Sleep(10 * time.Millisecond)
-	
+
 	select {
 	case event := <-client.EventChannel:
 		if event.Type != "progress" {

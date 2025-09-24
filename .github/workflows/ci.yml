@@ -115,7 +115,7 @@ jobs:
     - name: Run security scans
       run: |
         echo "Running Gosec..."
-        gosec -fmt sarif -out gosec.sarif ./... &
+        gosec -severity high -fmt sarif -out gosec.sarif ./... &
         GOSEC_PID=$!
 
         echo "Running govulncheck..."

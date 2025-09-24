@@ -59,13 +59,13 @@ type MockApplication struct{}
 
 func (m *MockApplication) Start(ctx context.Context) error { return nil }
 func (m *MockApplication) Stop(ctx context.Context) error  { return nil }
-func (m *MockApplication) Router() gor.Router               { return nil }
-func (m *MockApplication) ORM() gor.ORM                     { return nil }
-func (m *MockApplication) Queue() gor.Queue                 { return nil }
-func (m *MockApplication) Cache() gor.Cache                 { return nil }
-func (m *MockApplication) Cable() gor.Cable                 { return nil }
-func (m *MockApplication) Auth() interface{}                { return nil }
-func (m *MockApplication) Config() gor.Config               { return nil }
+func (m *MockApplication) Router() gor.Router              { return nil }
+func (m *MockApplication) ORM() gor.ORM                    { return nil }
+func (m *MockApplication) Queue() gor.Queue                { return nil }
+func (m *MockApplication) Cache() gor.Cache                { return nil }
+func (m *MockApplication) Cable() gor.Cable                { return nil }
+func (m *MockApplication) Auth() interface{}               { return nil }
+func (m *MockApplication) Config() gor.Config              { return nil }
 
 func TestMetadata(t *testing.T) {
 	metadata := Metadata{
@@ -546,13 +546,13 @@ func TestManager_List(t *testing.T) {
 
 	plugin1 := &MockPlugin{
 		metadata: Metadata{
-			Name: "plugin1",
+			Name:    "plugin1",
 			Version: "1.0.0",
 		},
 	}
 	plugin2 := &MockPlugin{
 		metadata: Metadata{
-			Name: "plugin2",
+			Name:    "plugin2",
 			Version: "2.0.0",
 		},
 	}

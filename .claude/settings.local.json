@@ -41,7 +41,10 @@
       "Bash(git push:*)",
       "Bash(git pull:*)",
       "Bash(git fetch:*)",
-      "Bash(git merge:*)"
+      "Bash(git merge:*)",
+      "Bash(git checkout:*)",
+      "Bash(git stash:*)",
+      "Bash(git restore:*)"
     ],
     "deny": [],
     "ask": []

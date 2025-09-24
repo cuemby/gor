@@ -453,7 +453,7 @@ func TestTimeout(t *testing.T) {
 	}
 
 	ctx2 := createTestContext("GET", "/test")
-	err = Timeout(50*time.Millisecond)(slowHandler)(ctx2)
+	err = Timeout(50 * time.Millisecond)(slowHandler)(ctx2)
 
 	w2 := ctx2.Response.(*httptest.ResponseRecorder)
 	if w2.Code != http.StatusRequestTimeout {
@@ -463,10 +463,10 @@ func TestTimeout(t *testing.T) {
 
 func TestGetClientIP(t *testing.T) {
 	tests := []struct {
-		name        string
-		headers     map[string]string
-		remoteAddr  string
-		expectedIP  string
+		name       string
+		headers    map[string]string
+		remoteAddr string
+		expectedIP string
 	}{
 		{
 			name:       "X-Forwarded-For",

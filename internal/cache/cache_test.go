@@ -108,8 +108,8 @@ func TestSolidCache_BasicOperations(t *testing.T) {
 	t.Run("SetComplexTypes", func(t *testing.T) {
 		// Test with map
 		mapValue := map[string]interface{}{
-			"name": "John",
-			"age":  30,
+			"name":   "John",
+			"age":    30,
 			"active": true,
 		}
 		err := cache.Set("map_key", mapValue, 5*time.Minute)

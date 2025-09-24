@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/cuemby/gor/internal/app/controllers"
 	"github.com/cuemby/gor/internal/orm"
@@ -353,11 +354,15 @@ func main() {
 
 	// Start server
 	fmt.Println("\n🚀 Gor server starting on http://localhost:8080")
-	fmt.Println("   Press Ctrl+C to stop\n")
+	fmt.Println("   Press Ctrl+C to stop")
 
 	server := &http.Server{
-		Addr:    ":8080",
-		Handler: appRouter,
+		Addr:              ":8080",
+		Handler:           appRouter,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		ReadHeaderTimeout: 5 * time.Second,
 	}
 
 	if err := server.ListenAndServe(); err != nil {

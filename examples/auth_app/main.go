@@ -78,7 +78,7 @@ func main() {
 	fmt.Println("=======================================")
 	fmt.Println("Visit http://localhost:8082")
 	fmt.Println("Default admin: admin@example.com / admin123")
-	fmt.Println("Press Ctrl+C to stop\n")
+	fmt.Println("Press Ctrl+C to stop")
 
 	// Create router
 	app := &SimpleApp{}
@@ -121,8 +121,12 @@ func main() {
 
 	// Start server
 	server := &http.Server{
-		Addr:    ":8082",
-		Handler: appRouter,
+		Addr:              ":8082",
+		Handler:           appRouter,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		ReadHeaderTimeout: 5 * time.Second,
 	}
 
 	if err := server.ListenAndServe(); err != nil {

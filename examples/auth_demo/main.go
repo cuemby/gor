@@ -281,8 +281,12 @@ func demoHTTPMiddleware(authenticator *auth.Authenticator, session *auth.Session
 
 	// Create a test server
 	server := &http.Server{
-		Addr:    ":8083",
-		Handler: mux,
+		Addr:              ":8083",
+		Handler:           mux,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      15 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		ReadHeaderTimeout: 5 * time.Second,
 	}
 
 	// Start server in background
