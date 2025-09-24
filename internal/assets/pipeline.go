@@ -3,7 +3,7 @@ package assets
 import (
 	"bytes"
 	"compress/gzip"
-	"crypto/md5"
+	"crypto/md5" // #nosec G501 - MD5 is used for asset fingerprinting, not security
 	"encoding/json"
 	"fmt"
 	"io/fs"
@@ -135,7 +135,7 @@ func (p *Pipeline) compileAsset(sourcePath string) error {
 	outputPath := filepath.Join(p.outputPath, relPath)
 
 	if p.fingerprint {
-		h := md5.Sum(output)
+		h := md5.Sum(output) // #nosec G401 - MD5 is used for asset fingerprinting, not security
 		hash = fmt.Sprintf("%x", h)[:8]
 
 		// Add hash to filename

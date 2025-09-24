@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"math/rand"
+	"math/rand" // #nosec G404 - This is for test data generation, not cryptographic use
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -109,7 +109,7 @@ func RandomString(length int) string {
 
 	b := make([]byte, length)
 	for i := range b {
-		b[i] = charset[rand.Intn(len(charset))]
+		b[i] = charset[rand.Intn(len(charset))] // #nosec G404 - This is for test data, not cryptographic use
 	}
 	return string(b)
 }
@@ -122,7 +122,7 @@ func RandomEmail() string {
 // RandomInt generates a random integer
 func RandomInt(min, max int) int {
 	// rand.Seed is deprecated as of Go 1.20; automatic seeding is now done by default
-	return rand.Intn(max-min+1) + min
+	return rand.Intn(max-min+1) + min // #nosec G404 - This is for test data, not cryptographic use
 }
 
 // CreateTestDatabase creates a test database

@@ -152,14 +152,14 @@ func (o *SSHOrchestrator) Cleanup(ctx context.Context, config *Config) error {
 // executeSSH executes a command via SSH
 func (o *SSHOrchestrator) executeSSH(ctx context.Context, server Server, command string) error {
 	sshCmd := o.buildSSHCommand(server, command)
-	cmd := exec.CommandContext(ctx, "sh", "-c", sshCmd)
+	cmd := exec.CommandContext(ctx, "sh", "-c", sshCmd) // #nosec G204 - SSH command built from config, not user input
 	return cmd.Run()
 }
 
 // executeSSHWithOutput executes a command via SSH and returns output
 func (o *SSHOrchestrator) executeSSHWithOutput(ctx context.Context, server Server, command string) (string, error) {
 	sshCmd := o.buildSSHCommand(server, command)
-	cmd := exec.CommandContext(ctx, "sh", "-c", sshCmd)
+	cmd := exec.CommandContext(ctx, "sh", "-c", sshCmd) // #nosec G204 - SSH command built from config, not user input
 	output, err := cmd.Output()
 	return string(output), err
 }

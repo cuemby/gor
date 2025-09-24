@@ -70,7 +70,7 @@ func (t *gorTable) Create(model interface{}) error {
 	// Generate insert SQL
 	fields, values, placeholders := t.extractFieldsAndValues(model, false)
 
-	sql := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)",
+	sql := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)", // #nosec G201 - Table name is from schema definition, not user input
 		t.name, fields, placeholders)
 
 	result, err := t.db.Exec(sql, values...)

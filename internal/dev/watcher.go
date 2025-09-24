@@ -174,7 +174,7 @@ func (w *Watcher) rebuild() error {
 
 	// Build
 	w.logger.Println("Building...")
-	buildCmd := exec.Command("sh", "-c", w.buildCmd)
+	buildCmd := exec.Command("sh", "-c", w.buildCmd) // #nosec G204 - Build command is from config, not user input
 	buildCmd.Stdout = os.Stdout
 	buildCmd.Stderr = os.Stderr
 
@@ -184,7 +184,7 @@ func (w *Watcher) rebuild() error {
 
 	// Run
 	w.logger.Println("Starting application...")
-	w.process = exec.Command("sh", "-c", w.runCmd)
+	w.process = exec.Command("sh", "-c", w.runCmd) // #nosec G204 - Run command is from config, not user input
 	w.process.Stdout = os.Stdout
 	w.process.Stderr = os.Stderr
 
