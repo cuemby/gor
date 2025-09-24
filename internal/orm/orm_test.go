@@ -79,11 +79,11 @@ func (p *TestPost) AfterDelete() error {
 
 func setupTestORM(t *testing.T) gor.ORM {
 	config := gor.DatabaseConfig{
-		Driver:           "sqlite3",
-		Database:         ":memory:",
-		MaxOpenConns:     10,
-		MaxIdleConns:     5,
-		ConnMaxLifetime:  time.Hour,
+		Driver:          "sqlite3",
+		Database:        ":memory:",
+		MaxOpenConns:    10,
+		MaxIdleConns:    5,
+		ConnMaxLifetime: time.Hour,
 	}
 
 	orm := NewORM(config)
@@ -130,11 +130,11 @@ func TestNewORM(t *testing.T) {
 
 func TestORM_Connect(t *testing.T) {
 	config := gor.DatabaseConfig{
-		Driver:           "sqlite3",
-		Database:         ":memory:",
-		MaxOpenConns:     5,
-		MaxIdleConns:     2,
-		ConnMaxLifetime:  30 * time.Minute,
+		Driver:          "sqlite3",
+		Database:        ":memory:",
+		MaxOpenConns:    5,
+		MaxIdleConns:    2,
+		ConnMaxLifetime: 30 * time.Minute,
 	}
 
 	orm := NewORM(config)

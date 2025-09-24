@@ -239,7 +239,7 @@ func TestPipeline_AssetPath(t *testing.T) {
 	pipeline.manifest["styles.css"] = "styles-abcd1234.css"
 
 	path := pipeline.AssetPath("styles.css")
-	expected := "/assets/./styles-abcd1234.css"  // The implementation includes "./" for directory handling
+	expected := "/assets/./styles-abcd1234.css" // The implementation includes "./" for directory handling
 	if path != expected {
 		t.Errorf("Expected asset path %s, got %s", expected, path)
 	}
@@ -485,7 +485,7 @@ func TestAssetServer(t *testing.T) {
 
 	// Test with custom settings
 	customServer := NewServer(pipeline, "").
-		WithMaxAge(1*time.Hour).
+		WithMaxAge(1 * time.Hour).
 		WithCORS("example.com")
 
 	if customServer.pathPrefix != "/assets" {

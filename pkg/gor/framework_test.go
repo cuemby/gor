@@ -200,9 +200,9 @@ func (c *MockController) Destroy(ctx *gor.Context) error {
 
 // MockConfig implements gor.Config for testing
 type MockConfig struct {
-	environment string
-	values      map[string]interface{}
-	dbConfig    gor.DatabaseConfig
+	environment  string
+	values       map[string]interface{}
+	dbConfig     gor.DatabaseConfig
 	serverConfig gor.ServerConfig
 }
 
@@ -215,8 +215,8 @@ func NewMockConfig() *MockConfig {
 			Database: ":memory:",
 		},
 		serverConfig: gor.ServerConfig{
-			Host: "localhost",
-			Port: 8080,
+			Host:         "localhost",
+			Port:         8080,
 			ReadTimeout:  15 * time.Second,
 			WriteTimeout: 15 * time.Second,
 			IdleTimeout:  60 * time.Second,

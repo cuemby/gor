@@ -15,15 +15,15 @@ import (
 // Mock application for testing
 type mockApp struct{}
 
-func (m *mockApp) Start(ctx context.Context) error   { return nil }
-func (m *mockApp) Stop(ctx context.Context) error    { return nil }
-func (m *mockApp) Router() gor.Router                 { return nil }
-func (m *mockApp) ORM() gor.ORM                       { return nil }
-func (m *mockApp) Queue() gor.Queue                   { return nil }
-func (m *mockApp) Cache() gor.Cache                   { return nil }
-func (m *mockApp) Cable() gor.Cable                   { return nil }
-func (m *mockApp) Auth() interface{}                  { return nil }
-func (m *mockApp) Config() gor.Config                 { return nil }
+func (m *mockApp) Start(ctx context.Context) error { return nil }
+func (m *mockApp) Stop(ctx context.Context) error  { return nil }
+func (m *mockApp) Router() gor.Router              { return nil }
+func (m *mockApp) ORM() gor.ORM                    { return nil }
+func (m *mockApp) Queue() gor.Queue                { return nil }
+func (m *mockApp) Cache() gor.Cache                { return nil }
+func (m *mockApp) Cable() gor.Cable                { return nil }
+func (m *mockApp) Auth() interface{}               { return nil }
+func (m *mockApp) Config() gor.Config              { return nil }
 
 // Mock controller for testing
 type mockController struct {

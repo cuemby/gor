@@ -29,12 +29,12 @@ func createTestContext(method, path string) (*gor.Context, *httptest.ResponseRec
 
 func TestBaseControllerActions(t *testing.T) {
 	tests := []struct {
-		name           string
-		method         string
-		path           string
-		action         func(*BaseController, *gor.Context) error
-		expectedError  string
-		setupParams    func(*gor.Context)
+		name          string
+		method        string
+		path          string
+		action        func(*BaseController, *gor.Context) error
+		expectedError string
+		setupParams   func(*gor.Context)
 	}{
 		{
 			name:          "Index",
