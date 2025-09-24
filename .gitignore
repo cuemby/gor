@@ -271,3 +271,6 @@ vgcore.*
 !/**/.gitkeepblog
 realtime_demo
 .claude/
+
+# Security scanning reports
+gosec.sarif
