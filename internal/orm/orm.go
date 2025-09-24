@@ -466,8 +466,8 @@ func parseStructTag(tag string, column *gor.Column) {
 		column.Index = true
 	}
 	if contains(tag, "auto_increment") {
-		// Handle auto increment
-		column.AutoIncrement = true
+		// Handle auto increment - set as primary key
+		column.PrimaryKey = true
 	}
 }
 
